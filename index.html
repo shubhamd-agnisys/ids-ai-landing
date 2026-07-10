@@ -1,0 +1,5111 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>IDS-AI Suite - Golden Specification to CSR Sign-Off</title>
+    <style>
+      :root {
+        color-scheme: light;
+        --paper: #fbfbf8;
+        --paper-2: #f4f7f5;
+        --ink: #111318;
+        --muted: #5f6875;
+        --quiet: #8b95a4;
+        --line: #dfe5ea;
+        --panel: rgba(255, 255, 255, 0.84);
+        --panel-solid: #ffffff;
+        --brand: #e06f38;
+        --brand-dark: #9e3d16;
+        --blue: #496cff;
+        --teal: #159b91;
+        --green: #298a50;
+        --amber: #c87a12;
+        --violet: #7158d9;
+        --red: #c64b3d;
+        --state-a: #e06f38;
+        --state-b: #70c9b8;
+        --state-c: #496cff;
+        --state-soft: rgba(224, 111, 56, 0.16);
+        --state-wash: rgba(224, 111, 56, 0.08);
+        --shadow: 0 22px 70px rgba(23, 31, 42, 0.12);
+        --radius: 8px;
+        --ease: cubic-bezier(0.2, 0.9, 0.2, 1);
+        --mono: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, monospace;
+      }
+
+      body[data-state="idle"] {
+        --state-a: #e06f38;
+        --state-b: #70c9b8;
+        --state-c: #496cff;
+        --state-soft: rgba(224, 111, 56, 0.16);
+        --state-wash: rgba(224, 111, 56, 0.08);
+      }
+      body[data-state="thinking"] {
+        --state-a: #7158d9;
+        --state-b: #4ba3ff;
+        --state-c: #159b91;
+        --state-soft: rgba(113, 88, 217, 0.16);
+        --state-wash: rgba(113, 88, 217, 0.08);
+      }
+      body[data-state="caution"] {
+        --state-a: #c87a12;
+        --state-b: #f0b44b;
+        --state-c: #e06f38;
+        --state-soft: rgba(200, 122, 18, 0.18);
+        --state-wash: rgba(200, 122, 18, 0.1);
+      }
+      body[data-state="executing"] {
+        --state-a: #496cff;
+        --state-b: #159b91;
+        --state-c: #e06f38;
+        --state-soft: rgba(73, 108, 255, 0.16);
+        --state-wash: rgba(73, 108, 255, 0.08);
+      }
+      body[data-state="verified"] {
+        --state-a: #298a50;
+        --state-b: #78c860;
+        --state-c: #159b91;
+        --state-soft: rgba(41, 138, 80, 0.16);
+        --state-wash: rgba(41, 138, 80, 0.08);
+      }
+
+      * { box-sizing: border-box; }
+      html { scroll-behavior: smooth; }
+      body {
+        margin: 0;
+        min-height: 100vh;
+        background: linear-gradient(135deg, #fffdfa, var(--paper-2));
+        color: var(--ink);
+        font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+        overflow-x: hidden;
+      }
+      button,
+      input { font: inherit; }
+      button { border: 0; }
+      a { color: inherit; }
+      svg { display: block; }
+
+      .bg {
+        position: absolute;
+        inset: 0 0 auto 0;
+        height: min(820px, 100vh);
+        z-index: 0;
+        pointer-events: none;
+        overflow: hidden;
+      }
+      .trace-field,
+      .sheen-field {
+        position: absolute;
+        inset: 0;
+      }
+      .trace-field {
+        opacity: 0.24;
+        background-image:
+          linear-gradient(112deg, transparent 0 22%, rgba(24, 33, 44, 0.055) 22.12%, transparent 22.5%),
+          linear-gradient(112deg, transparent 0 48%, rgba(224, 111, 56, 0.055) 48.12%, transparent 48.5%),
+          linear-gradient(112deg, transparent 0 76%, rgba(21, 155, 145, 0.06) 76.12%, transparent 76.48%);
+        background-size: 440px 100%, 560px 100%, 700px 100%;
+        animation: trace-drift 28s linear infinite;
+      }
+      .sheen-field {
+        opacity: 0.24;
+        background:
+          linear-gradient(108deg, transparent 7%, rgba(224, 111, 56, 0.04) 14%, transparent 22%),
+          linear-gradient(116deg, transparent 36%, rgba(73, 108, 255, 0.045) 44%, transparent 53%),
+          linear-gradient(109deg, transparent 66%, rgba(21, 155, 145, 0.04) 72%, transparent 82%);
+        animation: sheen-drift 14s var(--ease) infinite alternate;
+      }
+      .ghost-glyph {
+        position: absolute;
+        width: 460px;
+        height: 472px;
+        color: var(--state-a);
+        opacity: 0.046;
+        filter: blur(0.1px);
+        transform: rotate(-10deg);
+        animation: glyph-float 11s var(--ease) infinite alternate;
+      }
+      .ghost-glyph.one { top: 92px; right: -68px; }
+      .ghost-glyph.two {
+        width: 330px;
+        height: 338px;
+        left: -120px;
+        bottom: 3%;
+        color: var(--state-c);
+        animation-duration: 13s;
+        animation-direction: alternate-reverse;
+      }
+      @keyframes trace-drift {
+        from { background-position: 0 0, 0 0, 0 0; }
+        to { background-position: 440px 0, -560px 0, 700px 0; }
+      }
+      @keyframes sheen-drift {
+        from { transform: translateX(-3%); }
+        to { transform: translateX(3%); }
+      }
+      @keyframes glyph-float {
+        from { transform: translate3d(0, 0, 0) rotate(-10deg) scale(1); }
+        to { transform: translate3d(22px, -18px, 0) rotate(-4deg) scale(1.05); }
+      }
+
+      .page {
+        position: relative;
+        z-index: 1;
+      }
+      .shell {
+        width: min(1180px, calc(100% - 48px));
+        margin: 0 auto;
+      }
+      section {
+        padding: 76px 0;
+        scroll-margin-top: 100px;
+      }
+      .eyebrow {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        margin-bottom: 16px;
+        color: var(--state-a);
+        font-size: 12px;
+        font-weight: 850;
+        letter-spacing: 0.13em;
+        text-transform: uppercase;
+      }
+      .eyebrow::before {
+        content: "";
+        width: 9px;
+        height: 9px;
+        border-radius: 2px;
+        background: currentColor;
+        transform: rotate(-14deg);
+      }
+      h1,
+      h2,
+      h3,
+      p { margin-top: 0; }
+      h1 {
+        max-width: 15ch;
+        margin-bottom: 0;
+        font-size: clamp(38px, 4.4vw, 64px);
+        line-height: 1.04;
+        letter-spacing: 0;
+        font-weight: 880;
+      }
+      h1 .accent,
+      h2 .accent {
+        color: var(--state-a);
+        transition: color 700ms var(--ease);
+      }
+      h2 {
+        margin-bottom: 16px;
+        font-size: clamp(30px, 3.2vw, 48px);
+        line-height: 1.08;
+        letter-spacing: 0;
+        font-weight: 840;
+      }
+      h3 {
+        margin-bottom: 8px;
+        font-size: 18px;
+        line-height: 1.24;
+        letter-spacing: 0;
+        font-weight: 780;
+      }
+      .lede {
+        max-width: 66ch;
+        color: #3f4a57;
+        font-size: clamp(16px, 1.24vw, 19px);
+        line-height: 1.62;
+      }
+      .muted {
+        color: var(--muted);
+      }
+      .section-head {
+        max-width: 820px;
+        margin-bottom: 34px;
+      }
+      .section-head.tight { margin-bottom: 24px; }
+
+      .topbar {
+        position: fixed;
+        top: 18px;
+        left: 50%;
+        z-index: 50;
+        width: min(1180px, calc(100% - 40px));
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 20px;
+        padding: 11px 14px;
+        border: 1px solid rgba(255, 255, 255, 0.82);
+        border-radius: var(--radius);
+        background: rgba(255, 255, 255, 0.78);
+        box-shadow: 0 14px 42px rgba(21, 30, 42, 0.08);
+        backdrop-filter: blur(18px);
+        transform: translateX(-50%);
+      }
+      .brand {
+        display: inline-flex;
+        align-items: center;
+        gap: 10px;
+        min-width: 0;
+        text-decoration: none;
+      }
+      .brand-mark {
+        width: 34px;
+        height: 35px;
+        flex: 0 0 auto;
+        color: var(--brand);
+      }
+      .brand-text {
+        display: flex;
+        flex-direction: column;
+        line-height: 1;
+      }
+      .brand-name {
+        color: var(--brand);
+        font-size: 20px;
+        font-weight: 900;
+      }
+      .brand-tag {
+        margin-top: 3px;
+        color: #68717f;
+        font-size: 5.7px;
+        font-weight: 850;
+        letter-spacing: 0.04em;
+        text-transform: uppercase;
+      }
+      .topbar nav {
+        display: flex;
+        align-items: center;
+        gap: 3px;
+      }
+      .topbar nav a {
+        padding: 8px 10px;
+        border-radius: 6px;
+        color: #35404d;
+        font-size: 13px;
+        font-weight: 650;
+        text-decoration: none;
+        white-space: nowrap;
+      }
+      .topbar nav a:hover {
+        background: var(--state-wash);
+        color: var(--ink);
+      }
+
+      .btn {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
+        min-height: 44px;
+        padding: 12px 18px;
+        border-radius: var(--radius);
+        font-size: 14px;
+        font-weight: 760;
+        text-decoration: none;
+        cursor: pointer;
+        transition: transform 220ms var(--ease), border-color 220ms var(--ease), box-shadow 220ms var(--ease), background 600ms var(--ease);
+      }
+      .btn:hover { transform: translateY(-1px); }
+      .btn-primary {
+        border: 1px solid #cf5f2c;
+        background: #e06f38;
+        color: #fff;
+        box-shadow: 0 12px 26px rgba(158, 61, 22, 0.18);
+      }
+      .btn-primary:hover {
+        border-color: #b84f22;
+        background: #d7612d;
+        box-shadow: 0 14px 30px rgba(158, 61, 22, 0.22);
+      }
+      .btn-secondary {
+        border: 1px solid var(--line);
+        background: rgba(255, 255, 255, 0.86);
+        color: var(--ink);
+      }
+      .btn-secondary:hover { border-color: var(--state-a); }
+      .btn-text {
+        min-height: auto;
+        padding: 9px 0;
+        border-bottom: 1px solid transparent;
+        border-radius: 0;
+        color: var(--muted);
+        background: transparent;
+      }
+      .btn-text:hover {
+        border-bottom-color: var(--state-a);
+        color: var(--ink);
+        transform: none;
+      }
+      .topbar .btn { min-height: 36px; padding: 8px 13px; font-size: 13px; }
+
+      .hero {
+        position: relative;   /* offsetParent for .scroll-prompt */
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        min-height: 100vh;
+        min-height: 100svh;   /* svh: ignores mobile browser chrome */
+        padding-top: 84px;    /* clears the fixed topbar */
+        padding-bottom: 104px;/* clears the scroll prompt */
+      }
+
+      /* ═══════════════════════════════════════════════════════════════════
+         SCROLL PROMPT — a 100vh hero gives the eye no cut-off edge, so the
+         affordance has to be explicit. Chevron, not a mouse: a mouse icon
+         assumes a device half this audience is not using.
+         ═══════════════════════════════════════════════════════════════════ */
+      .scroll-prompt {
+        position: absolute;
+        bottom: 2.5rem;
+        left: 50%;
+        display: grid;
+        justify-items: center;
+        gap: 9px;
+        padding: 6px 10px;
+        border: 0;
+        background: none;
+        color: var(--quiet);
+        font-family: var(--mono);
+        font-size: 9.6px;
+        font-weight: 600;
+        letter-spacing: 0.16em;
+        text-transform: uppercase;
+        cursor: pointer;
+        opacity: 0.4;
+        transform: translate(-50%, 0);
+        animation: scroll-hint 2.5s ease-in-out infinite;
+        transition: opacity 420ms var(--ease), visibility 420ms var(--ease);
+      }
+      .scroll-prompt svg { display: block; overflow: visible; }
+      .scroll-prompt:hover { color: var(--brand); }
+      .scroll-prompt:focus-visible { outline: 2px solid var(--brand); outline-offset: 4px; border-radius: 6px; }
+
+      /* Vanish the moment the hint is taken; it is absolutely positioned in
+         the hero, so this is polish rather than an overlap fix. */
+      .scroll-prompt.gone {
+        opacity: 0 !important;
+        visibility: hidden;
+        animation: none;
+      }
+
+      @keyframes scroll-hint {
+        0%, 100% { transform: translate(-50%, 0); opacity: 0.4; }
+        50%      { transform: translate(-50%, 12px); opacity: 1; }
+      }
+
+      @media (prefers-reduced-motion: reduce) {
+        .scroll-prompt { animation: none; opacity: 0.75; }
+      }
+      @media (max-width: 1080px) {
+        .scroll-prompt { display: none; }
+      }
+      .hero-grid {
+        display: grid;
+        grid-template-columns: minmax(0, 0.98fr) minmax(430px, 1.02fr);
+        align-items: center;
+        gap: 38px;
+      }
+      .hero .lede {
+        margin: 20px 0 0;
+      }
+      .punchline {
+        display: inline-flex;
+        align-items: center;
+        gap: 10px;
+        margin: 22px 0 0;
+        padding: 13px 16px;
+        border: 1px solid var(--state-soft);
+        border-radius: var(--radius);
+        background: var(--state-wash);
+        color: var(--ink);
+        font-size: 15px;
+        font-weight: 820;
+      }
+      .punchline span {
+        width: 9px;
+        height: 9px;
+        border-radius: 2px;
+        background: var(--state-a);
+        transform: rotate(-14deg);
+      }
+      .hero-actions {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        gap: 12px;
+        margin-top: 28px;
+      }
+
+      .hero-visual {
+        position: relative;
+        min-height: 438px;
+        padding: 16px;
+        border: 1px solid rgba(222, 228, 234, 0.86);
+        border-radius: 16px;
+        background: #fff;
+        box-shadow: 0 18px 52px rgba(23, 31, 42, 0.08);
+        backdrop-filter: none;
+        overflow: hidden;
+      }
+      .hero-visual::before {
+        content: "";
+        position: absolute;
+        inset: 0;
+        background:
+          radial-gradient(360px 250px at 50% 50%, rgba(224, 111, 56, 0.06), transparent 62%),
+          repeating-linear-gradient(90deg, transparent 0 19px, rgba(17, 19, 24, 0.025) 20px),
+          repeating-linear-gradient(0deg, transparent 0 19px, rgba(17, 19, 24, 0.02) 20px);
+        opacity: 0.8;
+        animation: hero-scan 12s var(--ease) infinite alternate;
+      }
+      @keyframes hero-scan {
+        from { transform: translateX(-4%); }
+        to { transform: translateX(5%); }
+      }
+      .flow-stage {
+        position: relative;
+        z-index: 1;
+        height: 406px;
+      }
+      .flow-card {
+        position: absolute;
+        width: 148px;
+        min-height: 58px;
+        padding: 10px 11px;
+        border: 1px solid rgba(222, 228, 234, 0.9);
+        border-radius: var(--radius);
+        background: rgba(255, 255, 255, 0.94);
+        box-shadow: 0 10px 24px rgba(23, 31, 42, 0.07);
+      }
+      .flow-card.input {
+        left: 0;
+        top: 116px;
+      }
+      .flow-card.output {
+        right: 0;
+      }
+      .flow-card.out-1 { top: 0; }
+      .flow-card.out-2 { top: 64px; }
+      .flow-card.out-3 { top: 128px; }
+      .flow-card.out-4 { top: 192px; }
+      .flow-card.out-5 { top: 256px; }
+      .flow-card.out-6 { top: 320px; }
+      .flow-label {
+        margin: 0 0 8px;
+        color: var(--quiet);
+        font-size: 10px;
+        font-weight: 850;
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
+      }
+      .flow-card h3 {
+        margin: 0;
+        font-size: 13px;
+        line-height: 1.25;
+      }
+      .flow-card h3 small {
+        display: block;
+        margin-top: 2px;
+        color: var(--muted);
+        font-size: 10.5px;
+        line-height: 1.2;
+      }
+      .input-list {
+        display: grid;
+        gap: 7px;
+      }
+      .input-item {
+        display: grid;
+        grid-template-columns: 22px 1fr;
+        align-items: center;
+        gap: 8px;
+        color: #2f3946;
+        font-size: 11.5px;
+        font-weight: 720;
+      }
+      .input-icon {
+        display: grid;
+        place-items: center;
+        width: 22px;
+        height: 22px;
+        border-radius: 5px;
+        background: color-mix(in srgb, var(--brand) 10%, #fff);
+        color: var(--brand);
+        font-family: var(--mono);
+        font-size: 9px;
+        font-weight: 850;
+      }
+      .mini-bars {
+        display: grid;
+        gap: 6px;
+      }
+      .mini-bars i {
+        display: block;
+        height: 7px;
+        border-radius: 2px;
+        background: #dfe5eb;
+      }
+      .mini-bars i:nth-child(2) { width: 74%; }
+      .mini-bars i:nth-child(3) { width: 52%; background: var(--state-soft); }
+      .agent-core {
+        position: absolute;
+        left: 50%;
+        top: 50%;
+        display: grid;
+        place-items: center;
+        width: 148px;
+        height: 148px;
+        border-radius: 50%;
+        background: radial-gradient(circle at 50% 42%, #ff8a35 0 34%, #f36b14 66%, #dc5311 100%);
+        border: 1px solid rgba(224, 111, 56, 0.32);
+        box-shadow: 0 0 0 8px rgba(224, 111, 56, 0.08), 0 18px 44px rgba(224, 111, 56, 0.26);
+        transform: translate(-50%, -50%);
+      }
+      .agent-core::before,
+      .agent-core::after {
+        content: "";
+        position: absolute;
+        inset: -15px;
+        border: 1px solid rgba(224, 111, 56, 0.2);
+        border-radius: 50%;
+        opacity: 0.35;
+        animation: rotate-ring 26s linear infinite;
+      }
+      .agent-core::after {
+        inset: -31px;
+        border-color: rgba(224, 111, 56, 0.13);
+        animation-duration: 36s;
+        animation-direction: reverse;
+      }
+      .agent-core svg {
+        width: 36px;
+        height: 38px;
+        color: #fff;
+        animation: glyph-breathe 4s var(--ease) infinite;
+      }
+      .agent-core-label {
+        display: grid;
+        place-items: center;
+        gap: 3px;
+        color: #fff;
+        text-align: center;
+        text-shadow: 0 1px 10px rgba(122, 40, 0, 0.28);
+      }
+      .agent-core-label strong {
+        font-size: 26px;
+        line-height: 1;
+        letter-spacing: 0;
+      }
+      .agent-core-label span {
+        font-size: 11px;
+        font-weight: 760;
+      }
+      @keyframes rotate-ring {
+        to { transform: rotate(360deg); }
+      }
+      @keyframes glyph-breathe {
+        0%, 100% { transform: scale(1) rotate(0deg); }
+        50% { transform: scale(1.045) rotate(-2deg); }
+      }
+      .flow-lines {
+        position: absolute;
+        inset: 0;
+        z-index: 0;
+      }
+      .flow-lines path {
+        fill: none;
+        stroke: var(--state-a);
+        stroke-width: 1.8;
+        stroke-dasharray: 7 7;
+        opacity: 0.42;
+        animation: dash 1.2s linear infinite;
+      }
+      .flow-lines path.alt { stroke: var(--state-c); }
+      @keyframes dash {
+        to { stroke-dashoffset: -28; }
+      }
+      .coverage-pill {
+        position: absolute;
+        left: 50%;
+        bottom: 8px;
+        display: inline-flex;
+        align-items: center;
+        gap: 10px;
+        padding: 11px 15px;
+        border: 1px solid rgba(41, 138, 80, 0.2);
+        border-radius: 999px;
+        background: rgba(255, 255, 255, 0.84);
+        color: var(--green);
+        font-family: var(--mono);
+        font-size: 12px;
+        font-weight: 780;
+        transform: translateX(-50%);
+        white-space: nowrap;
+      }
+      .coverage-pill span {
+        width: 9px;
+        height: 9px;
+        border-radius: 50%;
+        background: var(--green);
+        box-shadow: 0 0 0 5px rgba(41, 138, 80, 0.12);
+      }
+
+      .proof {
+        padding-top: 18px;
+        padding-bottom: 60px;
+      }
+      .proof-shell {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr) auto minmax(260px, 0.5fr);
+        align-items: stretch;
+        gap: 26px;
+        padding: 30px;
+        border: 1px solid var(--line);
+        border-radius: 14px;
+        background: rgba(255, 255, 255, 0.88);
+        box-shadow: 0 16px 50px rgba(21, 30, 42, 0.07);
+      }
+      .proof-left {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 24px;
+      }
+      .proof-kicker {
+        margin-bottom: 15px;
+        color: var(--quiet);
+        font-size: 10px;
+        font-weight: 850;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+      }
+      .stat strong {
+        display: block;
+        color: var(--amber);
+        font-size: clamp(34px, 4vw, 54px);
+        line-height: 0.95;
+        letter-spacing: 0;
+        font-weight: 880;
+        font-variant-numeric: tabular-nums;
+      }
+      .stat p {
+        margin: 12px 0 0;
+        color: #4d5866;
+        font-size: 14px;
+        line-height: 1.48;
+      }
+      .proof-rule {
+        width: 1px;
+        background: var(--line);
+      }
+      .proof-right {
+        display: grid;
+        align-content: center;
+        padding-left: 4px;
+      }
+      .proof-right strong {
+        display: block;
+        color: var(--green);
+        font-size: clamp(44px, 5vw, 72px);
+        line-height: 0.9;
+        font-weight: 890;
+      }
+      .proof-right p {
+        margin: 13px 0 0;
+        color: var(--ink);
+        font-size: 17px;
+        line-height: 1.38;
+        font-weight: 760;
+      }
+      .citation {
+        grid-column: 1 / -1;
+        margin: 0;
+        padding-top: 18px;
+        border-top: 1px solid var(--line);
+        color: var(--quiet);
+        font-size: 12px;
+        line-height: 1.5;
+      }
+      .source-note {
+        margin: 14px 0 0;
+        padding-top: 12px;
+        border-top: 1px solid #edf1f4;
+        color: var(--quiet);
+        font-size: 11.5px;
+        line-height: 1.48;
+      }
+      .source-note a {
+        color: #465160;
+        font-weight: 720;
+        text-decoration: none;
+      }
+      .source-note a:hover {
+        color: var(--state-a);
+        text-decoration: underline;
+      }
+
+      .removal {
+        padding-top: 62px;
+        padding-bottom: 64px;
+      }
+      .removal .section-head {
+        margin-bottom: 34px;
+      }
+      .removal .eyebrow {
+        color: var(--blue);
+      }
+      .removal-table {
+        overflow: hidden;
+        border: 1px solid #d9e1e8;
+        border-radius: 12px;
+        background: #fff;
+        box-shadow: 0 18px 52px rgba(21, 30, 42, 0.08);
+      }
+      .removal-head,
+      .removal-row {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+      }
+      .removal-head span {
+        padding: 17px 24px;
+        border-bottom: 1px solid #dfe5ea;
+        background: #f7f8fa;
+        color: #5f6875;
+        font-size: 11px;
+        font-weight: 850;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+      }
+      .removal-head span:last-child {
+        background: #fff;
+        color: var(--green);
+      }
+      .removal-row + .removal-row {
+        border-top: 1px solid #e8edf1;
+      }
+      .removal-cell {
+        display: grid;
+        grid-template-columns: 18px 1fr;
+        gap: 14px;
+        align-items: center;
+        min-height: 56px;
+        padding: 17px 24px;
+        background: #f7f8fa;
+        color: #35404d;
+        font-size: 15px;
+        line-height: 1.42;
+      }
+      .removal-cell.with {
+        background: #fff;
+      }
+      .removal-mark {
+        position: relative;
+        display: inline-block;
+        width: 14px;
+        height: 14px;
+      }
+      .removal-mark.minus::before {
+        content: "";
+        position: absolute;
+        left: 1px;
+        top: 6px;
+        width: 12px;
+        height: 2px;
+        border-radius: 999px;
+        background: #c3ccd5;
+      }
+      .removal-mark.check::before,
+      .removal-mark.check::after {
+        content: "";
+        position: absolute;
+        border-radius: 999px;
+        background: var(--green);
+        transform-origin: left center;
+      }
+      .removal-mark.check::before {
+        left: 1px;
+        top: 7px;
+        width: 5px;
+        height: 2px;
+        transform: rotate(42deg);
+      }
+      .removal-mark.check::after {
+        left: 5px;
+        top: 10px;
+        width: 10px;
+        height: 2px;
+        transform: rotate(-48deg);
+      }
+
+      .motion-flow-section {
+        padding-top: 56px;
+        padding-bottom: 60px;
+      }
+      .motion-flow-section .section-head {
+        max-width: 700px;
+        margin-left: 0;
+        margin-right: auto;
+        text-align: left;
+      }
+      .motion-board {
+        position: relative;
+        isolation: isolate;
+        display: grid;
+        grid-template-columns: repeat(5, minmax(0, 1fr));
+        gap: 12px;
+        min-height: 300px;
+        padding: 28px;
+        overflow: hidden;
+      }
+      .motion-board::before {
+        content: "";
+        position: absolute;
+        left: 58px;
+        right: 58px;
+        top: 50%;
+        height: 2px;
+        background: linear-gradient(90deg, var(--brand), var(--blue), var(--amber), var(--violet), var(--green));
+        opacity: 0.32;
+        z-index: 0;
+      }
+      .motion-board::after {
+        content: "";
+        position: absolute;
+        inset: -24%;
+        background:
+          linear-gradient(112deg, transparent 32%, rgba(224, 111, 56, 0.1) 39%, transparent 47%),
+          linear-gradient(112deg, transparent 58%, rgba(73, 108, 255, 0.1) 66%, transparent 76%);
+        animation: hero-scan 7s var(--ease) infinite alternate;
+        pointer-events: none;
+        z-index: 0;
+      }
+      .motion-node {
+        position: relative;
+        z-index: 2;
+        min-height: 214px;
+        padding: 18px;
+        border: 1px solid color-mix(in srgb, var(--tone) 24%, #e3e8ed);
+        border-radius: 10px;
+        background: rgba(255, 255, 255, 0.9);
+        box-shadow: 0 14px 34px rgba(23, 31, 42, 0.07);
+        overflow: hidden;
+        opacity: 0;
+        transform: translateY(12px);
+        transition: opacity 560ms var(--ease), transform 560ms var(--ease), border-color 220ms var(--ease);
+        transition-delay: var(--delay);
+      }
+      .motion-board.in-view .motion-node {
+        opacity: 1;
+        transform: none;
+      }
+      .motion-node::before {
+        content: "";
+        position: absolute;
+        inset: -20%;
+        background: linear-gradient(112deg, transparent 36%, color-mix(in srgb, var(--tone) 16%, transparent) 47%, transparent 58%);
+        transform: translateX(-35%);
+        transition: transform 680ms var(--ease);
+      }
+      .motion-node:hover {
+        border-color: color-mix(in srgb, var(--tone) 46%, #dfe5ea);
+      }
+      .motion-node:hover::before {
+        transform: translateX(24%);
+      }
+      .motion-node > * {
+        position: relative;
+        z-index: 1;
+      }
+      .motion-node .num {
+        display: inline-grid;
+        place-items: center;
+        width: 34px;
+        height: 34px;
+        margin-bottom: 18px;
+        border: 1px solid color-mix(in srgb, var(--tone) 32%, #fff);
+        border-radius: 8px;
+        background: color-mix(in srgb, var(--tone) 9%, #fff);
+        color: var(--tone);
+        font-family: var(--mono);
+        font-size: 12px;
+        font-weight: 850;
+      }
+      .motion-node h3 {
+        margin-bottom: 10px;
+        font-size: 16px;
+      }
+      .motion-node p {
+        margin: 0;
+        color: var(--muted);
+        font-size: 13.2px;
+        line-height: 1.52;
+      }
+      .motion-packet {
+        position: absolute;
+        z-index: 1;
+        left: 5%;
+        top: calc(50% - 6px);
+        width: 12px;
+        height: 12px;
+        border-radius: 3px;
+        background: var(--state-a);
+        box-shadow: 0 0 0 7px var(--state-soft);
+        transform: rotate(-14deg);
+        animation: flow-packet 5.8s linear infinite;
+      }
+      .motion-packet.two {
+        background: var(--blue);
+        animation-delay: 1.6s;
+      }
+      .motion-packet.three {
+        background: var(--green);
+        animation-delay: 3.1s;
+      }
+      @keyframes flow-packet {
+        0% { left: 5%; opacity: 0; }
+        8%, 88% { opacity: 1; }
+        100% { left: 94%; opacity: 0; }
+      }
+      .motion-summary {
+        display: grid;
+        grid-template-columns: minmax(0, 0.96fr) minmax(0, 0.96fr) minmax(300px, 1.08fr);
+        gap: 14px;
+        width: min(900px, 100%);
+        margin-top: 16px;
+        margin-left: auto;
+        margin-right: auto;
+      }
+      .motion-summary article {
+        display: flex;
+        flex-direction: column;
+        min-height: 132px;
+        padding: 20px;
+        border: 1px solid var(--line);
+        border-radius: 10px;
+        background: rgba(255, 255, 255, 0.88);
+      }
+      .motion-summary article.feature-fit {
+        padding-right: 24px;
+      }
+      .motion-summary h3 {
+        font-size: 16px;
+      }
+      .motion-summary p {
+        margin: 0;
+        color: var(--muted);
+        font-size: 13.5px;
+        line-height: 1.5;
+      }
+      .motion-summary .audience-tags {
+        display: grid;
+        grid-template-columns: repeat(2, max-content);
+        align-items: center;
+        gap: 8px 10px;
+        margin-top: auto;
+        padding-top: 15px;
+      }
+      .motion-summary .audience-tags span {
+        border: 1px solid rgba(224, 111, 56, 0.18);
+        background: rgba(224, 111, 56, 0.07);
+        color: #4b5563;
+      }
+
+      .story {
+        padding-top: 72px;
+        padding-bottom: 82px;
+      }
+      .story-grid {
+        display: grid;
+        grid-template-columns: minmax(320px, 0.78fr) minmax(460px, 1fr);
+        gap: 34px;
+        align-items: start;
+      }
+      .story-copy {
+        position: sticky;
+        top: 112px;
+      }
+      .story-steps {
+        display: grid;
+        gap: 12px;
+        margin-top: 26px;
+      }
+      .story-step {
+        display: grid;
+        grid-template-columns: auto 1fr;
+        gap: 14px;
+        padding: 16px;
+        min-height: 132px;
+        align-items: center;
+        border: 1px solid var(--line);
+        border-radius: 10px;
+        background: rgba(255, 255, 255, 0.82);
+        transition: border-color 260ms var(--ease), background 260ms var(--ease), transform 260ms var(--ease);
+      }
+      .story-step.active {
+        border-color: var(--tone);
+        background: color-mix(in srgb, var(--tone) 8%, #fff);
+        transform: translateX(3px);
+      }
+      .story-step .num {
+        display: grid;
+        place-items: center;
+        width: 34px;
+        height: 34px;
+        border: 1px solid color-mix(in srgb, var(--tone) 32%, #fff);
+        border-radius: 8px;
+        color: var(--tone);
+        background: color-mix(in srgb, var(--tone) 8%, #fff);
+        font-family: var(--mono);
+        font-size: 12px;
+        font-weight: 850;
+      }
+      .story-step h3 {
+        margin: 0 0 4px;
+        font-size: 15px;
+      }
+      .story-step p {
+        margin: 0;
+        color: var(--muted);
+        font-size: 13px;
+        line-height: 1.48;
+      }
+      .story-visual {
+        position: sticky;
+        top: 112px;
+        min-height: 560px;
+        padding: 24px;
+        overflow: hidden;
+      }
+      .story-visual::before {
+        content: "";
+        position: absolute;
+        inset: -20%;
+        background:
+          linear-gradient(112deg, transparent 36%, var(--state-wash) 44%, transparent 52%),
+          radial-gradient(360px 260px at 52% 28%, rgba(73, 108, 255, 0.08), transparent 70%);
+        animation: clip-sweep 7s var(--ease) infinite alternate;
+      }
+      .story-board {
+        position: relative;
+        z-index: 1;
+        display: grid;
+        gap: 12px;
+        min-height: 510px;
+      }
+      .story-node {
+        position: relative;
+        display: grid;
+        grid-template-columns: 42px 1fr auto;
+        gap: 14px;
+        align-items: center;
+        padding: 15px 16px;
+        border: 1px solid var(--line);
+        border-radius: 10px;
+        background: rgba(255, 255, 255, 0.88);
+        box-shadow: 0 12px 34px rgba(23, 31, 42, 0.06);
+        opacity: 0.68;
+        transition: opacity 320ms var(--ease), transform 320ms var(--ease), border-color 320ms var(--ease), background 320ms var(--ease);
+      }
+      .story-node::before {
+        content: "";
+        position: absolute;
+        left: 35px;
+        top: 100%;
+        width: 2px;
+        height: 14px;
+        background: linear-gradient(var(--tone), transparent);
+        opacity: 0.34;
+      }
+      .story-node:last-child::before { display: none; }
+      .story-icon {
+        display: grid;
+        place-items: center;
+        width: 42px;
+        height: 42px;
+        border-radius: 9px;
+        background: color-mix(in srgb, var(--tone) 10%, #fff);
+        color: var(--tone);
+      }
+      .story-icon svg {
+        width: 22px;
+        height: 23px;
+      }
+      .story-node b {
+        display: block;
+        margin-bottom: 4px;
+        font-size: 14px;
+      }
+      .story-node span {
+        color: var(--muted);
+        font-size: 12.5px;
+        line-height: 1.42;
+      }
+      .story-state {
+        padding: 5px 9px;
+        border-radius: 999px;
+        background: color-mix(in srgb, var(--tone) 10%, #fff);
+        color: var(--tone);
+        font-family: var(--mono);
+        font-size: 10.5px;
+        font-weight: 800;
+      }
+      .story-board[data-stage="spec"] .story-node[data-stage="spec"],
+      .story-board[data-stage="generate"] .story-node[data-stage="generate"],
+      .story-board[data-stage="check"] .story-node[data-stage="check"],
+      .story-board[data-stage="correct"] .story-node[data-stage="correct"],
+      .story-board[data-stage="signoff"] .story-node[data-stage="signoff"] {
+        opacity: 1;
+        border-color: var(--tone);
+        background: color-mix(in srgb, var(--tone) 7%, #fff);
+        transform: translateX(4px);
+      }
+
+      .panel,
+      .glass {
+        border: 1px solid var(--line);
+        border-radius: 12px;
+        background: var(--panel-solid);
+      }
+      .glass {
+        border-color: rgba(255, 255, 255, 0.84);
+        background: var(--panel);
+        box-shadow: var(--shadow);
+        backdrop-filter: blur(15px);
+      }
+      .panel {
+        padding: 24px;
+      }
+
+      .leverage-grid {
+        display: grid;
+        grid-template-columns: minmax(0, 1.25fr) minmax(280px, 0.75fr);
+        gap: 24px;
+        align-items: start;
+      }
+      .chart-panel svg,
+      .cost-panel svg,
+      .architecture svg { width: 100%; height: auto; }
+      .chart-note {
+        padding: 24px;
+        border-left: 3px solid var(--amber);
+        border-radius: 0 12px 12px 0;
+        background: rgba(200, 122, 18, 0.08);
+      }
+      .chart-note p {
+        margin-bottom: 15px;
+        color: #3f4a57;
+        font-size: 15.5px;
+        line-height: 1.62;
+      }
+      .chart-note p:last-child { margin-bottom: 0; }
+      .cost-panel { margin-top: 24px; }
+      .bar {
+        transform: scaleY(0);
+        transform-origin: bottom;
+        transition: transform 900ms var(--ease);
+      }
+      .in-view .bar { transform: scaleY(1); }
+      .bar.delay-1 { transition-delay: 100ms; }
+      .bar.delay-2 { transition-delay: 200ms; }
+      .bar.delay-3 { transition-delay: 300ms; }
+
+      .loop-shell {
+        position: relative;
+        padding: 20px;
+        overflow: hidden;
+      }
+      .loop-shell::before {
+        content: "";
+        position: absolute;
+        inset: 0;
+        background:
+          linear-gradient(112deg, transparent 36%, var(--state-wash) 43%, transparent 51%),
+          radial-gradient(480px 280px at 50% 12%, rgba(73, 108, 255, 0.08), transparent 70%);
+        pointer-events: none;
+      }
+      .loop-shell.is-running::before {
+        animation: clip-sweep 3.8s var(--ease) infinite alternate;
+      }
+      .loop-shell.is-done {
+        border-color: rgba(41, 138, 80, 0.22);
+      }
+      .loop-top,
+      .loop-grid,
+      .agent-console,
+      .loop-actions,
+      .loop-note {
+        position: relative;
+        z-index: 1;
+      }
+      .loop-top {
+        display: grid;
+        grid-template-columns: 1fr auto;
+        align-items: center;
+        gap: 24px;
+        margin-bottom: 16px;
+      }
+      .loop-top h3 {
+        font-size: 20px !important;
+        margin-bottom: 6px !important;
+      }
+      .loop-top .muted {
+        font-size: 13.8px;
+        line-height: 1.42 !important;
+      }
+      .loop-ring {
+        width: min(310px, 100%);
+        justify-self: end;
+      }
+      .loop-ring text {
+        font-family: var(--mono);
+        font-size: 10px;
+        font-weight: 760;
+        fill: #4f5a68;
+      }
+      .loop-ring .cycle {
+        stroke: var(--state-a);
+        stroke-width: 2;
+        fill: none;
+        stroke-dasharray: 5 7;
+        animation: dash 1.1s linear infinite;
+      }
+      .loop-ring .ring-node {
+        transform-box: fill-box;
+        transform-origin: center;
+        transition: opacity 260ms var(--ease), transform 260ms var(--ease);
+      }
+      .loop-ring .ring-node.active {
+        opacity: 1;
+        transform: scale(1.35);
+        filter: drop-shadow(0 0 10px var(--state-soft));
+      }
+      .loop-grid {
+        display: grid;
+        grid-template-columns: minmax(220px, 0.92fr) minmax(320px, 1.18fr) minmax(220px, 0.9fr);
+        gap: 16px;
+        align-items: stretch;
+      }
+      .work-card {
+        min-height: 0;
+        overflow: hidden;
+      }
+      .work-card.panel {
+        padding: 0;
+      }
+      .work-head {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 16px;
+        padding: 11px 14px;
+        border-bottom: 1px solid var(--line);
+        color: var(--quiet);
+        font-size: 10px;
+        font-weight: 850;
+        letter-spacing: 0.11em;
+        text-transform: uppercase;
+      }
+      .work-body {
+        padding: 14px;
+      }
+      .spec-line {
+        display: grid;
+        grid-template-columns: 66px 1fr auto;
+        gap: 10px;
+        align-items: center;
+        min-height: 28px;
+        color: #526070;
+        font-family: var(--mono);
+        font-size: 11.5px;
+      }
+      .spec-line b {
+        color: #8b95a4;
+        font-weight: 620;
+      }
+      .redacted {
+        display: inline-flex;
+        width: 70px;
+        max-width: 100%;
+        height: 9px;
+        border-radius: 2px;
+        background: repeating-linear-gradient(90deg, #cfd6df 0 4px, #e4e8ed 4px 8px);
+      }
+      .issue {
+        color: var(--amber);
+        font-weight: 820;
+      }
+      .fixed {
+        color: var(--green);
+        font-weight: 820;
+      }
+      .state-chip {
+        display: inline-flex;
+        align-items: center;
+        gap: 7px;
+        padding: 5px 9px;
+        border: 1px solid var(--state-soft);
+        border-radius: 999px;
+        background: var(--state-wash);
+        color: var(--state-a);
+        font-family: var(--mono);
+        font-size: 10.5px;
+        font-weight: 780;
+        letter-spacing: 0;
+        text-transform: none;
+      }
+      .state-chip::before {
+        content: "";
+        width: 7px;
+        height: 7px;
+        border-radius: 2px;
+        background: currentColor;
+        transform: rotate(-14deg);
+      }
+      .finding {
+        margin-bottom: 11px;
+        padding: 10px;
+        border: 1px solid rgba(200, 122, 18, 0.22);
+        border-radius: var(--radius);
+        background: rgba(200, 122, 18, 0.08);
+        color: #3f4a57;
+        font-size: 12px;
+        line-height: 1.36;
+      }
+      .finding strong { color: var(--ink); }
+      .agent-trace {
+        display: grid;
+        gap: 9px;
+      }
+      .trace-step {
+        display: grid;
+        grid-template-columns: auto 1fr auto;
+        gap: 9px;
+        align-items: center;
+        padding: 7px 9px;
+        border: 1px solid #e6ebef;
+        border-radius: 8px;
+        background: rgba(255, 255, 255, 0.72);
+        opacity: 0.46;
+        transition: opacity 320ms var(--ease), transform 320ms var(--ease), border-color 320ms var(--ease), background 320ms var(--ease);
+      }
+      .trace-step.on {
+        opacity: 1;
+        border-color: var(--state-a);
+        background: var(--state-wash);
+        transform: translateX(3px);
+      }
+      .trace-step.done {
+        opacity: 1;
+        border-color: rgba(41, 138, 80, 0.18);
+        background: rgba(41, 138, 80, 0.06);
+      }
+      .trace-node {
+        display: grid;
+        place-items: center;
+        width: 17px;
+        height: 17px;
+        border-radius: 5px;
+        background: #dfe5eb;
+        color: #fff;
+        font-family: var(--mono);
+        font-size: 10px;
+        font-weight: 850;
+        transform: rotate(-14deg);
+      }
+      .trace-step.on .trace-node {
+        background: var(--state-a);
+        animation: node-pulse 1.1s ease-in-out infinite;
+      }
+      .trace-step.done .trace-node {
+        background: var(--green);
+        animation: none;
+      }
+      @keyframes node-pulse {
+        0%, 100% { box-shadow: 0 0 0 0 var(--state-soft); }
+        50% { box-shadow: 0 0 0 6px var(--state-soft); }
+      }
+      .trace-copy b {
+        display: block;
+        margin-bottom: 2px;
+        font-size: 12px;
+      }
+      .trace-copy span {
+        display: block;
+        overflow: hidden;
+        color: var(--muted);
+        font-size: 10.8px;
+        line-height: 1.25;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+      }
+      .trace-status {
+        color: #9aa4b1;
+        font-family: var(--mono);
+        font-size: 10.5px;
+        font-weight: 850;
+        text-transform: uppercase;
+        white-space: nowrap;
+      }
+      .trace-step.on .trace-status { color: var(--state-a); }
+      .trace-step.done .trace-status { color: var(--green); }
+      .artifact-line {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 12px;
+        padding: 8px 0;
+        border-bottom: 1px dashed #e6ebef;
+        font-family: var(--mono);
+        font-size: 11.5px;
+      }
+      .artifact-line:last-child { border-bottom: 0; }
+      .artifact-line .sync-state {
+        color: #a4adb8;
+        font-size: 10.5px;
+        font-weight: 850;
+        text-transform: uppercase;
+      }
+      .artifact-line.synced {
+        animation: sync-flash 520ms var(--ease);
+      }
+      .artifact-line.synced .sync-state {
+        color: var(--green);
+      }
+      @keyframes sync-flash {
+        45% { transform: translateX(4px); background: rgba(41, 138, 80, 0.08); }
+      }
+      .coverage {
+        margin-top: 12px;
+      }
+      .coverage-track {
+        height: 8px;
+        border-radius: 999px;
+        background: #e9eef2;
+        overflow: hidden;
+      }
+      .coverage-fill {
+        width: 72%;
+        height: 100%;
+        border-radius: inherit;
+        background: linear-gradient(90deg, var(--amber), var(--green));
+        transition: width 1000ms var(--ease);
+      }
+      .coverage-meta {
+        display: flex;
+        justify-content: space-between;
+        margin-top: 9px;
+        color: var(--muted);
+        font-family: var(--mono);
+        font-size: 11.5px;
+      }
+      .coverage-meta b {
+        color: var(--ink);
+        font-variant-numeric: tabular-nums;
+      }
+      .loop-actions {
+        display: flex;
+        align-items: center;
+        flex-wrap: wrap;
+        gap: 12px;
+        margin-top: 15px;
+      }
+      .loop-note {
+        margin: 13px 0 0;
+        max-width: 88ch;
+        color: #4d5866;
+        font-size: 14px;
+        line-height: 1.62;
+      }
+      .autoplay-note {
+        color: var(--quiet);
+        font-size: 13px;
+        font-weight: 650;
+      }
+      .agent-console {
+        display: grid;
+        grid-template-columns: minmax(240px, 0.92fr) minmax(260px, 0.76fr) minmax(280px, 1fr);
+        gap: 16px;
+        margin-top: 18px;
+      }
+      .agent-console-card {
+        position: relative;
+        min-height: 226px;
+        padding: 18px;
+        overflow: hidden;
+      }
+      .agent-console-card::before {
+        content: "";
+        position: absolute;
+        inset: -24%;
+        background: linear-gradient(112deg, transparent 36%, var(--state-wash) 47%, transparent 58%);
+        animation: hero-scan 6s var(--ease) infinite alternate;
+        pointer-events: none;
+      }
+      .agent-console-card > * {
+        position: relative;
+        z-index: 1;
+      }
+      .console-kicker {
+        margin-bottom: 13px;
+        color: var(--quiet);
+        font-size: 10px;
+        font-weight: 850;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+      }
+      .prompt-bubble {
+        padding: 15px;
+        border: 1px solid rgba(73, 108, 255, 0.22);
+        border-radius: 12px 12px 12px 4px;
+        background: rgba(73, 108, 255, 0.08);
+        color: #283242;
+        font-size: 14px;
+        line-height: 1.48;
+        animation: prompt-enter 5.4s var(--ease) infinite;
+      }
+      .prompt-meta {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        margin-top: 14px;
+        color: var(--muted);
+        font-family: var(--mono);
+        font-size: 11px;
+      }
+      .prompt-meta i {
+        display: inline-block;
+        width: 7px;
+        height: 7px;
+        border-radius: 2px;
+        background: var(--blue);
+        transform: rotate(-14deg);
+        animation: node-pulse 1.3s ease-in-out infinite;
+      }
+      @keyframes prompt-enter {
+        0%, 100% { transform: translateY(3px); opacity: 0.74; }
+        16%, 72% { transform: none; opacity: 1; }
+      }
+      .agent-brain {
+        display: grid;
+        place-items: center;
+        min-height: 116px;
+      }
+      .agent-brain-core {
+        position: relative;
+        display: grid;
+        place-items: center;
+        width: 96px;
+        height: 96px;
+        border: 1px solid var(--state-soft);
+        border-radius: 50%;
+        background: rgba(255, 255, 255, 0.92);
+        box-shadow: 0 18px 42px rgba(23, 31, 42, 0.1);
+      }
+      .agent-brain-core::before,
+      .agent-brain-core::after {
+        content: "";
+        position: absolute;
+        inset: -13px;
+        border: 1px dashed var(--state-a);
+        border-radius: 50%;
+        opacity: 0.34;
+        animation: rotate-ring 18s linear infinite;
+      }
+      .agent-brain-core::after {
+        inset: -25px;
+        border-color: var(--state-c);
+        animation-duration: 26s;
+        animation-direction: reverse;
+      }
+      .agent-brain-core svg {
+        width: 38px;
+        height: 40px;
+        color: var(--state-a);
+        animation: glyph-breathe 3.4s var(--ease) infinite;
+      }
+      .agent-plan {
+        display: grid;
+        gap: 8px;
+        margin: 12px 0 0;
+        padding: 0;
+        list-style: none;
+      }
+      .agent-plan li {
+        display: flex;
+        align-items: center;
+        gap: 9px;
+        color: #4d5866;
+        font-size: 12.5px;
+        line-height: 1.35;
+        opacity: 0.62;
+        animation: plan-step 5.4s var(--ease) infinite;
+        animation-delay: var(--step-delay);
+      }
+      .agent-plan li::before {
+        content: "";
+        width: 7px;
+        height: 7px;
+        border-radius: 2px;
+        background: var(--state-a);
+        transform: rotate(-14deg);
+      }
+      @keyframes plan-step {
+        0%, 14%, 100% { opacity: 0.48; transform: translateX(0); }
+        28%, 68% { opacity: 1; transform: translateX(3px); }
+      }
+      .artifact-stack {
+        display: grid;
+        gap: 9px;
+      }
+      .agent-file {
+        display: grid;
+        grid-template-columns: 34px 1fr auto;
+        gap: 11px;
+        align-items: center;
+        min-height: 42px;
+        padding: 9px 10px;
+        border: 1px solid #e2e8ee;
+        border-radius: 9px;
+        background: rgba(255, 255, 255, 0.78);
+        transform-origin: center;
+        animation: file-sync 5.4s var(--ease) infinite;
+        animation-delay: var(--file-delay);
+      }
+      .file-icon {
+        display: grid;
+        place-items: center;
+        width: 34px;
+        height: 26px;
+        border: 1px solid color-mix(in srgb, var(--tone) 28%, #fff);
+        border-radius: 6px;
+        background: color-mix(in srgb, var(--tone) 9%, #fff);
+        color: var(--tone);
+        font-family: var(--mono);
+        font-size: 10px;
+        font-weight: 850;
+      }
+      .agent-file b {
+        color: #2f3946;
+        font-family: var(--mono);
+        font-size: 12px;
+      }
+      .agent-file span:last-child {
+        color: var(--green);
+        font-family: var(--mono);
+        font-size: 10px;
+        font-weight: 850;
+        text-transform: uppercase;
+      }
+      @keyframes file-sync {
+        0%, 18%, 100% { transform: translateX(0); border-color: #e2e8ee; background: rgba(255, 255, 255, 0.78); }
+        38%, 72% { transform: translateX(4px); border-color: color-mix(in srgb, var(--tone) 34%, #e2e8ee); background: color-mix(in srgb, var(--tone) 7%, #fff); }
+      }
+      .console-token {
+        position: absolute;
+        z-index: 2;
+        top: 50%;
+        left: 28%;
+        width: 11px;
+        height: 11px;
+        border-radius: 3px;
+        background: var(--state-a);
+        box-shadow: 0 0 0 7px var(--state-soft);
+        transform: rotate(-14deg);
+        animation: console-token 5.4s linear infinite;
+      }
+      .console-token.two {
+        background: var(--blue);
+        animation-delay: 1.4s;
+      }
+      @keyframes console-token {
+        0% { left: 28%; opacity: 0; }
+        12%, 82% { opacity: 1; }
+        45% { left: 50%; }
+        100% { left: 72%; opacity: 0; }
+      }
+      .agent-window {
+        display: grid;
+        grid-template-columns: 1fr;
+        gap: 0;
+        margin-top: 14px;
+        padding: 0;
+        max-height: 640px;
+        overflow: hidden;
+        background: rgba(255, 255, 255, 0.9);
+      }
+      .agent-appbar,
+      .agent-workspace {
+        grid-column: 1 / -1;
+      }
+      .agent-appbar {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 16px;
+        min-height: 36px;
+        padding: 0 14px;
+        border-bottom: 1px solid #dfe5ea;
+        background: #24272a;
+        color: #e9edf1;
+      }
+      .traffic {
+        display: inline-flex;
+        gap: 6px;
+      }
+      .traffic i {
+        width: 10px;
+        height: 10px;
+        border-radius: 50%;
+      }
+      .traffic i:nth-child(1) { background: #ff5c57; }
+      .traffic i:nth-child(2) { background: #ffbd2e; }
+      .traffic i:nth-child(3) { background: #28c840; }
+      .app-title {
+        flex: 1;
+        color: #d8dde3;
+        font-size: 13px;
+        font-weight: 760;
+      }
+      .app-tools {
+        display: inline-flex;
+        gap: 7px;
+      }
+      .app-tools i {
+        width: 13px;
+        height: 13px;
+        border: 1px solid #7d858e;
+        border-radius: 3px;
+        opacity: 0.8;
+      }
+      .agent-workspace {
+        display: grid;
+        grid-template-columns: 190px 1fr;
+        min-height: 0;
+        height: 604px;
+      }
+      .agent-sidebar {
+        padding: 12px 10px;
+        border-right: 1px solid #e1e6eb;
+        background: #fafafa;
+      }
+      .sidebar-head {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        margin-bottom: 12px;
+        color: #5e6773;
+        font-size: 10px;
+        font-weight: 850;
+        letter-spacing: 0.16em;
+        text-transform: uppercase;
+      }
+      .sidebar-head span:last-child {
+        color: var(--brand);
+        letter-spacing: 0;
+        text-transform: none;
+      }
+      .chat-item {
+        padding: 8px 8px;
+        border-left: 3px solid transparent;
+        border-radius: 6px;
+        color: #3f4a57;
+        font-size: 12px;
+        line-height: 1.35;
+      }
+      .chat-item.active {
+        border-left-color: var(--brand);
+        background: rgba(224, 111, 56, 0.13);
+      }
+      .chat-item small {
+        display: block;
+        margin-top: 5px;
+        color: #8b95a4;
+        font-size: 10.5px;
+      }
+      .agent-thread {
+        position: relative;
+        min-height: 0;
+        height: 604px;
+        padding: 14px 22px 56px;
+        background:
+          linear-gradient(180deg, #fff 0%, rgba(255, 255, 255, 0.94) 78%, #fff 100%),
+          radial-gradient(440px 280px at 86% 30%, var(--state-wash), transparent 70%);
+        overflow: hidden;
+      }
+      .agent-thread::before {
+        content: "";
+        position: absolute;
+        inset: -26%;
+        background: linear-gradient(112deg, transparent 34%, rgba(224, 111, 56, 0.07) 42%, transparent 51%);
+        animation: hero-scan 7s var(--ease) infinite alternate;
+        pointer-events: none;
+      }
+      .agent-thread > * {
+        position: relative;
+        z-index: 1;
+      }
+      .project-context {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        margin-bottom: 14px;
+        color: #697483;
+        font-family: var(--mono);
+        font-size: 11px;
+      }
+      .project-context::before {
+        content: "";
+        width: 7px;
+        height: 7px;
+        border-radius: 50%;
+        background: var(--green);
+      }
+      .thread-row {
+        display: grid;
+        grid-template-columns: 72px minmax(0, 760px);
+        gap: 12px;
+        align-items: start;
+        margin: 0 auto 12px;
+        max-width: 920px;
+      }
+      .chat-motion {
+        opacity: 0;
+        pointer-events: none;
+        transform: translateY(10px) scale(0.992);
+        transition: opacity 360ms var(--ease), transform 360ms var(--ease);
+      }
+      .chat-motion.is-visible {
+        opacity: 1;
+        pointer-events: auto;
+        transform: none;
+      }
+      .thread-label {
+        display: flex;
+        align-items: center;
+        gap: 7px;
+        color: #5e6773;
+        font-size: 10px;
+        font-weight: 850;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+      }
+      .thread-label .avatar {
+        display: grid;
+        place-items: center;
+        width: 19px;
+        height: 19px;
+        border: 1px solid #d9e1e8;
+        border-radius: 50%;
+        color: var(--state-a);
+        background: #fff;
+      }
+      .thread-label .agent-avatar {
+        color: var(--brand);
+        animation: agent-thinking 1.4s ease-in-out infinite;
+      }
+      @keyframes agent-thinking {
+        0%, 100% { box-shadow: 0 0 0 0 rgba(224, 111, 56, 0.18); }
+        50% { box-shadow: 0 0 0 7px rgba(224, 111, 56, 0.08); }
+      }
+      .user-prompt {
+        padding: 11px 14px;
+        border: 1px solid rgba(224, 111, 56, 0.2);
+        border-left: 3px solid var(--brand);
+        border-radius: 10px;
+        background: rgba(224, 111, 56, 0.12);
+        color: #29323d;
+        font-size: 12.6px;
+        line-height: 1.46;
+      }
+      .user-prompt.is-sent {
+        animation: prompt-submit 520ms var(--ease);
+      }
+      .typing-cursor {
+        display: inline-block;
+        width: 2px;
+        height: 1.08em;
+        margin-left: 3px;
+        vertical-align: -2px;
+        background: var(--ink);
+        animation: cursor-blink 760ms steps(1, end) infinite;
+      }
+      @keyframes cursor-blink {
+        0%, 46% { opacity: 1; }
+        47%, 100% { opacity: 0; }
+      }
+      @keyframes prompt-submit {
+        0% { transform: translateY(8px) scale(0.985); opacity: 0.58; }
+        62% { transform: translateY(-2px) scale(1.01); opacity: 1; }
+        100% { transform: none; opacity: 1; }
+      }
+      .action-panel {
+        position: relative;
+        overflow: hidden;
+      }
+      .action-panel.panel {
+        padding: 0;
+      }
+      .action-panel::before {
+        content: "";
+        position: absolute;
+        inset: 0;
+        background: linear-gradient(112deg, transparent 36%, rgba(224, 111, 56, 0.08) 48%, transparent 60%);
+        transform: translateX(-45%);
+        animation: action-loading 3.6s var(--ease) infinite;
+        pointer-events: none;
+      }
+      .action-panel > * {
+        position: relative;
+        z-index: 1;
+      }
+      @keyframes action-loading {
+        0% { transform: translateX(-52%); opacity: 0; }
+        18%, 82% { opacity: 1; }
+        100% { transform: translateX(52%); opacity: 0; }
+      }
+      .action-head {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 12px;
+        padding: 9px 12px;
+        border-bottom: 1px solid #e2e8ee;
+        color: #2f3946;
+        font-size: 11px;
+        font-weight: 850;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+      }
+      .action-head span:last-child {
+        color: #9aa4b1;
+        font-family: var(--mono);
+        font-size: 10px;
+        letter-spacing: 0;
+        text-transform: none;
+      }
+      .run-status {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        min-width: 108px;
+        justify-content: flex-end;
+      }
+      .run-status::before {
+        content: "";
+        width: 7px;
+        height: 7px;
+        border-radius: 2px;
+        background: var(--brand);
+        transform: rotate(-14deg);
+        animation: node-pulse 1.1s ease-in-out infinite;
+      }
+      .action-body {
+        padding: 11px;
+        background: #fbfbfb;
+      }
+      .tool-step {
+        display: grid;
+        grid-template-columns: 26px 1fr;
+        gap: 9px;
+        align-items: start;
+        margin-bottom: 7px;
+        color: #34404d;
+        font-family: var(--mono);
+        font-size: 11.2px;
+        opacity: 0;
+        transform: translateY(8px);
+        transition: opacity 320ms var(--ease), transform 320ms var(--ease), color 320ms var(--ease);
+      }
+      .tool-step:last-child { margin-bottom: 0; }
+      .tool-step.is-visible {
+        opacity: 0.78;
+        transform: none;
+      }
+      .tool-step.is-active {
+        opacity: 1;
+        color: #1f2937;
+        transform: translateX(4px);
+      }
+      .tool-step.is-done {
+        opacity: 1;
+        color: #1e6a43;
+      }
+      @keyframes tool-step-run {
+        0%, 16%, 100% { opacity: 0.56; transform: translateX(0); }
+        28%, 62% { opacity: 1; transform: translateX(4px); }
+      }
+      .tool-step .ok {
+        color: var(--green);
+        font-weight: 850;
+      }
+      .tool-lines {
+        display: grid;
+        gap: 4px;
+        margin-top: 4px;
+        color: #8c96a3;
+        font-family: var(--mono);
+        font-size: 10px;
+        line-height: 1.35;
+      }
+      .files-panel {
+        margin-top: 8px;
+        overflow: hidden;
+        border: 1px solid #e2e8ee;
+        border-radius: 8px;
+        background: #fff;
+        opacity: 0;
+        transform: translateY(8px);
+        transition: opacity 360ms var(--ease), transform 360ms var(--ease), border-color 360ms var(--ease);
+      }
+      .files-panel.is-visible {
+        opacity: 1;
+        transform: none;
+      }
+      .files-panel.is-done {
+        border-color: rgba(41, 138, 80, 0.24);
+      }
+      .files-head {
+        display: flex;
+        justify-content: space-between;
+        gap: 12px;
+        padding: 7px 10px;
+        border-bottom: 1px solid #e7ecef;
+        color: var(--brand);
+        font-size: 10.5px;
+        font-weight: 850;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+      }
+      .files-head span:last-child {
+        letter-spacing: 0;
+        text-transform: none;
+      }
+      .files-head span:first-child::before {
+        content: "";
+        display: inline-block;
+        width: 8px;
+        height: 8px;
+        margin-right: 7px;
+        border: 1px solid var(--brand);
+        border-top-color: transparent;
+        border-radius: 50%;
+        animation: spin 900ms linear infinite;
+      }
+      .files-panel.is-done .files-head span:first-child::before {
+        border: 0;
+        background: var(--green);
+        animation: none;
+        box-shadow: 0 0 0 4px rgba(41, 138, 80, 0.1);
+      }
+      @keyframes spin {
+        to { transform: rotate(360deg); }
+      }
+      .files-path {
+        padding: 6px 10px 3px;
+        color: #7b8592;
+        font-family: var(--mono);
+        font-size: 10.5px;
+      }
+      .file-list {
+        display: grid;
+        padding: 0 10px 7px;
+      }
+      .file-list div {
+        display: grid;
+        grid-template-columns: 1fr auto;
+        gap: 16px;
+        align-items: center;
+        min-height: 20px;
+        color: #35404d;
+        font-family: var(--mono);
+        font-size: 10.5px;
+        opacity: 0;
+        transform: translateY(7px);
+        transition: opacity 280ms var(--ease), transform 280ms var(--ease), color 280ms var(--ease);
+      }
+      .file-list div.is-visible {
+        opacity: 1;
+        transform: none;
+      }
+      .file-list div.is-done {
+        color: #1e6a43;
+      }
+      @keyframes file-produce {
+        0%, 18%, 100% { opacity: 0.58; transform: translateX(0); }
+        34%, 72% { opacity: 1; transform: translateX(4px); color: #1e6a43; }
+      }
+      .file-list span:last-child {
+        color: #8b95a4;
+      }
+      .show-more {
+        padding: 6px 10px;
+        border-top: 1px solid #edf1f4;
+        color: var(--brand);
+        font-size: 10.5px;
+        font-weight: 760;
+        text-align: center;
+      }
+      .success-line {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        max-width: 760px;
+        margin: 6px auto 7px;
+        color: #222b36;
+        font-size: 12.8px;
+        font-weight: 780;
+      }
+      .success-line::before {
+        content: "";
+        display: inline-block;
+        width: 14px;
+        height: 14px;
+        border-radius: 3px;
+        background: var(--green);
+        transform: rotate(-14deg);
+        box-shadow: 0 0 0 5px rgba(41, 138, 80, 0.1);
+      }
+      .location-line {
+        max-width: 760px;
+        margin: 0 auto 7px;
+        color: #465160;
+        font-size: 12.5px;
+      }
+      .location-line code {
+        color: var(--brand-dark);
+        font-family: var(--mono);
+        font-size: 11px;
+      }
+      .agent-result-table {
+        max-width: 760px;
+        margin: 0 auto;
+        overflow: hidden;
+        border: 1px solid #e0e5ea;
+        border-radius: 8px;
+        background: #fff;
+      }
+      .agent-result-table .row {
+        display: grid;
+        grid-template-columns: minmax(160px, 1fr) 90px minmax(180px, 1.4fr);
+        min-height: 27px;
+        border-top: 1px solid #edf1f4;
+        color: #36414e;
+        font-size: 10.8px;
+      }
+      .agent-result-table .row:first-child {
+        border-top: 0;
+        background: #f3f5f7;
+        color: #252d36;
+        font-size: 10.5px;
+        font-weight: 850;
+        letter-spacing: 0.05em;
+        text-transform: uppercase;
+      }
+      .agent-result-table span {
+        padding: 6px 9px;
+      }
+      .composer {
+        position: absolute;
+        left: 26px;
+        right: 26px;
+        bottom: 12px;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        max-width: 920px;
+        min-height: 34px;
+        margin: 0 auto;
+        padding: 0 12px;
+        border: 1px solid #d9e1e8;
+        border-radius: 12px;
+        background: rgba(255, 255, 255, 0.94);
+        color: #a0a9b4;
+        font-size: 12px;
+      }
+      .composer.is-typing {
+        color: #34404d;
+        border-color: rgba(224, 111, 56, 0.28);
+        box-shadow: 0 0 0 4px rgba(224, 111, 56, 0.07);
+      }
+      .composer.is-sent {
+        color: var(--green);
+        border-color: rgba(41, 138, 80, 0.22);
+      }
+      .composer::before {
+        content: "@";
+        color: #65717f;
+      }
+      .composer::after {
+        content: "";
+        width: 10px;
+        height: 10px;
+        margin-left: auto;
+        border: solid #c0c9d2;
+        border-width: 1px 1px 0 0;
+        transform: rotate(45deg);
+      }
+      .composer.is-typing::after {
+        width: 2px;
+        height: 1.1em;
+        border: 0;
+        background: var(--ink);
+        transform: none;
+        animation: cursor-blink 760ms steps(1, end) infinite;
+      }
+
+      .pipeline {
+        display: grid;
+        grid-template-columns: repeat(5, 1fr);
+        gap: 12px;
+      }
+      .pipe-node {
+        position: relative;
+        min-height: 150px;
+        padding: 19px 17px;
+        border: 1px solid var(--line);
+        border-radius: 10px;
+        background: #fff;
+      }
+      .pipe-node.key {
+        border-color: var(--state-a);
+        background: var(--state-wash);
+      }
+      .pipe-node::after {
+        content: "";
+        position: absolute;
+        top: 50%;
+        right: -13px;
+        width: 13px;
+        height: 1px;
+        background: var(--line);
+      }
+      .pipe-node:last-child::after { display: none; }
+      .node-num {
+        color: var(--quiet);
+        font-family: var(--mono);
+        font-size: 10px;
+        font-weight: 780;
+      }
+      .pipe-node h3 {
+        margin: 9px 0 8px;
+        font-size: 15px;
+      }
+      .pipe-node p {
+        margin: 0;
+        color: var(--muted);
+        font-size: 12.8px;
+        line-height: 1.5;
+      }
+      .properties {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 18px;
+        margin-top: 28px;
+      }
+      .property {
+        padding: 24px;
+        border: 1px solid var(--line);
+        border-top: 3px solid var(--tone);
+        border-radius: 10px;
+        background: #fff;
+      }
+      .property h3 { color: var(--tone); }
+      .property p {
+        margin-bottom: 0;
+        color: #4d5866;
+        font-size: 14px;
+        line-height: 1.58;
+      }
+
+      .surface {
+        display: grid;
+        grid-template-columns: 320px 1fr;
+        gap: 20px;
+        align-items: stretch;
+      }
+      .surface-tabs {
+        display: grid;
+        gap: 9px;
+        align-content: start;
+      }
+      .surface-tab {
+        display: grid;
+        grid-template-columns: 42px 1fr;
+        gap: 13px;
+        align-items: center;
+        width: 100%;
+        min-height: 76px;
+        padding: 12px;
+        border: 1px solid var(--line);
+        border-radius: 10px;
+        background: #fff;
+        color: var(--ink);
+        text-align: left;
+        cursor: pointer;
+        transition: transform 220ms var(--ease), border-color 220ms var(--ease), background 220ms var(--ease);
+      }
+      .surface-tab:hover { transform: translateX(2px); }
+      .surface-tab[aria-selected="true"] {
+        border-color: var(--tone);
+        background: color-mix(in srgb, var(--tone) 7%, #fff);
+      }
+      .emblem {
+        display: grid;
+        place-items: center;
+        width: 42px;
+        height: 42px;
+        border: 1px solid color-mix(in srgb, var(--tone) 28%, #fff);
+        border-radius: 9px;
+        background: color-mix(in srgb, var(--tone) 10%, #fff);
+        color: var(--tone);
+      }
+      .emblem svg {
+        width: 22px;
+        height: 23px;
+      }
+      .surface-tab b {
+        display: block;
+        margin-bottom: 4px;
+        font-size: 13.5px;
+      }
+      .surface-tab span {
+        color: var(--muted);
+        font-size: 12px;
+        line-height: 1.35;
+      }
+      .surface-panel {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr) 330px;
+        gap: 26px;
+        min-height: 394px;
+        padding: 28px;
+      }
+      .surface-panel h3 {
+        margin-top: 16px;
+        font-size: 26px;
+      }
+      .surface-panel p {
+        max-width: 58ch;
+        color: #4d5866;
+        line-height: 1.6;
+      }
+      .surface-panel ul {
+        display: grid;
+        gap: 11px;
+        margin: 22px 0 0;
+        padding: 0;
+        list-style: none;
+      }
+      .surface-panel li {
+        position: relative;
+        padding-left: 22px;
+        color: #3f4a57;
+        font-size: 14px;
+        line-height: 1.5;
+      }
+      .surface-panel li::before {
+        content: "";
+        position: absolute;
+        left: 0;
+        top: 7px;
+        width: 8px;
+        height: 8px;
+        border-radius: 2px;
+        background: var(--tone);
+        transform: rotate(-14deg);
+      }
+      .safe-clip {
+        position: relative;
+        min-height: 320px;
+        border: 1px solid color-mix(in srgb, var(--tone) 22%, #fff);
+        border-radius: 12px;
+        background:
+          linear-gradient(135deg, color-mix(in srgb, var(--tone) 10%, #fff), #fff 58%),
+          #fff;
+        overflow: hidden;
+      }
+      .safe-clip::before {
+        content: "";
+        position: absolute;
+        inset: -20%;
+        background: linear-gradient(112deg, transparent 42%, color-mix(in srgb, var(--tone) 18%, transparent) 50%, transparent 58%);
+        animation: clip-sweep 4s var(--ease) infinite;
+      }
+      @keyframes clip-sweep {
+        from { transform: translateX(-12%); }
+        to { transform: translateX(12%); }
+      }
+      .clip-content {
+        position: relative;
+        z-index: 1;
+        padding: 18px;
+      }
+      .mock-window {
+        border: 1px solid rgba(223, 229, 234, 0.9);
+        border-radius: 9px;
+        background: rgba(255, 255, 255, 0.84);
+        overflow: hidden;
+      }
+      .mock-head {
+        display: flex;
+        gap: 6px;
+        padding: 10px 12px;
+        border-bottom: 1px solid #edf1f4;
+      }
+      .mock-head i {
+        width: 8px;
+        height: 8px;
+        border-radius: 50%;
+        background: color-mix(in srgb, var(--tone) 44%, #dfe5eb);
+      }
+      .mock-body {
+        display: grid;
+        gap: 9px;
+        padding: 16px 14px 20px;
+      }
+      .mock-line {
+        display: block;
+        height: 9px;
+        border-radius: 2px;
+        background: #dfe5eb;
+      }
+      .mock-line.tone { background: color-mix(in srgb, var(--tone) 30%, #dfe5eb); }
+      .agent-path {
+        position: absolute;
+        left: 42px;
+        right: 42px;
+        bottom: 38px;
+        height: 50px;
+      }
+      .agent-path svg { width: 100%; height: 100%; }
+      .agent-path path {
+        fill: none;
+        stroke: var(--tone);
+        stroke-width: 2;
+        stroke-dasharray: 6 6;
+        animation: dash 1s linear infinite;
+      }
+
+      #artifacts,
+      #outcomes {
+        padding-top: 48px;
+        padding-bottom: 48px;
+      }
+      /* Z leg: headline holds the left, the ledger swings right. Shifting
+         both to the right just left a dead half-page. */
+      #outcomes .section-head {
+        max-width: 640px;
+        margin-left: 0;
+        margin-right: auto;
+        text-align: left;
+      }
+
+      #artifacts .section-head {
+        margin-bottom: 20px;
+      }
+      .artifact-stage {
+        display: grid;
+        grid-template-columns: minmax(320px, 0.66fr) minmax(520px, 1.34fr);
+        gap: 14px;
+        align-items: stretch;
+      }
+      .artifact-grid {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 8px;
+        align-content: start;
+      }
+      .artifact-view {
+        min-height: 100%;
+        margin-top: 0;
+        overflow: hidden;
+      }
+      .artifact-view-head {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        padding: 10px 13px;
+        border-bottom: 1px solid var(--line);
+        color: #4d5866;
+        font-family: var(--mono);
+        font-size: 11.4px;
+      }
+      .artifact-view-head span:first-child {
+        width: 8px;
+        height: 8px;
+        border-radius: 50%;
+        background: var(--green);
+        box-shadow: 0 0 0 5px rgba(41, 138, 80, 0.1);
+      }
+      .artifact-view-body {
+        display: grid;
+        grid-template-columns: minmax(210px, 0.66fr) minmax(280px, 1.34fr);
+        gap: 14px;
+        padding: 14px;
+      }
+      .artifact-view-body p {
+        color: #3f4a57;
+        font-size: 13.5px;
+        line-height: 1.5;
+        margin: 0;
+      }
+      .code-shape {
+        display: grid;
+        gap: 6px;
+      }
+      .code-row {
+        display: grid;
+        grid-template-columns: 24px 1fr;
+        gap: 8px;
+        align-items: center;
+      }
+      .code-row span:first-child {
+        color: #bcc5cf;
+        font-family: var(--mono);
+        font-size: 11px;
+        text-align: right;
+      }
+      .code-bar {
+        display: block;
+        height: 7px;
+        border-radius: 2px;
+        background: #dfe5eb;
+      }
+      .code-bar.kw { background: color-mix(in srgb, var(--violet) 38%, #dfe5eb); }
+      .code-bar.id { background: color-mix(in srgb, var(--blue) 32%, #dfe5eb); }
+      .code-bar.num { background: color-mix(in srgb, var(--teal) 32%, #dfe5eb); }
+
+
+      /* ═══════════════════════════════════════════════════════════════════
+         DARK BAND — the horizon.
+         Full-bleed (sections are unconstrained; .shell does the centring),
+         so no negative-margin trick is needed. The surface is a warm
+         near-black pulled from the brand hue, not an arbitrary brown, and
+         the state tokens are lifted to hold contrast on it. No new hues.
+         ═══════════════════════════════════════════════════════════════════ */
+      .band-dark {
+        --ink: #f4f1ee;
+        --muted: #a49c94;
+        --quiet: #857d76;
+        --line: rgba(255, 255, 255, 0.11);
+        --state-wash: rgba(224, 111, 56, 0.16);
+        --green: #4ec27a;
+        --blue: #7b95ff;
+        --teal: #35bfae;
+        --violet: #a08cff;
+        position: relative;
+        margin-top: 34px;
+        padding-top: 92px;
+        padding-bottom: 96px;
+        background:
+          radial-gradient(980px 420px at 20% 0%, rgba(224, 111, 56, 0.11), transparent 62%),
+          #17130f;
+        color: var(--ink);
+      }
+      .band-dark h2 { color: #fbf9f7; }
+      .band-dark .lede { color: #a49c94; }
+
+      /* Hairline horizons top and bottom so the band reads as a deliberate
+         plate rather than a section that lost its background. */
+      .band-dark::before,
+      .band-dark::after {
+        content: "";
+        position: absolute;
+        left: 0;
+        right: 0;
+        height: 1px;
+        background: linear-gradient(90deg, transparent, rgba(224, 111, 56, 0.45), transparent);
+      }
+      .band-dark::before { top: 0; }
+      .band-dark::after { bottom: 0; }
+
+      .band-dark .explorer {
+        border-color: var(--line);
+        background: rgba(255, 255, 255, 0.028);
+      }
+      .band-dark .explorer-head {
+        border-bottom-color: var(--line);
+        background: rgba(255, 255, 255, 0.045);
+        color: #9b938b;
+      }
+      .band-dark .explorer-foot { border-top-color: var(--line); color: #7c746d; }
+      .band-dark .explorer-dir { color: #cdc6bf; }
+      .band-dark .explorer-dir .caret { border-left-color: #7c746d; }
+      .band-dark .explorer-file { color: #a49c94; }
+      .band-dark .explorer-file .tick { background: #4a443e; }
+      .band-dark .explorer-file .size { color: #6e6760; }
+      .band-dark .explorer-file:hover { background: rgba(224, 111, 56, 0.09); color: #f4f1ee; }
+      .band-dark .explorer-file[aria-selected="true"] { color: #fbf9f7; }
+
+      .band-dark .artifact-view.glass {
+        border-color: var(--line);
+        background: rgba(255, 255, 255, 0.028);
+        box-shadow: 0 24px 60px rgba(0, 0, 0, 0.34);
+      }
+      .band-dark .artifact-view-head { border-bottom-color: var(--line); color: #b0a89f; }
+      .band-dark .artifact-view-head span:first-child { box-shadow: 0 0 0 5px rgba(78, 194, 122, 0.14); }
+      .band-dark #artifactPath { color: #f4f1ee; }
+      .band-dark #artifactSize { color: #7c746d !important; }
+      .band-dark .artifact-view-body p { color: #a49c94; }
+      .band-dark .code-row span:first-child { color: #59524c; }
+      .band-dark .code-bar { background: #2b2521; }
+      .band-dark .code-bar.kw { background: color-mix(in srgb, var(--violet) 46%, #2b2521); }
+      .band-dark .code-bar.id { background: color-mix(in srgb, var(--blue) 42%, #2b2521); }
+      .band-dark .code-bar.num { background: color-mix(in srgb, var(--teal) 42%, #2b2521); }
+
+      .outcomes {
+        position: relative;
+        isolation: isolate;
+        display: grid;
+        grid-template-columns: 1fr;
+        gap: 5px;
+        width: min(800px, 100%);
+        margin: 0 auto;
+        padding: 12px 16px;
+        overflow: hidden;
+        border: 1px solid #dfe5ea;
+        border-radius: 12px;
+        background: rgba(255, 255, 255, 0.9);
+        box-shadow: 0 14px 42px rgba(21, 30, 42, 0.06);
+      }
+      .outcomes::before {
+        content: "";
+        position: absolute;
+        left: 38px;
+        top: 28px;
+        bottom: 28px;
+        width: 1px;
+        background: #dfe5ea;
+        opacity: 0.82;
+        transform: scaleY(0);
+        transform-origin: top;
+        transition: transform 1300ms var(--ease);
+      }
+      .outcomes.in-view::before {
+        transform: scaleY(1);
+      }
+      .outcome {
+        position: relative;
+        z-index: 1;
+        display: grid;
+        grid-template-columns: 96px minmax(174px, 0.34fr) minmax(0, 1fr);
+        align-items: center;
+        gap: 12px;
+        min-height: 0;
+        padding: 8px 12px 8px 10px;
+        border: 1px solid rgba(223, 229, 234, 0);
+        border-radius: 10px;
+        background: rgba(255, 255, 255, 0);
+        opacity: 0;
+        transform: translateY(8px);
+        transition:
+          opacity 540ms var(--ease),
+          transform 540ms var(--ease),
+          border-color 360ms var(--ease),
+          background 360ms var(--ease);
+      }
+      .outcomes.in-view .outcome {
+        opacity: 1;
+        transform: none;
+        border-color: rgba(223, 229, 234, 0.7);
+        background: rgba(255, 255, 255, 0.56);
+      }
+      .outcomes.in-view .outcome:nth-child(1) { transition-delay: 0ms; }
+      .outcomes.in-view .outcome:nth-child(2) { transition-delay: 110ms; }
+      .outcomes.in-view .outcome:nth-child(3) { transition-delay: 220ms; }
+      .outcomes.in-view .outcome:nth-child(4) { transition-delay: 330ms; }
+      .outcomes.in-view .outcome:nth-child(5) { transition-delay: 440ms; }
+      .outcome:hover {
+        background: rgba(255, 255, 255, 0.78);
+      }
+      .outcome:last-child {
+        border-bottom-width: 1px;
+      }
+      .outcome .state-chip {
+        justify-self: start;
+        margin-left: 12px;
+        color: #52606f;
+        border-color: #dfe5ea;
+        background: rgba(255, 255, 255, 0.72);
+        font-family: inherit;
+        font-size: 11px;
+        font-weight: 720;
+      }
+      .outcome .state-chip::before {
+        background: #aeb8c3;
+      }
+      .outcome h3 {
+        margin: 0;
+        font-size: 13.6px;
+        line-height: 1.25;
+      }
+      .outcome p {
+        margin: 0;
+        color: var(--muted);
+        font-size: 12.6px;
+        line-height: 1.32;
+      }
+
+      .chip-row {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px;
+      }
+      .chip-row span {
+        display: inline-flex;
+        align-items: center;
+        min-height: 40px;
+        padding: 10px 16px;
+        border: 1px solid var(--line);
+        border-radius: 999px;
+        background: #fff;
+        color: #3f4a57;
+        font-size: 14px;
+        font-weight: 660;
+      }
+      .audience-grid {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 14px;
+      }
+      .audience-card {
+        position: relative;
+        min-height: 210px;
+        padding: 22px;
+        border: 1px solid var(--line);
+        border-radius: 12px;
+        background: rgba(255, 255, 255, 0.88);
+        overflow: hidden;
+      }
+      .audience-card::before {
+        content: "";
+        position: absolute;
+        inset: -20%;
+        background: linear-gradient(112deg, transparent 42%, color-mix(in srgb, var(--tone) 16%, transparent) 50%, transparent 58%);
+        transform: translateX(-28%);
+        transition: transform 700ms var(--ease);
+      }
+      .audience-card:hover::before {
+        transform: translateX(22%);
+      }
+      .audience-card > * {
+        position: relative;
+        z-index: 1;
+      }
+      .audience-mark {
+        display: grid;
+        place-items: center;
+        width: 42px;
+        height: 42px;
+        margin-bottom: 18px;
+        border: 1px solid color-mix(in srgb, var(--tone) 28%, #fff);
+        border-radius: 9px;
+        color: var(--tone);
+        background: color-mix(in srgb, var(--tone) 9%, #fff);
+      }
+      .audience-mark svg {
+        width: 22px;
+        height: 23px;
+      }
+      .audience-card h3 {
+        margin-bottom: 10px;
+        font-size: 17px;
+      }
+      .audience-card p {
+        margin-bottom: 14px;
+        color: var(--muted);
+        font-size: 13.5px;
+        line-height: 1.52;
+      }
+      .audience-tags {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 7px;
+      }
+      .audience-tags span {
+        padding: 5px 8px;
+        border-radius: 999px;
+        background: color-mix(in srgb, var(--tone) 9%, #fff);
+        color: #465160;
+        font-size: 11.5px;
+        font-weight: 720;
+      }
+      .why-grid {
+        display: grid;
+        grid-template-columns: minmax(0, 0.82fr) minmax(480px, 1.18fr);
+        gap: 34px;
+        align-items: center;
+      }
+      .tool-stack {
+        display: grid;
+        gap: 10px;
+        margin-top: 24px;
+      }
+      .tool-row {
+        display: grid;
+        grid-template-columns: 116px 1fr;
+        gap: 14px;
+        padding: 11px 0;
+        border-top: 1px solid #edf1f4;
+      }
+      .tool-row b {
+        color: var(--state-a);
+        font-family: var(--mono);
+        font-size: 12px;
+      }
+      .tool-row span {
+        color: #4d5866;
+        font-size: 13.5px;
+        line-height: 1.48;
+      }
+      .architecture {
+        padding: 24px;
+      }
+      .context-motion {
+        position: relative;
+        min-height: 560px;
+        padding: 26px;
+        overflow: hidden;
+      }
+      .context-motion::before {
+        content: "";
+        position: absolute;
+        inset: -22%;
+        background:
+          radial-gradient(420px 280px at 52% 44%, var(--state-wash), transparent 72%),
+          linear-gradient(112deg, transparent 32%, rgba(224, 111, 56, 0.09) 39%, transparent 48%),
+          linear-gradient(112deg, transparent 61%, rgba(73, 108, 255, 0.1) 68%, transparent 77%);
+        animation: hero-scan 8s var(--ease) infinite alternate;
+      }
+      .context-grid {
+        position: relative;
+        z-index: 1;
+        height: 508px;
+      }
+      .context-core {
+        position: absolute;
+        left: 50%;
+        top: 50%;
+        display: grid;
+        place-items: center;
+        width: 148px;
+        height: 148px;
+        border: 1px solid var(--state-soft);
+        border-radius: 50%;
+        background: rgba(255, 255, 255, 0.9);
+        box-shadow: 0 20px 54px rgba(23, 31, 42, 0.11);
+        transform: translate(-50%, -50%);
+      }
+      .context-core::before,
+      .context-core::after {
+        content: "";
+        position: absolute;
+        inset: -18px;
+        border: 1px dashed var(--state-a);
+        border-radius: 50%;
+        opacity: 0.35;
+        animation: rotate-ring 26s linear infinite;
+      }
+      .context-core::after {
+        inset: -34px;
+        border-color: var(--state-c);
+        animation-duration: 36s;
+        animation-direction: reverse;
+      }
+      .context-core svg {
+        width: 54px;
+        height: 56px;
+        color: var(--state-a);
+        animation: glyph-breathe 4s var(--ease) infinite;
+      }
+      .context-node {
+        position: absolute;
+        width: 182px;
+        padding: 14px;
+        border: 1px solid var(--line);
+        border-radius: 10px;
+        background: rgba(255, 255, 255, 0.9);
+        box-shadow: 0 12px 32px rgba(23, 31, 42, 0.07);
+      }
+      .context-node b {
+        display: block;
+        margin-bottom: 5px;
+        font-size: 13.5px;
+      }
+      .context-node span {
+        color: var(--muted);
+        font-size: 12px;
+        line-height: 1.38;
+      }
+      .context-node.spec { left: 16px; top: 36px; }
+      .context-node.gen { right: 18px; top: 42px; }
+      .context-node.verify { left: 36px; bottom: 54px; }
+      .context-node.integrate { right: 32px; bottom: 58px; }
+      .context-beams {
+        position: absolute;
+        inset: 0;
+        z-index: 0;
+      }
+      .context-beams path {
+        fill: none;
+        stroke: var(--state-a);
+        stroke-width: 1.8;
+        stroke-dasharray: 7 7;
+        opacity: 0.42;
+        animation: dash 1.1s linear infinite;
+      }
+      .context-beams path:nth-child(even) {
+        stroke: var(--state-c);
+      }
+      .context-packet {
+        position: absolute;
+        z-index: 2;
+        width: 12px;
+        height: 12px;
+        border-radius: 3px;
+        background: var(--state-a);
+        transform: rotate(-14deg);
+        animation: packet-a 4.8s var(--ease) infinite;
+      }
+      .context-packet.two {
+        background: var(--state-c);
+        animation-name: packet-b;
+        animation-delay: 1.2s;
+      }
+      .context-packet.three {
+        background: var(--green);
+        animation-name: packet-c;
+        animation-delay: 2.2s;
+      }
+      @keyframes packet-a {
+        0%, 100% { left: 18%; top: 18%; opacity: 0; }
+        12%, 86% { opacity: 1; }
+        50% { left: 49%; top: 49%; }
+        78% { left: 76%; top: 19%; }
+      }
+      @keyframes packet-b {
+        0%, 100% { left: 80%; top: 80%; opacity: 0; }
+        12%, 86% { opacity: 1; }
+        50% { left: 49%; top: 49%; }
+        78% { left: 18%; top: 78%; }
+      }
+      @keyframes packet-c {
+        0%, 100% { left: 18%; top: 78%; opacity: 0; }
+        12%, 86% { opacity: 1; }
+        50% { left: 49%; top: 49%; }
+        78% { left: 79%; top: 78%; }
+      }
+
+      /* ═══════════════════════════════════════════════════════════════════
+         HORIZONS — soft bands mark chapter boundaries. Sections are
+         unconstrained (.shell centres), so a background here is full-bleed.
+         Warm neutral, not cool grey: the paper is #fbfbf8 and a cool tint
+         reads as a colour cast rather than a band.
+         ═══════════════════════════════════════════════════════════════════ */
+      .band-soft {
+        position: relative;
+        background: #f4f3ef;
+      }
+      .band-soft::before,
+      .band-soft::after {
+        content: "";
+        position: absolute;
+        left: 0;
+        right: 0;
+        height: 1px;
+        background: #e7e4dc;
+      }
+      .band-soft::before { top: 0; }
+      .band-soft::after { bottom: 0; }
+      /* The diff card sits on the band, so lift it off the tint. */
+      .band-soft .difftable { box-shadow: 0 24px 60px rgba(21, 30, 42, 0.09); }
+
+      /* ═══════════════════════════════════════════════════════════════════
+         CLOSED LOOPS — horizontal stat bar.
+         Was a ~640px vertical timeline for five numbers. Metrics are for
+         scanning, not for walking down. The thread stays on the story
+         section, where sequence actually means something.
+         ═══════════════════════════════════════════════════════════════════ */
+      #outcomes .statbar {
+        display: grid;
+        grid-template-columns: repeat(5, 1fr);
+        width: 100%;
+        margin: 0;
+        padding: 0;
+        overflow: visible;
+        border: 1px solid var(--line);
+        border-radius: 14px;
+        background: rgba(255, 255, 255, 0.92);
+        box-shadow: 0 16px 46px rgba(21, 30, 42, 0.06);
+      }
+      #outcomes .statbar::before,
+      #outcomes .statbar::after { display: none; }
+
+      #outcomes .stat {
+        position: relative;
+        display: block;
+        padding: 26px 22px 24px;
+        border: 0;
+        background: none;
+        opacity: 0;
+        transform: translateY(10px);
+        transition: opacity 520ms var(--ease), transform 520ms var(--ease);
+      }
+      #outcomes .stat + .stat { border-left: 1px solid #eceef1; }
+      #outcomes .statbar.in-view .stat { opacity: 1; transform: none; }
+      #outcomes .statbar.in-view .stat:nth-child(1) { transition-delay: 0ms; }
+      #outcomes .statbar.in-view .stat:nth-child(2) { transition-delay: 80ms; }
+      #outcomes .statbar.in-view .stat:nth-child(3) { transition-delay: 160ms; }
+      #outcomes .statbar.in-view .stat:nth-child(4) { transition-delay: 240ms; }
+      #outcomes .statbar.in-view .stat:nth-child(5) { transition-delay: 320ms; }
+
+      /* A short tone rule above each number: the only place per-stat colour
+         appears, and it maps to the same state tokens used elsewhere. */
+      #outcomes .stat::before {
+        content: "";
+        display: block;
+        width: 26px;
+        height: 2px;
+        margin-bottom: 14px;
+        border-radius: 2px;
+        background: var(--tone, var(--brand));
+      }
+      #outcomes .stat .metric { display: block; }
+      #outcomes .stat .metric b {
+        display: block;
+        color: var(--ink);
+        font-size: 34px;
+        font-weight: 800;
+        letter-spacing: -0.02em;
+        line-height: 1.05;
+      }
+      #outcomes .stat .metric i {
+        display: block;
+        margin-top: 5px;
+        color: var(--quiet);
+        font-family: var(--mono);
+        font-size: 10.5px;
+        font-style: normal;
+        line-height: 1.4;
+      }
+      #outcomes .stat h3 {
+        margin: 15px 0 5px;
+        color: var(--ink);
+        font-size: 14.5px;
+        font-weight: 700;
+        line-height: 1.3;
+      }
+      #outcomes .stat p {
+        margin: 0;
+        color: var(--muted);
+        font-size: 12.5px;
+        line-height: 1.48;
+      }
+
+      @media (max-width: 1080px) {
+        #outcomes .statbar { grid-template-columns: repeat(2, 1fr); }
+        #outcomes .stat + .stat { border-left: 0; }
+        #outcomes .stat:nth-child(2n) { border-left: 1px solid #eceef1; }
+        #outcomes .stat:nth-child(n + 3) { border-top: 1px solid #eceef1; }
+      }
+      @media (max-width: 620px) {
+        #outcomes .statbar { grid-template-columns: 1fr; }
+        #outcomes .stat:nth-child(2n) { border-left: 0; }
+        #outcomes .stat + .stat { border-top: 1px solid #eceef1; }
+      }
+      @media (prefers-reduced-motion: reduce) {
+        #outcomes .stat { opacity: 1 !important; transform: none !important; }
+      }
+
+
+      .cta {
+        padding: 116px 0 124px;
+        text-align: center;
+      }
+      .cta .big-mark {
+        width: 82px;
+        height: 84px;
+        margin: 0 auto 26px;
+        color: var(--brand);
+        animation: glyph-breathe 4s var(--ease) infinite;
+      }
+      .cta h2 {
+        max-width: 20ch;
+        margin-left: auto;
+        margin-right: auto;
+      }
+      .cta .lede {
+        margin-left: auto;
+        margin-right: auto;
+      }
+      .cta .hero-actions {
+        justify-content: center;
+      }
+      .footer {
+        padding: 32px 0;
+        border-top: 1px solid var(--line);
+      }
+      .footer-inner {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 20px;
+        flex-wrap: wrap;
+      }
+      .footer p {
+        margin: 0;
+        color: var(--muted);
+        font-size: 13px;
+      }
+
+      .reveal {
+        opacity: 0;
+        transform: translateY(18px);
+        transition: opacity 680ms var(--ease), transform 680ms var(--ease);
+      }
+      .reveal.in-view {
+        opacity: 1;
+        transform: none;
+      }
+
+      @media (max-width: 1080px) {
+        .topbar nav { display: none; }
+        .hero-grid,
+        .story-grid,
+        .leverage-grid,
+        .loop-grid,
+        .agent-console,
+        .surface,
+        .surface-panel,
+        .artifact-stage,
+        .artifact-view-body,
+        .why-grid,
+        .loop-top {
+          grid-template-columns: 1fr;
+        }
+        .hero {
+          padding-top: 132px;
+          padding-bottom: 20px;
+          min-height: auto;
+        }
+        .hero-visual {
+          min-height: 500px;
+        }
+        .loop-ring { justify-self: start; }
+        .pipeline,
+        .properties,
+        .outcomes {
+          grid-template-columns: 1fr;
+        }
+        .outcome {
+          border-right: 0;
+          border-bottom: 1px solid rgba(223, 229, 234, 0.7);
+        }
+        .outcome:last-child {
+          border-bottom-width: 1px;
+        }
+        .motion-board {
+          grid-template-columns: 1fr;
+        }
+        .motion-board::before,
+        .console-token {
+          display: none;
+        }
+        .agent-workspace {
+          grid-template-columns: 1fr;
+        }
+        .agent-sidebar {
+          display: none;
+        }
+        .thread-row {
+          grid-template-columns: 1fr;
+        }
+        .audience-grid { grid-template-columns: repeat(2, 1fr); }
+        .story-copy,
+        .story-visual {
+          position: relative;
+          top: auto;
+        }
+        .story-visual {
+          min-height: 0;
+        }
+        .pipe-node::after { display: none; }
+        .proof-shell {
+          grid-template-columns: 1fr;
+        }
+        .proof-left {
+          grid-template-columns: 1fr;
+        }
+        .proof-rule { display: none; }
+        .artifact-grid {
+          grid-template-columns: repeat(2, 1fr);
+        }
+      }
+      @media (max-width: 680px) {
+        .shell { width: min(100% - 28px, 1180px); }
+        section { padding: 72px 0; }
+        .topbar {
+          top: 12px;
+          width: calc(100% - 24px);
+        }
+        .brand-tag { display: none; }
+        h1 { font-size: clamp(34px, 10.8vw, 48px); }
+        .hero-visual {
+          padding: 16px;
+          min-height: 0;
+        }
+        .flow-stage { height: auto; }
+        .flow-card {
+          position: relative;
+          left: auto !important;
+          right: auto !important;
+          top: auto !important;
+          width: 100%;
+          margin-bottom: 10px;
+        }
+        .agent-core {
+          position: relative;
+          left: auto;
+          top: auto;
+          width: 138px;
+          height: 138px;
+          margin: 16px auto 12px;
+          transform: none;
+        }
+        .flow-lines { display: none; }
+        .coverage-pill {
+          position: relative;
+          left: auto;
+          bottom: auto;
+          margin: 10px auto 0;
+          transform: none;
+        }
+        .artifact-grid {
+          grid-template-columns: 1fr;
+        }
+        .removal-head,
+        .removal-row,
+        .motion-board,
+        .motion-summary {
+          grid-template-columns: 1fr;
+        }
+        .removal-cell {
+          min-height: auto;
+          padding: 15px 18px;
+          font-size: 14px;
+        }
+        .motion-node {
+          grid-template-columns: 38px 1fr;
+          gap: 11px;
+          min-height: 0;
+        }
+        .motion-node p {
+          grid-column: 2;
+        }
+        .motion-node .num {
+          margin-left: 16px;
+        }
+        .outcome {
+          grid-template-columns: 82px 1fr;
+          gap: 9px 12px;
+        }
+        .outcome p {
+          grid-column: 2;
+        }
+        .audience-grid {
+          grid-template-columns: 1fr;
+        }
+        .loop-shell,
+        .panel,
+        .surface-panel,
+        .architecture,
+        .context-motion,
+        .story-visual {
+          padding: 18px;
+        }
+        .story-board,
+        .context-grid {
+          min-height: 0;
+          height: auto;
+        }
+        .context-beams,
+        .context-packet {
+          display: none;
+        }
+        .context-core {
+          position: relative;
+          left: auto;
+          top: auto;
+          width: 132px;
+          height: 132px;
+          margin: 12px auto 22px;
+          transform: none;
+        }
+        .context-node {
+          position: relative;
+          left: auto !important;
+          right: auto !important;
+          top: auto !important;
+          bottom: auto !important;
+          width: 100%;
+          margin-top: 10px;
+        }
+        .work-card { min-height: auto; }
+        .agent-console-card {
+          min-height: 0;
+        }
+        .agent-window {
+          max-height: 720px;
+        }
+        .agent-workspace {
+          height: 684px;
+        }
+        .agent-thread {
+          min-height: 0;
+          height: 684px;
+          padding: 18px 14px 68px;
+        }
+        .thread-row {
+          margin-bottom: 16px;
+        }
+        .thread-label {
+          margin-bottom: -6px;
+        }
+        .agent-result-table .row {
+          grid-template-columns: 1fr;
+        }
+        .agent-result-table .row span {
+          padding: 7px 10px;
+        }
+        .composer {
+          left: 14px;
+          right: 14px;
+        }
+        .spec-line {
+          grid-template-columns: 54px 1fr auto;
+          font-size: 11.5px;
+        }
+        .artifact-view-head {
+          align-items: flex-start;
+          flex-direction: column;
+        }
+      }
+      @media (prefers-reduced-motion: reduce) {
+        *,
+        *::before,
+        *::after {
+          animation-duration: 0.001ms !important;
+          animation-iteration-count: 1 !important;
+          transition-duration: 0.001ms !important;
+          scroll-behavior: auto !important;
+        }
+        .reveal,
+        .bar {
+          opacity: 1;
+          transform: none;
+        }
+      }
+
+      /* Capability panel swaps with a soft cross-fade rather than a hard cut,
+         so a scroll-driven change reads as motion, not a flicker. */
+      .surface-panel > * {
+        transition: opacity 240ms var(--ease), transform 240ms var(--ease);
+      }
+      .surface-panel.swapping > * {
+        opacity: 0;
+        transform: translateY(7px);
+      }
+      @media (prefers-reduced-motion: reduce) {
+        .surface-panel > *, .surface-panel.swapping > * { opacity: 1 !important; transform: none !important; transition: none; }
+      }
+
+
+      /* ═══════════════════════════════════════════════════════════════════
+         DIFF VIEWER — "what we take out of the flow".
+         Containerised, with a wall down the middle. Engineers do not read
+         marketing comparisons; they read diffs. So this is a diff.
+         ═══════════════════════════════════════════════════════════════════ */
+      .difftable {
+        position: relative;
+        overflow: hidden;
+        border: 1px solid #dde3e9;
+        border-radius: 14px;
+        background: #fff;
+        box-shadow: 0 22px 64px rgba(21, 30, 42, 0.08);
+      }
+
+      .diff-heads,
+      .diff-row {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+      }
+
+      .diff-heads { border-bottom: 1px solid #e4e9ee; background: #f8f9fb; }
+      .diff-head {
+        padding: 15px 26px;
+        font-size: 10.5px;
+        font-weight: 800;
+        letter-spacing: 0.14em;
+        text-transform: uppercase;
+      }
+      .diff-head.legacy { color: #9aa3ad; }
+      .diff-head.agent {
+        border-left: 1px solid #e4e9ee;
+        background: rgba(39, 138, 76, 0.045);
+        color: var(--green);
+      }
+
+      .diff-row + .diff-row { border-top: 1px solid #eef1f4; }
+
+      .diff-cell {
+        display: grid;
+        grid-template-columns: 20px minmax(0, 1fr);
+        gap: 14px;
+        align-items: start;
+        min-height: 84px;
+        padding: 22px 26px;
+      }
+      .diff-cell p { margin: 0; font-size: 15px; line-height: 1.52; }
+
+      /* The wall. */
+      .diff-cell.agent {
+        border-left: 1px solid #e4e9ee;
+        background: rgba(39, 138, 76, 0.028);
+      }
+      .diff-cell.legacy p { color: #8e97a2; }
+      .diff-cell.agent p { color: var(--ink); font-weight: 550; }
+
+      .diff-badge {
+        position: relative;
+        width: 19px; height: 19px;
+        margin-top: 1px;
+        border-radius: 5px;
+      }
+      .diff-badge.x { background: rgba(201, 77, 63, 0.1); }
+      .diff-badge.c { background: rgba(39, 138, 76, 0.12); }
+      .diff-badge::before,
+      .diff-badge::after {
+        content: "";
+        position: absolute;
+        border-radius: 1px;
+      }
+      /* ✕ */
+      .diff-badge.x::before,
+      .diff-badge.x::after {
+        left: 50%; top: 50%;
+        width: 9px; height: 1.5px;
+        margin: -0.75px 0 0 -4.5px;
+        background: var(--red);
+      }
+      .diff-badge.x::before { transform: rotate(45deg); }
+      .diff-badge.x::after  { transform: rotate(-45deg); }
+      /* ✓ */
+      .diff-badge.c::before {
+        left: 5px; top: 9px;
+        width: 4px; height: 1.5px;
+        background: var(--green);
+        transform: rotate(45deg);
+        transform-origin: left center;
+      }
+      .diff-badge.c::after {
+        left: 7.4px; top: 11.4px;
+        width: 8px; height: 1.5px;
+        background: var(--green);
+        transform: rotate(-52deg);
+        transform-origin: left center;
+      }
+
+      /* Rows resolve as they cross the reading band; the agent side lands last. */
+      .diff-row .diff-cell { opacity: 0; transform: translateY(8px); transition: opacity 560ms var(--ease), transform 560ms var(--ease); }
+      .diff-row.in .diff-cell.legacy { opacity: 1; transform: none; }
+      .diff-row.in .diff-cell.agent  { opacity: 1; transform: none; transition-delay: 190ms; }
+
+      @media (max-width: 780px) {
+        .diff-heads { grid-template-columns: 1fr; }
+        .diff-heads .diff-head.legacy { display: none; }
+        .diff-head.agent { border-left: 0; }
+        .diff-row { grid-template-columns: 1fr; }
+        .diff-cell { min-height: 0; padding: 16px 18px; }
+        .diff-cell.agent { border-left: 0; border-top: 1px solid #eef1f4; }
+      }
+
+      @media (prefers-reduced-motion: reduce) {
+        .diff-row .diff-cell { opacity: 1 !important; transform: none !important; }
+      }
+
+      /* ═══════════════════════════════════════════════════════════════════
+         INSIGHT DASHBOARD — root cause and cost curve, side by side.
+         They tell one story; stacking them made the reader work for it.
+         ═══════════════════════════════════════════════════════════════════ */
+      .leverage-grid {
+        grid-template-columns: minmax(0, 1fr) minmax(0, 1fr) !important;
+        gap: 20px !important;
+        align-items: stretch !important;
+      }
+      .leverage-grid > .chart-note {
+        grid-column: 1 / -1;
+        margin-top: 4px;
+      }
+      .leverage-grid .panel { height: 100%; }
+      .insight-bridge {
+        grid-column: 1 / -1;
+        display: flex;
+        align-items: center;
+        gap: 16px;
+        margin: 2px 0 -6px;
+        padding: 14px 20px;
+        border-radius: 10px;
+        background: rgba(200, 122, 18, 0.06);
+        color: #6a5334;
+        font-size: 14.5px;
+        line-height: 1.5;
+      }
+      .insight-bridge b { color: var(--amber); font-weight: 750; }
+      .insight-bridge .bridge-mark {
+        flex: 0 0 auto;
+        width: 8px; height: 8px;
+        border-radius: 1.5px;
+        background: var(--amber);
+        transform: rotate(-14deg);
+      }
+      @media (max-width: 960px) {
+        .leverage-grid { grid-template-columns: minmax(0, 1fr) !important; }
+      }
+
+
+      /* ═══════════════════════════════════════════════════════════════════
+         STICKY-SCROLL CAPABILITIES
+         The left rail pins; the right column scrolls its four panels past it.
+         No clicking required — but a click still jumps you to a panel.
+         ═══════════════════════════════════════════════════════════════════ */
+      .surface { align-items: start !important; gap: 26px !important; }
+      .surface-tabs {
+        position: sticky;
+        top: 112px;
+        align-self: start;
+      }
+      .surface-stack { display: grid; gap: 18px; }
+      .surface-stack .surface-panel {
+        opacity: 0.34;
+        transform: translateY(6px);
+        transition: opacity 520ms var(--ease), transform 520ms var(--ease), box-shadow 520ms var(--ease);
+      }
+      .surface-stack .surface-panel.is-active {
+        opacity: 1;
+        transform: none;
+        box-shadow: 0 20px 56px rgba(21, 30, 42, 0.09);
+      }
+      /* Spacer so the first and last panel can both reach the reading line. */
+      .surface-stack::before,
+      .surface-stack::after { content: ""; display: block; height: 10vh; }
+
+      @media (max-width: 960px) {
+        .surface-tabs { position: static; }
+        .surface-stack::before, .surface-stack::after { display: none; }
+        .surface-stack .surface-panel { opacity: 1; transform: none; }
+      }
+      @media (prefers-reduced-motion: reduce) {
+        .surface-stack .surface-panel { opacity: 1 !important; transform: none !important; }
+      }
+
+
+      /* ═══════════════════════════════════════════════════════════════════
+         EXPLORER — the generated outputs as a file tree, not eight buttons.
+         This audience lives in an IDE; showing the shape of the output tree
+         is a stronger claim than listing extensions.
+         ═══════════════════════════════════════════════════════════════════ */
+      .explorer {
+        display: flex;
+        flex-direction: column;
+        overflow: hidden;
+        border: 1px solid #dfe5ea;
+        border-radius: 11px;
+        background: #fbfcfd;
+      }
+      .explorer-head {
+        display: flex; align-items: center; gap: 9px;
+        padding: 11px 14px;
+        border-bottom: 1px solid #e6ebef;
+        background: #f4f6f8;
+        color: #6c7683;
+        font-size: 10.5px; font-weight: 800; letter-spacing: 0.12em; text-transform: uppercase;
+      }
+      .explorer-dot { width: 7px; height: 7px; border-radius: 1.5px; background: var(--brand); transform: rotate(-14deg); }
+      .explorer-body { padding: 8px 6px; font-family: var(--mono); font-size: 12px; }
+      .explorer-foot {
+        display: flex; justify-content: space-between;
+        margin-top: auto;
+        padding: 10px 14px;
+        border-top: 1px solid #e6ebef;
+        color: #a4adb8; font-size: 10.5px; font-weight: 600;
+      }
+
+      .explorer-dir {
+        display: flex; align-items: center; gap: 7px;
+        padding: 7px 8px;
+        color: #55606e; font-weight: 700;
+      }
+      .explorer-dir .caret {
+        width: 0; height: 0;
+        border-left: 4px solid #9aa4ae;
+        border-top: 3.5px solid transparent;
+        border-bottom: 3.5px solid transparent;
+        transform: rotate(90deg);
+      }
+      .explorer-file {
+        display: grid;
+        grid-template-columns: 12px minmax(0, 1fr) auto;
+        align-items: center;
+        gap: 9px;
+        width: 100%;
+        padding: 7px 8px 7px 22px;
+        border: 0;
+        border-radius: 6px;
+        background: none;
+        color: #6c7683;
+        font: inherit;
+        text-align: left;
+        cursor: pointer;
+        transition: background 200ms var(--ease), color 200ms var(--ease);
+      }
+      .explorer-file .tick {
+        width: 7px; height: 7px; border-radius: 1.5px;
+        background: #ccd3da; transform: rotate(-14deg);
+        transition: background 240ms var(--ease);
+      }
+      .explorer-file .size { color: #b6bdc5; font-size: 10.5px; }
+      .explorer-file:hover { background: rgba(224, 111, 56, 0.05); color: var(--ink); }
+      .explorer-file[aria-selected="true"] {
+        background: var(--state-wash, rgba(224, 111, 56, 0.08));
+        color: var(--ink);
+        font-weight: 700;
+      }
+      .explorer-file[aria-selected="true"] .tick { background: var(--brand); }
+
+      @media (max-width: 900px) {
+        .explorer-body { max-height: 320px; overflow-y: auto; }
+      }
+
+    </style>
+  </head>
+  <body data-state="idle">
+    <svg width="0" height="0" aria-hidden="true" focusable="false" style="position:absolute">
+      <defs>
+        <symbol id="agnisys-glyph" viewBox="0 0 552 566">
+          <polygon points="92,319 86,561 319,488 319,319" fill="currentColor" />
+          <polygon points="434,153 283,214 396,369 551,277" fill="currentColor" />
+          <polygon points="75,7 5,239 221,296 264,115" fill="currentColor" />
+        </symbol>
+        <symbol id="tile-glyph" viewBox="0 0 552 566">
+          <polygon points="92,319 86,561 319,488 319,319" fill="currentColor" opacity="0.95" />
+          <polygon points="434,153 283,214 396,369 551,277" fill="currentColor" opacity="0.62" />
+          <polygon points="75,7 5,239 221,296 264,115" fill="currentColor" opacity="0.8" />
+        </symbol>
+      </defs>
+    </svg>
+
+    <div class="bg" aria-hidden="true">
+      <div class="trace-field"></div>
+      <div class="sheen-field"></div>
+      <svg class="ghost-glyph one"><use href="#agnisys-glyph" /></svg>
+      <svg class="ghost-glyph two"><use href="#agnisys-glyph" /></svg>
+    </div>
+
+    <header class="topbar">
+      <a class="brand" href="#top" aria-label="Agnisys IDS-AI">
+        <svg class="brand-mark" aria-hidden="true"><use href="#agnisys-glyph" /></svg>
+        <span class="brand-text">
+          <span class="brand-name">AGNISYS</span>
+          <span class="brand-tag">System Development with Certainty</span>
+        </span>
+      </a>
+      <nav aria-label="Page">
+        <a href="#flow-removal">Changes</a>
+        <a href="#story">NL flow</a>
+        <a href="#leverage">Why spec</a>
+        <a href="#loop">Loop</a>
+        <a href="#capabilities">Capabilities</a>
+        <a href="#artifacts">Artifacts</a>
+        <a href="#why">Why Agnisys</a>
+      </nav>
+      <a class="btn btn-primary" href="#cta">Request a Demo</a>
+    </header>
+
+    <main class="page" id="top">
+      <section class="hero" data-state="idle" data-rail-target="spec">
+        <div class="shell hero-grid">
+          <div class="hero-copy reveal">
+            <h1>From engineering intent to <span class="accent">sign-off</span> with IDS-AI</h1>
+            <p class="lede">
+              IDS-AI turns natural-language requests and structured inputs into design,
+              verification, validation, integration, documentation, and sign-off handoffs
+              while keeping the golden specification in control.
+            </p>
+            <div class="punchline"><span></span>One source of truth. 100% CSR verification coverage.</div>
+            <div class="hero-actions">
+              <a class="btn btn-primary" href="#cta">Request a Demo</a>
+              <a class="btn btn-secondary" href="#cta">Talk to an Expert</a>
+              <a class="btn btn-text" href="#artifacts">Download Datasheet</a>
+            </div>
+          </div>
+
+          <div class="hero-visual reveal" aria-label="Inputs flow into IDS-AI and produce design, verification, validation, integration, documentation, and sign-off handoffs.">
+            <div class="flow-stage">
+              <svg class="flow-lines" viewBox="0 0 590 468" aria-hidden="true">
+                <path d="M155 226 C222 226 225 226 294 226" />
+                <path d="M294 178 C363 40 380 34 438 34" />
+                <path class="alt" d="M294 194 C368 104 383 103 438 103" />
+                <path d="M294 214 C378 166 385 172 438 172" />
+                <path class="alt" d="M294 234 C378 234 385 241 438 241" />
+                <path d="M294 254 C374 304 383 310 438 310" />
+                <path class="alt" d="M294 274 C365 372 383 379 438 379" />
+              </svg>
+
+              <article class="flow-card input">
+                <p class="flow-label">Inputs</p>
+                <div class="input-list">
+                  <div class="input-item"><span class="input-icon">.md</span><span>Markdown</span></div>
+                  <div class="input-item"><span class="input-icon">TXT</span><span>Text</span></div>
+                  <div class="input-item"><span class="input-icon">HTML</span><span>HTML</span></div>
+                  <div class="input-item"><span class="input-icon">PDF</span><span>PDF</span></div>
+                  <div class="input-item"><span class="input-icon">DOC</span><span>Word</span></div>
+                </div>
+              </article>
+
+              <div class="agent-core" aria-hidden="true">
+                <div class="agent-core-label">
+                  <svg><use href="#tile-glyph" /></svg>
+                  <strong>IDS-AI</strong>
+                  <span>Agentic AI Layer</span>
+                </div>
+              </div>
+
+              <article class="flow-card output out-1">
+                <h3>Design <small>RTL IP and SoC</small></h3>
+              </article>
+              <article class="flow-card output out-2">
+                <h3>Verification <small>UVM and tests</small></h3>
+              </article>
+              <article class="flow-card output out-3">
+                <h3>Validation <small>Environment and tests</small></h3>
+              </article>
+              <article class="flow-card output out-4">
+                <h3>Integration <small>SoC assembly</small></h3>
+              </article>
+              <article class="flow-card output out-5">
+                <h3>Documentation <small>HTML, PDF, Word</small></h3>
+              </article>
+              <article class="flow-card output out-6">
+                <h3>Sign-Off <small>CSR coverage closure</small></h3>
+              </article>
+              <div class="coverage-pill"><span></span>CSR Sign-Off - 100% coverage</div>
+            </div>
+          </div>
+        </div>
+        <button class="scroll-prompt" id="scrollPrompt" type="button" aria-label="Scroll to industry reality">
+          <span aria-hidden="true">Scroll</span>
+          <svg width="20" height="11" viewBox="0 0 20 11" fill="none" aria-hidden="true">
+            <path d="M1 1L10 9.5L19 1" stroke="currentColor" stroke-width="1.6"
+                  stroke-linecap="round" stroke-linejoin="round" />
+          </svg>
+        </button>
+      </section>
+
+      <section class="proof" id="proof" data-state="thinking" data-rail-target="spec">
+        <div class="shell">
+          <div class="proof-shell reveal">
+            <div>
+              <div class="proof-kicker">Industry reality</div>
+              <div class="proof-left">
+                <div class="stat">
+                  <strong data-count="45" data-prefix="~" data-suffix="%">~45%</strong>
+                  <p>of ASIC functional flaws trace to incorrect or incomplete specifications.</p>
+                </div>
+                <div class="stat">
+                  <strong data-count="29" data-prefix="~" data-suffix="%">~29%</strong>
+                  <p>are caused by changes to the specification after it is agreed.</p>
+                </div>
+                <div class="stat">
+                  <strong data-count="14" data-suffix="%">14%</strong>
+                  <p>of ASIC projects achieve first-silicon success.</p>
+                </div>
+              </div>
+            </div>
+            <div class="proof-rule" aria-hidden="true"></div>
+            <div class="proof-right">
+              <div class="proof-kicker">With IDS-AI</div>
+              <strong data-count="100" data-suffix="%">100%</strong>
+              <p>CSR verification coverage at sign-off.</p>
+            </div>
+            <p class="citation">
+              Source: 2024 Wilson Research Group Functional Verification Study, Siemens EDA.
+              Multiple responses permitted. Industry data and IDS-AI product claims are separated intentionally.
+            </p>
+          </div>
+        </div>
+      </section>
+
+      <section id="leverage" data-state="caution" data-rail-target="check">
+        <div class="shell">
+          <div class="section-head reveal">
+            <h2>The specification is where a defect is cheapest to kill.</h2>
+            <p class="lede">
+              Design error remains the largest root cause. The specification is still the best lever
+              because specification defects can be removed before RTL exists.
+            </p>
+          </div>
+
+          <div class="leverage-grid">
+              <div class="panel chart-panel reveal">
+                <div class="proof-kicker">Root cause of functional flaws - uncropped</div>
+                <svg viewBox="0 0 680 320" role="img" aria-label="Bar chart comparing design error, specification error, specification changes, internal IP flaws, and external IP flaws.">
+                  <g stroke="#edf1f4" stroke-width="1">
+                    <line x1="54" y1="44" x2="650" y2="44" />
+                    <line x1="54" y1="92" x2="650" y2="92" />
+                    <line x1="54" y1="140" x2="650" y2="140" />
+                    <line x1="54" y1="188" x2="650" y2="188" />
+                    <line x1="54" y1="236" x2="650" y2="236" />
+                  </g>
+                  <g fill="#97a1af" font-size="10" text-anchor="end">
+                    <text x="44" y="47">80%</text>
+                    <text x="44" y="95">60%</text>
+                    <text x="44" y="143">40%</text>
+                    <text x="44" y="191">20%</text>
+                    <text x="44" y="239">0%</text>
+                  </g>
+                  <line x1="54" y1="236" x2="650" y2="236" stroke="#cfd6df" />
+                  <g>
+                    <rect class="bar" x="76" y="80" width="30" height="156" rx="3" fill="#aeb8c3" />
+                    <rect class="bar delay-1" x="110" y="92" width="30" height="144" rx="3" fill="#d1d8df" />
+                    <rect class="bar delay-1" x="176" y="128" width="30" height="108" rx="3" fill="var(--amber)" />
+                    <rect class="bar delay-2" x="210" y="96" width="30" height="140" rx="3" fill="#e7b65e" />
+                    <rect class="bar delay-2" x="276" y="166" width="30" height="70" rx="3" fill="var(--amber)" />
+                    <rect class="bar delay-3" x="310" y="136" width="30" height="100" rx="3" fill="#e7b65e" />
+                    <rect class="bar delay-3" x="376" y="200" width="30" height="36" rx="3" fill="#aeb8c3" />
+                    <rect class="bar delay-3" x="410" y="195" width="30" height="41" rx="3" fill="#d1d8df" />
+                    <rect class="bar delay-3" x="476" y="196" width="30" height="40" rx="3" fill="#aeb8c3" />
+                    <rect class="bar delay-3" x="510" y="202" width="30" height="34" rx="3" fill="#d1d8df" />
+                  </g>
+                  <g fill="#566171" font-size="9" text-anchor="middle" font-weight="760">
+                    <text x="108" y="256">DESIGN</text><text x="108" y="268">ERROR</text>
+                    <text x="208" y="256">INCORRECT /</text><text x="208" y="268">INCOMPLETE SPEC</text>
+                    <text x="308" y="256">CHANGES IN</text><text x="308" y="268">SPECIFICATION</text>
+                    <text x="408" y="256">INTERNAL</text><text x="408" y="268">IP FLAW</text>
+                    <text x="508" y="256">EXTERNAL</text><text x="508" y="268">IP FLAW</text>
+                  </g>
+                  <g fill="#4d5866" font-size="11">
+                    <rect x="76" y="294" width="11" height="11" rx="2" fill="var(--amber)" />
+                    <text x="93" y="304">ASIC</text>
+                    <rect x="134" y="294" width="11" height="11" rx="2" fill="#e7b65e" />
+                    <text x="151" y="304">FPGA</text>
+                    <text x="650" y="304" text-anchor="end" fill="#97a1af" font-size="10">Multiple responses possible</text>
+                  </g>
+                </svg>
+                <p class="source-note">
+                  Source: Siemens EDA / Wilson Research Group 2024 functional verification trend reports:
+                  <a href="https://resources.sw.siemens.com/en-US/white-paper-2024-wilson-research-group-ic-asic-functional-verification-trend-report/">IC/ASIC report</a>
+                  and
+                  <a href="https://resources.sw.siemens.com/en-US/white-paper-2024-wilson-research-group-fpga-functional-verification-trend-report/">FPGA report</a>.
+                </p>
+              </div>
+
+              <div class="panel cost-panel reveal">
+                <div class="proof-kicker">The 1 / 10 / 100 rule</div>
+                <svg viewBox="0 0 860 330" role="img" aria-label="Exponential 1 10 100 defect cost curve with broken high-cost bars.">
+                  <defs>
+                    <marker id="arrow-head-cost" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto">
+                      <path d="M0 0 L8 3 L0 6 Z" fill="#111827" />
+                    </marker>
+                    <linearGradient id="cost-post-silicon" x1="0" x2="0" y1="0" y2="1">
+                      <stop offset="0%" stop-color="#f97316" />
+                      <stop offset="100%" stop-color="#d95b22" />
+                    </linearGradient>
+                  </defs>
+                  <rect x="40" y="54" width="780" height="188" rx="16" fill="#fbfcfc" stroke="#edf1f4" />
+                  <line x1="70" y1="216" x2="790" y2="216" stroke="#111827" stroke-width="2" />
+                  <line x1="70" y1="112" x2="790" y2="112" stroke="rgba(224,111,56,0.32)" stroke-width="1.3" stroke-dasharray="8 8" />
+                  <path d="M105 188 C282 192 410 185 500 164 C590 146 650 128 719 36" fill="none" stroke="#111827" stroke-width="2.4" marker-end="url(#arrow-head-cost)" />
+                  <rect class="bar" x="94" y="187" width="68" height="29" rx="5" fill="var(--green)" />
+                  <rect class="bar delay-1" x="258" y="162" width="68" height="54" rx="5" fill="var(--blue)" />
+                  <rect class="bar delay-2" x="438" y="116" width="68" height="100" rx="5" fill="var(--violet)" />
+                  <rect class="bar delay-3" x="640" y="54" width="78" height="162" rx="5" fill="url(#cost-post-silicon)" />
+                  <g stroke="#fff" stroke-width="7" stroke-linecap="round">
+                    <path d="M450 151 L469 140" />
+                    <path d="M475 151 L494 140" />
+                    <path d="M652 132 L675 119" />
+                    <path d="M684 132 L707 119" />
+                  </g>
+                  <g stroke="#344054" stroke-width="2" stroke-linecap="round">
+                    <path d="M450 151 L469 140" />
+                    <path d="M475 151 L494 140" />
+                    <path d="M652 132 L675 119" />
+                    <path d="M684 132 L707 119" />
+                  </g>
+                  <g text-anchor="middle" font-size="18" font-weight="880">
+                    <text x="128" y="178" fill="var(--green)">$1</text>
+                    <text x="292" y="153" fill="var(--blue)">$10</text>
+                    <text x="472" y="106" fill="var(--violet)">$100</text>
+                    <text x="679" y="43" fill="var(--brand)">$1M+</text>
+                  </g>
+                  <g text-anchor="middle" fill="#475467" font-size="11" font-weight="760">
+                    <text x="128" y="243">Specification</text><text x="128" y="257">phase</text>
+                    <text x="292" y="243">RTL / architecture</text><text x="292" y="257">phase</text>
+                    <text x="472" y="243">Implementation /</text><text x="472" y="257">verification</text>
+                    <text x="679" y="243">Silicon / post-silicon</text><text x="679" y="257">phase</text>
+                  </g>
+                  <g transform="translate(78 282)">
+                    <rect x="0" y="0" width="704" height="36" rx="18" fill="rgba(41,138,80,0.09)" stroke="rgba(41,138,80,0.2)" />
+                    <circle cx="22" cy="18" r="8" fill="rgba(41,138,80,0.14)" stroke="rgba(41,138,80,0.3)" />
+                    <path d="M18 18 L21 21 L27 14" fill="none" stroke="var(--green)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+                    <text x="368" y="23" text-anchor="middle" fill="#1f6f43" font-size="13" font-weight="830">Find defects in the specification, where they are least expensive to fix.</text>
+                  </g>
+                </svg>
+                <p class="source-note">
+                  Cost curve: illustrative 1 / 10 / 100 defect-cost heuristic, shown separately from the Wilson verification-study data; see
+                  <a href="https://akfpartners.com/growth-blog/1-10-100-rule-in-quality-software-development">AKF Partners</a>
+                  and
+                  <a href="https://www.perforce.com/blog/alm/whats-true-cost-software-defects">Perforce</a>
+                  summaries of the rule.
+                </p>
+              </div>
+
+          </div>
+        </div>
+      </section>
+
+      <!-- Sits between the pain (1/10/100) and the proof (the thread):
+           "here is the friction we remove." A centre axis rather than a
+           comparison table — it reads like a diff, which is what this
+           audience looks at all day. -->
+      <section id="flow-removal" class="removal band-soft" data-state="executing" data-rail-target="check">
+        <div class="shell">
+          <div class="section-head reveal">
+            <h2>What IDS-AI takes out of the flow.</h2>
+          </div>
+
+          <div class="difftable reveal" id="corridor" aria-label="What IDS-AI removes from the engineering flow">
+            <div class="diff-heads" aria-hidden="true">
+              <span class="diff-head legacy">Legacy flow</span>
+              <span class="diff-head agent">IDS-AI agent flow</span>
+            </div>
+            <div class="corridor-row diff-row" data-row="0">
+              <div class="diff-cell legacy">
+                <span class="diff-badge x" aria-hidden="true"></span>
+                <p>Ambiguous CSR definitions found during verification.</p>
+              </div>
+              <div class="diff-cell agent">
+                <span class="diff-badge c" aria-hidden="true"></span>
+                <p>Specification checked for correctness before generation runs.</p>
+              </div>
+            </div>
+            <div class="corridor-row diff-row" data-row="1">
+              <div class="diff-cell legacy">
+                <span class="diff-badge x" aria-hidden="true"></span>
+                <p>Manual cleanup of IDS-Batch warnings and errors.</p>
+              </div>
+              <div class="diff-cell agent">
+                <span class="diff-badge c" aria-hidden="true"></span>
+                <p>A self-correcting loop that fixes and re-checks its own work.</p>
+              </div>
+            </div>
+            <div class="corridor-row diff-row" data-row="2">
+              <div class="diff-cell legacy">
+                <span class="diff-badge x" aria-hidden="true"></span>
+                <p>Drift between the specification, the RTL, and the docs.</p>
+              </div>
+              <div class="diff-cell agent">
+                <span class="diff-badge c" aria-hidden="true"></span>
+                <p>Every artifact regenerated together from one source of truth.</p>
+              </div>
+            </div>
+            <div class="corridor-row diff-row" data-row="3">
+              <div class="diff-cell legacy">
+                <span class="diff-badge x" aria-hidden="true"></span>
+                <p>Verification gaps discovered late, or not at all.</p>
+              </div>
+              <div class="diff-cell agent">
+                <span class="diff-badge c" aria-hidden="true"></span>
+                <p>CSR sign-off with 100% verification coverage.</p>
+              </div>
+            </div>
+            <div class="corridor-row diff-row" data-row="4">
+              <div class="diff-cell legacy">
+                <span class="diff-badge x" aria-hidden="true"></span>
+                <p>Tool-by-tool handoff, re-entered by hand each time.</p>
+              </div>
+              <div class="diff-cell agent">
+                <span class="diff-badge c" aria-hidden="true"></span>
+                <p>One agentic layer that drives the tools on your behalf.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section id="story" class="motion-flow-section" data-state="thinking" data-rail-target="spec">
+        <div class="shell">
+          <div class="section-head reveal">
+            <h2>Natural-language intent becomes checked silicon handoffs.</h2>
+            <p class="lede">
+              The user does not need to think in tool order. They describe the design intent,
+              constraints, or requested output; IDS-AI grounds that request in the golden
+              specification, runs the right generators, checks drift, and closes CSR sign-off.
+            </p>
+          </div>
+
+          <div class="motion-board glass reveal" aria-label="Natural language drives IDS-AI from intent to sign-off">
+            <span class="motion-packet" aria-hidden="true"></span>
+            <span class="motion-packet two" aria-hidden="true"></span>
+            <span class="motion-packet three" aria-hidden="true"></span>
+            <article class="motion-node" style="--tone: var(--brand); --delay: 0ms">
+              <span class="num">01</span>
+              <h3>Prompt the intent</h3>
+              <p>Natural language, data sheets, legacy headers, or notes describe what the user wants changed or generated.</p>
+            </article>
+            <article class="motion-node" style="--tone: var(--blue); --delay: 90ms">
+              <span class="num">02</span>
+              <h3>Shape the spec</h3>
+              <p>IDS-AI turns that request into structured, checked, versioned specification intent.</p>
+            </article>
+            <article class="motion-node" style="--tone: var(--amber); --delay: 180ms">
+              <span class="num">03</span>
+              <h3>Generate handoffs</h3>
+              <p>Correct generators produce RTL IP, RTL SoC, UVM/RAL, headers, IP-XACT, docs, and validation assets.</p>
+            </article>
+            <article class="motion-node" style="--tone: var(--violet); --delay: 270ms">
+              <span class="num">04</span>
+              <h3>Check and self-correct</h3>
+              <p>The agent compares generated outputs against the source, resolves drift, and reruns the affected handoffs.</p>
+            </article>
+            <article class="motion-node" style="--tone: var(--green); --delay: 360ms">
+              <span class="num">05</span>
+              <h3>Close CSR sign-off</h3>
+              <p>End with synchronized artifacts and 100% CSR verification coverage tied to the final specification.</p>
+            </article>
+          </div>
+
+          <div class="motion-summary reveal">
+            <article>
+              <h3>User prompt, not tool choreography</h3>
+              <p>The user asks for engineering work in natural language; IDS-AI chooses the right spec, generation, verification, and integration actions.</p>
+            </article>
+            <article>
+              <h3>Golden spec stays in control</h3>
+              <p>Natural language starts the flow, but the golden specification remains the source that keeps outputs deterministic, traceable, and synchronized.</p>
+            </article>
+            <article class="feature-fit">
+              <h3>Built for complex silicon programs</h3>
+              <p>Best fit: large register maps, fast design iteration, safety-sensitive CSR behavior, SoC connectivity, and FPGA-to-ASIC delivery.</p>
+              <div class="audience-tags"><span>AI accelerators</span><span>Automotive SoCs</span><span>Networking</span><span>FPGA</span><span>Custom ASIC</span></div>
+            </article>
+          </div>
+        </div>
+      </section>
+
+      <section id="loop" class="band-soft" data-state="executing" data-rail-target="act">
+        <div class="shell">
+          <div class="section-head reveal">
+            <h2>Detect conflicts, correct the source, regenerate outputs, verify closure.</h2>
+            <p class="lede">
+              This is deliberately abstract. Register names are redacted, content is drawn, and only
+              safe metrics are revealed. The interaction shows the engineering behavior without exposing UI.
+            </p>
+          </div>
+
+          <div class="loop-shell glass reveal">
+            <div class="loop-top">
+              <div>
+                <h3 style="font-size:24px;margin-bottom:8px">Create -> Generate -> Check -> Self-correct -> CSR Sign-Off</h3>
+                <p class="muted" style="margin:0;line-height:1.55">The sequence loops continuously: detect the conflict, correct the source, regenerate affected collateral, and close coverage.</p>
+              </div>
+              <svg class="loop-ring" viewBox="0 0 420 126" aria-hidden="true">
+                <path class="cycle" d="M36 63 C82 10 146 10 194 63 S306 116 354 63" />
+                <path class="cycle" d="M354 63 C306 10 242 10 194 63 S82 116 36 63" opacity="0.36" />
+                <g>
+                  <circle class="ring-node active" data-ring="create" cx="36" cy="63" r="8" fill="var(--brand)" /><text x="20" y="35">Create</text>
+                  <circle class="ring-node" data-ring="generate" cx="116" cy="28" r="8" fill="var(--blue)" /><text x="92" y="14">Generate</text>
+                  <circle class="ring-node" data-ring="check" cx="210" cy="63" r="8" fill="var(--amber)" /><text x="196" y="35">Check</text>
+                  <circle class="ring-node" data-ring="correct" cx="304" cy="98" r="8" fill="var(--violet)" /><text x="274" y="124">Correct</text>
+                  <circle class="ring-node" data-ring="signoff" cx="384" cy="63" r="8" fill="var(--green)" /><text x="352" y="35">Sign-Off</text>
+                </g>
+              </svg>
+            </div>
+
+            <div class="loop-grid">
+              <article class="work-card panel">
+                <div class="work-head"><span>Golden specification</span><span class="state-chip" id="specChip">1 issue</span></div>
+                <div class="work-body">
+                  <div class="spec-line"><b>block</b><span class="redacted"></span><span></span></div>
+                  <div class="spec-line"><b>reg</b><span class="redacted" style="width:86px"></span><span></span></div>
+                  <div class="spec-line"><b>field</b><span class="redacted" style="width:64px"></span><span></span></div>
+                  <div class="spec-line issue" id="widthLine"><b>width</b><span id="widthVal">8</span><span>!</span></div>
+                  <div class="spec-line issue" id="resetLine"><b>reset</b><span id="resetVal">0x1FF</span><span>!</span></div>
+                  <div class="spec-line"><b>sw</b><span>rw</span><span></span></div>
+                  <div class="spec-line"><b>hw</b><span>ro</span><span></span></div>
+                </div>
+              </article>
+
+              <article class="work-card panel">
+                <div class="work-head"><span>IDS-AI execution trace</span><span class="state-chip" id="traceChip">queued</span></div>
+                <div class="work-body">
+                  <div class="finding">
+                    <strong>0x1FF</strong> needs 9 bits; declared width is 8. IDS-AI corrects
+                    the golden specification and regenerates dependent outputs.
+                  </div>
+                  <div class="agent-trace" aria-label="Self-running correction trace">
+                    <div class="trace-step" data-trace="detect">
+                      <span class="trace-node">1</span>
+                      <span class="trace-copy"><b>Detect conflict</b><span>Reset width and declared field width disagree.</span></span>
+                      <span class="trace-status">queued</span>
+                    </div>
+                    <div class="trace-step" data-trace="correct">
+                      <span class="trace-node">2</span>
+                      <span class="trace-copy"><b>Correct source</b><span>Golden specification updates width from 8 to 9.</span></span>
+                      <span class="trace-status">queued</span>
+                    </div>
+                    <div class="trace-step" data-trace="regen">
+                      <span class="trace-node">3</span>
+                      <span class="trace-copy"><b>Regenerate collateral</b><span>RTL, UVM, headers, and docs are refreshed together.</span></span>
+                      <span class="trace-status">queued</span>
+                    </div>
+                    <div class="trace-step" data-trace="verify">
+                      <span class="trace-node">4</span>
+                      <span class="trace-copy"><b>Verify closure</b><span>CSR coverage resolves to 100% with clean artifacts.</span></span>
+                      <span class="trace-status">queued</span>
+                    </div>
+                  </div>
+                </div>
+              </article>
+
+              <article class="work-card panel">
+                <div class="work-head"><span>Generated artifacts</span><span class="state-chip" id="artifactChip">stale</span></div>
+                <div class="work-body">
+                  <div class="artifact-line" data-output><span>RTL (IP)</span><span class="sync-state">stale</span></div>
+                  <div class="artifact-line" data-output><span>RTL (SoC)</span><span class="sync-state">stale</span></div>
+                  <div class="artifact-line" data-output><span>UVM / RAL</span><span class="sync-state">stale</span></div>
+                  <div class="artifact-line" data-output><span>Headers</span><span class="sync-state">stale</span></div>
+                  <div class="artifact-line" data-output><span>Docs</span><span class="sync-state">stale</span></div>
+                  <div class="coverage">
+                    <div class="coverage-track"><div class="coverage-fill" id="coverageFill"></div></div>
+                    <div class="coverage-meta"><span>CSR coverage</span><b id="coverageNum">72%</b></div>
+                  </div>
+                </div>
+              </article>
+            </div>
+
+            <div class="agent-console agent-window" aria-label="Prompt-driven IDS-AI agent work surface">
+              <div class="agent-appbar">
+                <span class="traffic" aria-hidden="true"><i></i><i></i><i></i></span>
+                <span class="app-title">IDS Collaboration Framework</span>
+                <span class="app-tools" aria-hidden="true"><i></i><i></i><i></i></span>
+              </div>
+              <div class="agent-workspace">
+                <aside class="agent-sidebar" aria-hidden="true">
+                  <div class="sidebar-head"><span>Chats</span><span>New</span></div>
+                  <div class="chat-item active">Generate CSR verification environment<small>10m ago - 32 msgs</small></div>
+                  <div class="chat-item">Review stale generated files<small>1d ago - 8 msgs</small></div>
+                </aside>
+
+                <div class="agent-thread">
+                  <div class="project-context">Project context / redacted/spec_workspace</div>
+                  <div class="thread-row chat-motion" data-chat-user>
+                    <div class="thread-label"><span class="avatar">U</span><span>User</span></div>
+                    <div class="user-prompt">
+                      <span id="typedPrompt" data-prompt="Using this golden specification, regenerate the CSR verification environment, confirm the bus agent, testbench top, Makefiles, RTL handoff, and exact files created."></span><span class="typing-cursor" aria-hidden="true"></span>
+                    </div>
+                  </div>
+
+                  <div class="thread-row chat-motion" data-chat-agent>
+                    <div class="thread-label"><span class="avatar agent-avatar">A</span><span>Agent</span></div>
+                    <div class="action-panel panel">
+                      <div class="action-head"><span>Agent action plan and tool analysis</span><span class="run-status" id="agentRunStatus">waiting</span></div>
+                      <div class="action-body">
+                        <div class="tool-step" data-agent-step>
+                          <span>1.</span>
+                          <div><span class="ok">ok</span> ids_spec_check
+                            <div class="tool-lines">
+                              <span>Detected width/reset drift in redacted CSR block.</span>
+                              <span>Selected source correction in golden specification.</span>
+                            </div>
+                          </div>
+                        </div>
+                        <div class="tool-step" data-agent-step>
+                          <span>2.</span>
+                          <div><span class="ok">ok</span> ids_generate
+                            <div class="tool-lines">
+                              <span>Regenerated RTL IP, RTL SoC, UVM/RAL, headers, docs, and IP-XACT.</span>
+                              <span>Confirmed all generated artifacts are synchronized.</span>
+                            </div>
+                          </div>
+                        </div>
+                        <div class="tool-step" data-agent-step>
+                          <span>3.</span>
+                          <div><span class="ok">ok</span> list_directory
+                            <div class="tool-lines">
+                              <span>Captured output manifest, file sizes, and generated handoff report.</span>
+                            </div>
+                          </div>
+                        </div>
+
+                        <div class="files-panel" data-files-panel>
+                          <div class="files-head"><span id="filesCreatedCount">Files created - 0</span><span id="filesOpenState">Preparing</span></div>
+                          <div class="files-path">/output/redacted/csr_signoff/</div>
+                          <div class="file-list">
+                            <div data-file-row><span>block_external_ids.sv</span><span>3.5 KB</span></div>
+                            <div data-file-row><span>csr_agent_pkg.sv</span><span>2.0 KB</span></div>
+                            <div data-file-row><span>Makefile.questa</span><span>2.9 KB</span></div>
+                            <div data-file-row><span>ral_model.sv</span><span>8.1 KB</span></div>
+                            <div data-file-row><span>handoff_report.html</span><span>14.2 KB</span></div>
+                          </div>
+                          <div class="show-more" id="showMoreFiles">6 more queued</div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="success-line chat-motion" data-chat-final>CSR verification environment generated successfully</div>
+                  <p class="location-line chat-motion" data-chat-final>Location: <code>output/redacted/csr_signoff/</code></p>
+                  <div class="agent-result-table chat-motion" data-chat-final aria-label="Generated file result table">
+                    <div class="row"><span>File</span><span>Size</span><span>Purpose</span></div>
+                    <div class="row"><span>csr_agent_pkg.sv</span><span>2.0 KB</span><span>Bus agent package</span></div>
+                    <div class="row"><span>ip_registers.sv</span><span>3.5 KB</span><span>RTL IP handoff</span></div>
+                    <div class="row"><span>soc_map.sv</span><span>2.6 KB</span><span>SoC integration map</span></div>
+                  </div>
+                  <div class="composer" id="chatComposer">Message... mention files, Enter to send</div>
+                </div>
+              </div>
+            </div>
+
+            <div class="loop-actions">
+              <button class="btn btn-secondary" id="replayBtn" type="button" hidden>Replay</button>
+              <span class="autoplay-note">Loops while this section is in view.</span>
+            </div>
+            <p class="loop-note">
+              The visible product story is the loop itself: a detected specification conflict resolves into
+              regenerated outputs and closed CSR coverage without exposing the underlying UI.
+            </p>
+          </div>
+        </div>
+      </section>
+
+      <section id="capabilities" data-state="executing" data-rail-target="act">
+        <div class="shell">
+          <div class="section-head tight reveal">
+            <h2>Four outcomes. One product surface.</h2>
+          </div>
+
+          <div class="surface reveal">
+            <div class="surface-tabs" role="tablist" aria-label="IDS-AI capabilities">
+              <button class="surface-tab" role="tab" aria-selected="true" data-cap="0" style="--tone: var(--brand)">
+                <span class="emblem"><svg aria-hidden="true"><use href="#tile-glyph" /></svg></span>
+                <span><b>Specification Quality</b><span>Design intent, completeness, consistency.</span></span>
+              </button>
+              <button class="surface-tab" role="tab" aria-selected="false" data-cap="1" style="--tone: var(--blue)">
+                <span class="emblem"><svg aria-hidden="true"><use href="#tile-glyph" /></svg></span>
+                <span><b>RTL and SoC Integration</b><span>IP RTL, SoC RTL, connectivity.</span></span>
+              </button>
+              <button class="surface-tab" role="tab" aria-selected="false" data-cap="2" style="--tone: var(--green)">
+                <span class="emblem"><svg aria-hidden="true"><use href="#tile-glyph" /></svg></span>
+                <span><b>CSR Verification</b><span>UVM, RAL, formal, coverage closure.</span></span>
+              </button>
+              <button class="surface-tab" role="tab" aria-selected="false" data-cap="3" style="--tone: var(--teal)">
+                <span class="emblem"><svg aria-hidden="true"><use href="#tile-glyph" /></svg></span>
+                <span><b>Artifact Sync</b><span>Regenerate together. Nothing drifts.</span></span>
+              </button>
+            </div>
+
+            <div class="surface-stack" id="capStack"></div>
+          </div>
+        </div>
+      </section>
+
+      <section id="artifacts" class="band-dark" data-state="executing" data-rail-target="verify">
+        <div class="shell">
+          <div class="section-head reveal">
+            <h2>Generated outputs stay synchronized.</h2>
+            <p class="lede">
+              RTL design, SoC integration, UVM tests, validation collateral, headers, and
+              documentation are produced together from the same checked specification.
+            </p>
+          </div>
+
+          <div class="artifact-stage reveal">
+            <div class="explorer" role="tree" aria-label="Generated output tree">
+              <div class="explorer-head"><span class="explorer-dot"></span>Explorer</div>
+              <div class="explorer-body" id="explorerBody"></div>
+              <div class="explorer-foot"><span id="explorerCount">8 files</span><span>regenerated together</span></div>
+            </div>
+
+            <article class="artifact-view glass">
+              <div class="artifact-view-head">
+                <span></span>
+                <strong id="artifactPath">output/redacted/ip_register_block.sv</strong>
+                <em id="artifactSize" style="margin-left:auto;color:#97a1af;font-style:normal">8.3 KB - confirmed on disk</em>
+              </div>
+              <div class="artifact-view-body">
+                <p id="artifactDesc">Synthesizable register RTL generated directly from the golden specification. Field offsets, reset values, access policies, and documentation references remain traceable.</p>
+                <div class="code-shape" id="codeShape"></div>
+              </div>
+            </article>
+          </div>
+        </div>
+      </section>
+
+      <section id="outcomes" data-state="verified" data-rail-target="signoff">
+        <div class="shell">
+          <div class="section-head tight reveal">
+            <h2>Closed loops from intent to sign-off.</h2>
+          </div>
+          <div class="statbar reveal" id="outcomeLoop">
+            <article class="stat" data-step="0" style="--tone: var(--brand)">
+              <span class="metric"><b>14%</b><i>first-silicon success today</i></span>
+              <h3>Fewer design re-spins</h3><p>Moves defect discovery before RTL and silicon.</p>
+            </article>
+            <article class="stat" data-step="1" style="--tone: var(--violet)">
+              <span class="metric"><b>~45%</b><i>of flaws start in the spec</i></span>
+              <h3>Higher specification quality</h3><p>Checks completeness and consistency at the source.</p>
+            </article>
+            <article class="stat" data-step="2" style="--tone: var(--blue)">
+              <span class="metric"><b>1</b><i>pass, not a hand-off chain</i></span>
+              <h3>Less manual effort</h3><p>Finds, recommends, regenerates, and verifies in one pass.</p>
+            </article>
+            <article class="stat" data-step="3" style="--tone: var(--amber)">
+              <span class="metric"><b>0</b><i>artifacts left to drift</i></span>
+              <h3>One source of truth</h3><p>RTL, tests, headers, docs, and integration stay synchronized.</p>
+            </article>
+            <article class="stat" data-step="4" style="--tone: var(--green)">
+              <span class="metric"><b>100%</b><i>CSR verification coverage</i></span>
+              <h3>Faster coverage closure</h3><p>Generated tests align with generated design intent.</p>
+            </article>
+          </div>
+        </div>
+      </section>
+
+      <section id="why" data-state="idle" data-rail-target="signoff">
+        <div class="shell why-grid">
+          <div class="reveal">
+            <h2>Two decades of specification-driven automation become the agent's action layer.</h2>
+            <p class="lede">
+              Agentic AI needs structured engineering context to act on. Agnisys already has that
+              substrate: golden specifications, CSR automation, correct-by-construction generators,
+              verification assets, integration flows, and batch execution.
+            </p>
+            <div class="tool-stack">
+              <div class="tool-row"><b>IDS-Batch</b><span>Generation engine for RTL, UVM/RAL, headers, IP-XACT, and documentation.</span></div>
+              <div class="tool-row"><b>IDS-Verify</b><span>UVM environments, formal properties, and CSR verification assets.</span></div>
+              <div class="tool-row"><b>IDS-Integrate</b><span>SoC-level connectivity, interconnect, and integration collateral.</span></div>
+              <div class="tool-row"><b>IDS-CF</b><span>Collaborative specification authoring, versioning, and the agent work surface.</span></div>
+            </div>
+          </div>
+          <div class="context-motion glass reveal">
+            <div class="proof-kicker">Structured context in motion</div>
+            <div class="context-grid" aria-label="Structured engineering context flowing into IDS-AI">
+              <svg class="context-beams" viewBox="0 0 620 508" aria-hidden="true">
+                <path d="M120 92 C210 112 248 190 310 254" />
+                <path d="M500 96 C420 118 372 190 310 254" />
+                <path d="M130 410 C218 394 252 324 310 254" />
+                <path d="M498 408 C420 386 372 318 310 254" />
+                <path d="M310 254 C286 308 282 352 310 400 S392 456 466 422" opacity=".4" />
+              </svg>
+              <span class="context-packet"></span>
+              <span class="context-packet two"></span>
+              <span class="context-packet three"></span>
+              <article class="context-node spec"><b>Golden specification</b><span>Structured intent, CSR definitions, versioned source of truth.</span></article>
+              <article class="context-node gen"><b>Correct generators</b><span>RTL, UVM, headers, IP-XACT, docs, and integration outputs.</span></article>
+              <article class="context-node verify"><b>Verification assets</b><span>Generated tests and coverage trace back to declared behavior.</span></article>
+              <article class="context-node integrate"><b>Integration flows</b><span>SoC connectivity and handoff collateral stay synchronized.</span></article>
+              <div class="context-core">
+                <svg aria-hidden="true"><use href="#tile-glyph" /></svg>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="cta" id="cta" data-state="verified" data-rail-target="signoff">
+        <div class="shell reveal">
+          <svg class="big-mark" aria-hidden="true"><use href="#agnisys-glyph" /></svg>
+          <h2>Turn the golden specification into the sign-off system.</h2>
+          <p class="lede">
+            See IDS-AI create, check, correct, regenerate, and close CSR verification coverage
+            from one source of truth.
+          </p>
+          <div class="hero-actions">
+            <a class="btn btn-primary" href="#">Request a Demo</a>
+            <a class="btn btn-secondary" href="#">Talk to an Expert</a>
+            <a class="btn btn-text" href="#">Download Datasheet</a>
+          </div>
+        </div>
+      </section>
+
+      <footer class="footer">
+        <div class="shell footer-inner">
+          <a class="brand" href="#top">
+            <svg class="brand-mark" aria-hidden="true"><use href="#agnisys-glyph" /></svg>
+            <span class="brand-text">
+              <span class="brand-name">AGNISYS</span>
+              <span class="brand-tag">System Development with Certainty</span>
+            </span>
+          </a>
+          <p>V2 prototype. Product content is redacted; all motion is CSS/SVG.</p>
+        </div>
+      </footer>
+    </main>
+
+    <script>
+      const reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+      /* Bidirectional. The old observer called unobserve() on first sighting,
+         so nothing replayed when the user scrolled back up. */
+      const revealObserver = new IntersectionObserver((entries) => {
+        entries.forEach((entry) => {
+          entry.target.classList.toggle("in-view", entry.isIntersecting);
+        });
+      }, { threshold: 0.12 });
+      document.querySelectorAll(".reveal, .chart-panel, .cost-panel").forEach((el) => revealObserver.observe(el));
+
+      /* ── Scroll-linked pipeline ────────────────────────────────────────
+         Two sections behave identically: a rail whose fill tracks scroll
+         progress, and rows that populate as they cross the reading line.
+         Both directions, because everything derives from scroll position
+         rather than from a one-shot trigger. */
+      const scrollPrompt = document.getElementById("scrollPrompt");
+      if (scrollPrompt) {
+        const dismiss = () => scrollPrompt.classList.add("gone");
+        scrollPrompt.addEventListener("click", () => {
+          document.getElementById("proof").scrollIntoView({
+            behavior: reduced ? "auto" : "smooth",
+            block: "start",
+          });
+          dismiss();
+        });
+        window.addEventListener("scroll", () => {
+          if (window.scrollY > 24) dismiss();
+        }, { passive: true, once: false });
+      }
+
+      const stateObserver = new IntersectionObserver((entries) => {
+        const visible = entries.filter((entry) => entry.isIntersecting)
+          .sort((a, b) => b.intersectionRatio - a.intersectionRatio)[0];
+        if (!visible) return;
+        const section = visible.target;
+        document.body.dataset.state = section.dataset.state || "idle";
+      }, { threshold: [0.28, 0.52], rootMargin: "-18% 0px -35% 0px" });
+      document.querySelectorAll("section[data-state]").forEach((section) => stateObserver.observe(section));
+
+      const storyBoard = document.getElementById("storyBoard");
+      const storySteps = Array.from(document.querySelectorAll(".story-step"));
+      const storyObserver = new IntersectionObserver((entries) => {
+        const visible = entries.filter((entry) => entry.isIntersecting)
+          .sort((a, b) => b.intersectionRatio - a.intersectionRatio)[0];
+        if (!visible || !storyBoard) return;
+        const stage = visible.target.dataset.stage;
+        storyBoard.dataset.stage = stage;
+        storySteps.forEach((step) => step.classList.toggle("active", step.dataset.stage === stage));
+      }, { threshold: [0.35, 0.65], rootMargin: "-34% 0px -42% 0px" });
+      storySteps.forEach((step) => storyObserver.observe(step));
+      function updateStoryStage() {
+        if (!storyBoard || !storySteps.length) return;
+        const marker = window.innerHeight * 0.52;
+        let closest = storySteps[0];
+        let distance = Infinity;
+        storySteps.forEach((step) => {
+          const rect = step.getBoundingClientRect();
+          const center = rect.top + rect.height / 2;
+          const next = Math.abs(center - marker);
+          if (next < distance) {
+            closest = step;
+            distance = next;
+          }
+        });
+        storyBoard.dataset.stage = closest.dataset.stage;
+        storySteps.forEach((step) => step.classList.toggle("active", step === closest));
+      }
+      let storyTick = 0;
+      window.addEventListener("scroll", () => {
+        if (storyTick) return;
+        storyTick = requestAnimationFrame(() => {
+          storyTick = 0;
+          updateStoryStage();
+        });
+      }, { passive: true });
+      window.addEventListener("resize", updateStoryStage);
+      updateStoryStage();
+
+      const countObserver = new IntersectionObserver((entries) => {
+        entries.forEach((entry) => {
+          if (!entry.isIntersecting) return;
+          const el = entry.target;
+          countObserver.unobserve(el);
+          const target = Number(el.dataset.count);
+          const prefix = el.dataset.prefix || "";
+          const suffix = el.dataset.suffix || "";
+          if (reduced) {
+            el.textContent = prefix + target + suffix;
+            return;
+          }
+          const start = performance.now();
+          const draw = (now) => {
+            const p = Math.min((now - start) / 950, 1);
+            const eased = 1 - Math.pow(1 - p, 3);
+            el.textContent = prefix + Math.round(target * eased) + suffix;
+            if (p < 1) requestAnimationFrame(draw);
+          };
+          requestAnimationFrame(draw);
+        });
+      }, { threshold: 0.78 });
+      document.querySelectorAll("[data-count]").forEach((el) => countObserver.observe(el));
+
+      const replayBtn = document.getElementById("replayBtn");
+      const widthVal = document.getElementById("widthVal");
+      const resetVal = document.getElementById("resetVal");
+      const widthLine = document.getElementById("widthLine");
+      const resetLine = document.getElementById("resetLine");
+      const specChip = document.getElementById("specChip");
+      const artifactChip = document.getElementById("artifactChip");
+      const outputs = Array.from(document.querySelectorAll("[data-output]"));
+      const coverageFill = document.getElementById("coverageFill");
+      const coverageNum = document.getElementById("coverageNum");
+      const loopShell = document.querySelector(".loop-shell");
+      const ringNodes = Array.from(document.querySelectorAll(".ring-node"));
+      const traceChip = document.getElementById("traceChip");
+      const traceSteps = Array.from(document.querySelectorAll(".trace-step"));
+      const agentWindow = document.querySelector(".agent-window");
+      const userChatRow = document.querySelector("[data-chat-user]");
+      const agentChatRow = document.querySelector("[data-chat-agent]");
+      const typedPrompt = document.getElementById("typedPrompt");
+      const userPromptBubble = typedPrompt?.closest(".user-prompt");
+      const chatComposer = document.getElementById("chatComposer");
+      const agentRunStatus = document.getElementById("agentRunStatus");
+      const agentSteps = Array.from(document.querySelectorAll("[data-agent-step]"));
+      const filesPanel = document.querySelector("[data-files-panel]");
+      const fileRows = Array.from(document.querySelectorAll("[data-file-row]"));
+      const filesCreatedCount = document.getElementById("filesCreatedCount");
+      const filesOpenState = document.getElementById("filesOpenState");
+      const showMoreFiles = document.getElementById("showMoreFiles");
+      const chatFinals = Array.from(document.querySelectorAll("[data-chat-final]"));
+      const promptText = typedPrompt?.dataset.prompt || "";
+      let loopTimers = [];
+      let loopRunning = false;
+      let loopQueued = false;
+      let loopShouldCycle = false;
+
+      function schedule(ms, fn) {
+        const id = setTimeout(fn, reduced ? 0 : ms);
+        loopTimers.push(id);
+      }
+
+      function setRing(stage) {
+        ringNodes.forEach((node) => node.classList.toggle("active", node.dataset.ring === stage));
+      }
+
+      function resetAgentChat() {
+        agentWindow.dataset.chatStage = "idle";
+        userChatRow.classList.remove("is-visible");
+        agentChatRow.classList.remove("is-visible");
+        chatFinals.forEach((el) => el.classList.remove("is-visible"));
+        typedPrompt.textContent = "";
+        userPromptBubble.classList.remove("is-sent");
+        chatComposer.textContent = "Message... mention files, Enter to send";
+        chatComposer.classList.remove("is-typing", "is-sent");
+        agentRunStatus.textContent = "waiting";
+        agentSteps.forEach((step) => step.classList.remove("is-visible", "is-active", "is-done"));
+        filesPanel.classList.remove("is-visible", "is-done");
+        fileRows.forEach((row) => row.classList.remove("is-visible", "is-done"));
+        filesCreatedCount.textContent = "Files created - 0";
+        filesOpenState.textContent = "Preparing";
+        showMoreFiles.textContent = "6 more queued";
+      }
+
+      function typeComposerPrompt(done) {
+        agentWindow.dataset.chatStage = "typing";
+        chatComposer.classList.add("is-typing");
+        chatComposer.classList.remove("is-sent");
+        chatComposer.textContent = "";
+
+        if (reduced) {
+          chatComposer.textContent = promptText;
+          done();
+          return;
+        }
+
+        let index = 0;
+        const stride = Math.max(1, Math.ceil(promptText.length / 92));
+        const tick = () => {
+          index = Math.min(promptText.length, index + stride);
+          chatComposer.textContent = promptText.slice(0, index);
+          if (index < promptText.length) schedule(18, tick);
+          else done();
+        };
+        tick();
+      }
+
+      function setAgentStep(index, status) {
+        agentSteps.forEach((step, i) => {
+          if (i < index) {
+            step.classList.add("is-visible", "is-done");
+            step.classList.remove("is-active");
+          } else if (i === index) {
+            step.classList.add("is-visible", "is-active");
+            step.classList.remove("is-done");
+          }
+        });
+        agentRunStatus.textContent = status;
+      }
+
+      function setFilesCreated(count) {
+        filesCreatedCount.textContent = `Files created - ${count}`;
+      }
+
+      function runAgentChat() {
+        resetAgentChat();
+        typeComposerPrompt(() => {
+          chatComposer.classList.remove("is-typing");
+          chatComposer.classList.add("is-sent");
+          chatComposer.textContent = "Prompt sent to IDS-AI";
+          typedPrompt.textContent = promptText;
+          userPromptBubble.classList.add("is-sent");
+          userChatRow.classList.add("is-visible");
+
+          schedule(260, () => {
+            agentWindow.dataset.chatStage = "thinking";
+            agentChatRow.classList.add("is-visible");
+            agentRunStatus.textContent = "thinking";
+          });
+          schedule(650, () => setAgentStep(0, "checking spec"));
+          schedule(1120, () => setAgentStep(1, "running generators"));
+          schedule(1590, () => setAgentStep(2, "collecting files"));
+          schedule(1960, () => {
+            agentSteps.forEach((step) => {
+              step.classList.add("is-visible", "is-done");
+              step.classList.remove("is-active");
+            });
+            filesPanel.classList.add("is-visible");
+            agentRunStatus.textContent = "producing files";
+            filesOpenState.textContent = "Producing";
+          });
+
+          fileRows.forEach((row, index) => {
+            schedule(2160 + index * 180, () => {
+              row.classList.add("is-visible", "is-done");
+              setFilesCreated(index + 1);
+            });
+          });
+
+          for (let count = 6; count <= 11; count += 1) {
+            schedule(3060 + (count - 6) * 90, () => setFilesCreated(count));
+          }
+
+          schedule(3660, () => {
+            filesPanel.classList.add("is-done");
+            filesOpenState.textContent = "Open folder";
+            showMoreFiles.textContent = "6 more generated";
+            agentRunStatus.textContent = "done - files ready";
+          });
+          schedule(3920, () => {
+            chatFinals.forEach((el, index) => {
+              schedule(index * 120, () => el.classList.add("is-visible"));
+            });
+          });
+        });
+      }
+
+      function resetLoop() {
+        loopTimers.forEach(clearTimeout);
+        loopTimers = [];
+        loopRunning = false;
+        loopShell.classList.remove("is-running", "is-done");
+        setRing("create");
+        widthVal.textContent = "8";
+        resetVal.textContent = "0x1FF";
+        widthLine.className = "spec-line issue";
+        resetLine.className = "spec-line issue";
+        specChip.textContent = "1 issue";
+        artifactChip.textContent = "stale";
+        traceChip.textContent = "queued";
+        traceSteps.forEach((step) => {
+          step.classList.remove("on", "done");
+          step.querySelector(".trace-status").textContent = "queued";
+        });
+        outputs.forEach((row) => {
+          row.classList.remove("synced");
+          row.querySelector(".sync-state").textContent = "stale";
+        });
+        coverageFill.style.width = "72%";
+        coverageNum.textContent = "72%";
+        replayBtn.hidden = true;
+        resetAgentChat();
+      }
+
+      function setTrace(index, status = "running") {
+        traceSteps.forEach((step, i) => {
+          if (i < index) {
+            step.classList.add("done");
+            step.classList.remove("on");
+            step.querySelector(".trace-status").textContent = "done";
+          } else if (i === index) {
+            step.classList.add("on");
+            step.classList.remove("done");
+            step.querySelector(".trace-status").textContent = status;
+          }
+        });
+      }
+
+      function finishTrace() {
+        traceSteps.forEach((step) => {
+          step.classList.add("done");
+          step.classList.remove("on");
+          step.querySelector(".trace-status").textContent = "done";
+        });
+      }
+
+      function runLoop() {
+        if (loopRunning) return;
+        loopRunning = true;
+        loopShell.classList.add("is-running");
+        loopShell.classList.remove("is-done");
+        replayBtn.hidden = true;
+        specChip.textContent = "applying";
+        artifactChip.textContent = "regenerating";
+        traceChip.textContent = "running";
+        setTrace(0);
+        setRing("generate");
+        runAgentChat();
+        schedule(360, () => {
+          setRing("check");
+          setTrace(1);
+        });
+        schedule(700, () => {
+          setRing("correct");
+          setTrace(2);
+          widthVal.textContent = "9";
+          widthLine.className = "spec-line fixed";
+          resetLine.className = "spec-line fixed";
+          specChip.textContent = "resolved";
+        });
+        outputs.forEach((row, index) => {
+          schedule(980 + index * 190, () => {
+            row.classList.add("synced");
+            row.querySelector(".sync-state").textContent = "synced";
+          });
+        });
+        schedule(1980, () => {
+          setRing("signoff");
+          setTrace(3);
+          coverageFill.style.width = "100%";
+          artifactChip.textContent = "synced";
+          if (reduced) {
+            coverageNum.textContent = "100%";
+            return;
+          }
+          const start = performance.now();
+          const draw = (now) => {
+            const p = Math.min((now - start) / 850, 1);
+            coverageNum.textContent = Math.round(72 + 28 * (1 - Math.pow(1 - p, 3))) + "%";
+            if (p < 1) requestAnimationFrame(draw);
+          };
+          requestAnimationFrame(draw);
+        });
+        schedule(5600, () => {
+          finishTrace();
+          traceChip.textContent = "done";
+          loopShell.classList.remove("is-running");
+          loopShell.classList.add("is-done");
+          replayBtn.hidden = false;
+          loopRunning = false;
+          if (!reduced && loopShouldCycle) {
+            schedule(5200, () => {
+              if (!loopShouldCycle) return;
+              resetLoop();
+              queueLoopStart(140);
+            });
+          }
+        });
+      }
+
+      function queueLoopStart(delay = 420) {
+        if (loopRunning || loopQueued) return;
+        if (loopShell.classList.contains("is-done")) return;
+        loopQueued = true;
+        schedule(delay, () => {
+          loopQueued = false;
+          if (!loopShouldCycle && !reduced) return;
+          runLoop();
+        });
+      }
+
+      replayBtn.addEventListener("click", () => {
+        loopShouldCycle = true;
+        resetLoop();
+        queueLoopStart(160);
+      });
+
+      const loopSection = document.getElementById("loop");
+      const loopAutoObserver = new IntersectionObserver((entries) => {
+        const visible = entries.some((entry) => entry.isIntersecting);
+        if (!visible) return;
+        loopShouldCycle = true;
+        queueLoopStart(420);
+      }, { threshold: 0.06, rootMargin: "0px 0px -10% 0px" });
+      loopAutoObserver.observe(loopSection);
+      const loopRect = loopSection.getBoundingClientRect();
+      if (loopRect.top < window.innerHeight && loopRect.bottom > 0) {
+        loopShouldCycle = true;
+        queueLoopStart(420);
+      }
+
+      const capabilities = [
+        {
+          tone: "var(--brand)",
+          chip: "batch__check_spec",
+          title: "Specification Quality and Design Intent",
+          desc: "Author functional and CSR specifications through text or graphical editing, then let IDS-AI review them for completeness, correctness, and internal consistency before generation begins.",
+          bullets: [
+            "Checks completeness, correctness, and integrity before generation begins.",
+            "Detects inconsistencies between functional specification and CSR definitions.",
+            "Corrects IDS-Batch warnings across SystemRDL, IP-XACT, and IDS-CF templates."
+          ],
+          shape: [92, 74, 58, 88, 45]
+        },
+        {
+          tone: "var(--blue)",
+          chip: "ids__integrate_run",
+          title: "RTL Generation and SoC Integration",
+          desc: "Implementation-ready RTL at IP level and SoC level, with natural-language connectivity instructions resolved into checked integration collateral.",
+          bullets: [
+            "Generates synthesizable Verilog, SystemVerilog, and VHDL from the golden spec.",
+            "Assembles SoC topology and processor-peripheral interconnect.",
+            "Keeps generated and hand-written RTL aligned through the specification."
+          ],
+          shape: [68, 86, 54, 92, 63, 48]
+        },
+        {
+          tone: "var(--green)",
+          chip: "ids__arv_sim_generate",
+          title: "CSR Verification and Coverage Closure",
+          desc: "Verification assets generate from the same source that generated the design, so tests and RTL cannot disagree about what a register does.",
+          bullets: [
+            "Generates UVM environments, RAL models, sequences, agents, and Makefiles.",
+            "Produces formal properties for declared register behavior.",
+            "Achieves 100% CSR verification coverage at sign-off."
+          ],
+          shape: [78, 50, 82, 66, 92, 44]
+        },
+        {
+          tone: "var(--teal)",
+          chip: "self-correcting loop",
+          title: "Artifact Synchronization",
+          desc: "When the specification changes, every downstream artifact regenerates together and the agent explains exactly what moved.",
+          bullets: [
+            "Tracks which specification version produced each artifact.",
+            "Detects drift between spec, RTL, tests, headers, and documentation.",
+            "Regenerates dependent outputs in one auditable pass."
+          ],
+          shape: [58, 76, 90, 64, 80, 46]
+        }
+      ];
+
+
+      const capStack = document.getElementById("capStack");
+      const capTabs = Array.from(document.querySelectorAll(".surface-tab"));
+
+      // Build one real panel per capability. They stack and scroll; the rail
+      // pins beside them and highlights whichever panel is being read.
+      const capPanels = capabilities.map((cap) => {
+        const panel = document.createElement("article");
+        panel.className = "surface-panel glass";
+        panel.style.setProperty("--tone", cap.tone);
+        panel.innerHTML = `
+          <div>
+            <span class="state-chip">${cap.chip}</span>
+            <h3>${cap.title}</h3>
+            <p>${cap.desc}</p>
+            <ul>${cap.bullets.map((b) => `<li>${b}</li>`).join("")}</ul>
+          </div>
+          <div class="safe-clip" aria-hidden="true">
+            <div class="clip-content">
+              <div class="mock-window">
+                <div class="mock-head"><i></i><i></i><i></i></div>
+                <div class="mock-body">${cap.shape.map((w, i) => `<span class="mock-line ${i % 2 ? "" : "tone"}" style="width:${w}%"></span>`).join("")}</div>
+              </div>
+              <div class="agent-path">
+                <svg viewBox="0 0 260 52"><path d="M8 38 C58 4 104 4 136 29 S208 49 252 12" /></svg>
+              </div>
+            </div>
+          </div>`;
+        capStack.appendChild(panel);
+        return panel;
+      });
+
+      let capActive = -1;
+      function setCapActive(index) {
+        if (index === capActive) return;
+        capActive = index;
+        capPanels.forEach((panel, i) => panel.classList.toggle("is-active", i === index));
+        capTabs.forEach((tab, i) => tab.setAttribute("aria-selected", String(i === index)));
+      }
+
+      // Clicking a tab still works: it scrolls that panel to the reading line.
+      capTabs.forEach((tab, i) => {
+        tab.addEventListener("click", () => {
+          capPanels[i].scrollIntoView({ behavior: reduced ? "auto" : "smooth", block: "center" });
+        });
+      });
+
+      function updateCapabilities() {
+        if (!capPanels.length) return;
+        const readLine = window.innerHeight * 0.46;
+        let best = Infinity;
+        let idx = capActive < 0 ? 0 : capActive;
+        capPanels.forEach((panel, i) => {
+          const r = panel.getBoundingClientRect();
+          if (r.bottom < 0 || r.top > window.innerHeight) return;
+          const d = Math.abs(r.top + r.height / 2 - readLine);
+          if (d < best) { best = d; idx = i; }
+        });
+        setCapActive(idx);
+      }
+
+      if (reduced) {
+        capPanels.forEach((panel) => panel.classList.add("is-active"));
+        setCapActive(0);
+      } else {
+        let capTicking = false;
+        const onCapScroll = () => {
+          if (capTicking) return;
+          capTicking = true;
+          requestAnimationFrame(() => { updateCapabilities(); capTicking = false; });
+        };
+        window.addEventListener("scroll", onCapScroll, { passive: true });
+        window.addEventListener("resize", onCapScroll);
+        setCapActive(0);
+        updateCapabilities();
+      }
+
+      const artifactData = [
+        {
+          path: "output/redacted/ip_register_block.sv",
+          size: "8.3 KB - confirmed on disk",
+          desc: "Synthesizable register RTL generated directly from the golden specification. Field offsets, reset values, access policies, and documentation references remain traceable.",
+          rows: [[1, 92], [2, 68], [2, 76], [3, 54], [2, 84], [1, 42]]
+        },
+        {
+          path: "output/redacted/soc_aggregation.sv",
+          size: "4.2 KB - confirmed on disk",
+          desc: "SoC-level aggregation and interconnect RTL assembled from structured connectivity intent.",
+          rows: [[1, 72], [2, 88], [3, 64], [2, 78], [2, 52], [1, 40]]
+        },
+        {
+          path: "output/redacted/register_model_ral.sv",
+          size: "22.7 KB - confirmed on disk",
+          desc: "UVM register model and environment scaffolding generated from the same source as the RTL.",
+          rows: [[2, 86], [1, 46], [3, 72], [2, 62], [2, 90], [3, 54]]
+        },
+        {
+          path: "output/redacted/csr_properties.sv",
+          size: "6.1 KB - confirmed on disk",
+          desc: "SystemVerilog assertions and properties for formal verification of declared CSR behavior.",
+          rows: [[1, 62], [3, 84], [2, 50], [3, 72], [1, 58]]
+        },
+        {
+          path: "output/redacted/register_map.h",
+          size: "3.4 KB - confirmed on disk",
+          desc: "C, C++, and SystemVerilog headers for firmware and validation teams.",
+          rows: [[2, 44], [2, 68], [3, 56], [2, 82], [3, 48]]
+        },
+        {
+          path: "output/redacted/component.xml",
+          size: "14.9 KB - confirmed on disk",
+          desc: "IP-XACT and integration collateral for handoff into tool flows without manual re-entry.",
+          rows: [[1, 82], [2, 54], [2, 90], [1, 46], [3, 62]]
+        },
+        {
+          path: "output/redacted/register_manual.html",
+          size: "11.9 KB - confirmed on disk",
+          desc: "Documentation generated alongside design and verification outputs so public descriptions stay aligned.",
+          rows: [[2, 90], [1, 46], [2, 72], [2, 86], [3, 40]]
+        },
+        {
+          path: "output/redacted/validation_flow.tcl",
+          size: "2.8 KB - confirmed on disk",
+          desc: "Validation environments, scripts, and flow collateral for repeatable checks.",
+          rows: [[3, 58], [1, 76], [2, 44], [3, 70], [2, 86]]
+        }
+      ];
+      const barClass = { 1: "kw", 2: "id", 3: "num" };
+      const artifactPath = document.getElementById("artifactPath");
+      const artifactSize = document.getElementById("artifactSize");
+      const artifactDesc = document.getElementById("artifactDesc");
+      const codeShape = document.getElementById("codeShape");
+
+      function renderArtifact(index) {
+        const artifact = artifactData[index];
+        artifactPath.textContent = artifact.path;
+        artifactSize.textContent = artifact.size;
+        artifactDesc.textContent = artifact.desc;
+        codeShape.innerHTML = artifact.rows.map(([kind, width], row) => `
+          <div class="code-row">
+            <span>${row + 1}</span>
+            <i class="code-bar ${barClass[kind]}" style="width:${width}%"></i>
+          </div>`).join("");
+      }
+      /* Group the eight outputs into the directories IDS-AI actually writes,
+         and render them as a tree. Selecting a file loads it into the viewer. */
+      const explorerTree = [
+        { dir: "rtl/",         files: [0, 1] },
+        { dir: "verification/", files: [2, 3] },
+        { dir: "software/",     files: [4] },
+        { dir: "integration/",  files: [5] },
+        { dir: "docs/",         files: [6] },
+        { dir: "validation/",   files: [7] },
+      ];
+
+      const explorerBody = document.getElementById("explorerBody");
+      const explorerCount = document.getElementById("explorerCount");
+
+      function baseName(path) { return path.slice(path.lastIndexOf("/") + 1); }
+      function shortSize(size) { return size.split(" - ")[0]; }
+
+      explorerBody.innerHTML =
+        '<div class="explorer-dir"><span class="caret"></span>output/redacted/</div>' +
+        explorerTree.map((group) => `
+          <div class="explorer-dir" style="padding-left:20px"><span class="caret"></span>${group.dir}</div>
+          ${group.files.map((i) => `
+            <button class="explorer-file" type="button" role="treeitem" data-artifact="${i}" aria-selected="${i === 0}">
+              <span class="tick"></span>
+              <span>${baseName(artifactData[i].path)}</span>
+              <span class="size">${shortSize(artifactData[i].size)}</span>
+            </button>`).join("")}
+        `).join("");
+
+      explorerCount.textContent = artifactData.length + " files";
+
+      const explorerFiles = Array.from(explorerBody.querySelectorAll(".explorer-file"));
+      explorerFiles.forEach((file) => {
+        file.addEventListener("click", () => {
+          explorerFiles.forEach((item) => item.setAttribute("aria-selected", String(item === file)));
+          renderArtifact(Number(file.dataset.artifact));
+        });
+      });
+      renderArtifact(0);
+
+      /* ── Central corridor ──────────────────────────────────────────────
+         Each row resolves as it crosses the reading band: the muted "before"
+         slides in from the left, the arrow draws across the axis, then the
+         "with IDS-AI" line lands. Reverses on the way back up. */
+      const corridorRows = Array.from(document.querySelectorAll(".corridor-row"));
+      if (corridorRows.length) {
+        if (reduced) {
+          corridorRows.forEach((row) => row.classList.add("in"));
+        } else {
+          const corridorObserver = new IntersectionObserver((entries) => {
+            entries.forEach((entry) => entry.target.classList.toggle("in", entry.isIntersecting));
+          }, { threshold: 0.55, rootMargin: "-8% 0px -12% 0px" });
+          corridorRows.forEach((row) => corridorObserver.observe(row));
+        }
+      }
+    </script>
+  </body>
+</html>
