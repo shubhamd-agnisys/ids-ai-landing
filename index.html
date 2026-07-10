@@ -21,7 +21,7 @@
         --teal: #159b91;
         --green: #298a50;
         --amber: #c87a12;
-        --violet: #7158d9;
+        --violet: #7158d9;   /* charts only -- the 1/10/100 cost curve */
         --red: #c64b3d;
         --state-a: #e06f38;
         --state-b: #70c9b8;
@@ -31,6 +31,8 @@
         --shadow: 0 22px 70px rgba(23, 31, 42, 0.12);
         --radius: 8px;
         --ease: cubic-bezier(0.2, 0.9, 0.2, 1);
+        --spring: cubic-bezier(0.34, 1.4, 0.64, 1);   /* overshoots on the way in */
+        --sine: cubic-bezier(0.45, 0, 0.55, 1);       /* symmetric, no overshoot */
         --mono: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, monospace;
       }
 
@@ -42,11 +44,11 @@
         --state-wash: rgba(224, 111, 56, 0.08);
       }
       body[data-state="thinking"] {
-        --state-a: #7158d9;
+        --state-a: #159b91;
         --state-b: #4ba3ff;
-        --state-c: #159b91;
-        --state-soft: rgba(113, 88, 217, 0.16);
-        --state-wash: rgba(113, 88, 217, 0.08);
+        --state-c: #496cff;
+        --state-soft: rgba(21, 155, 145, 0.16);
+        --state-wash: rgba(21, 155, 145, 0.08);
       }
       body[data-state="caution"] {
         --state-a: #c87a12;
@@ -100,31 +102,31 @@
         inset: 0;
       }
       .trace-field {
-        opacity: 0.24;
+        opacity: 0.42;
         background-image:
           linear-gradient(112deg, transparent 0 22%, rgba(24, 33, 44, 0.055) 22.12%, transparent 22.5%),
           linear-gradient(112deg, transparent 0 48%, rgba(224, 111, 56, 0.055) 48.12%, transparent 48.5%),
           linear-gradient(112deg, transparent 0 76%, rgba(21, 155, 145, 0.06) 76.12%, transparent 76.48%);
         background-size: 440px 100%, 560px 100%, 700px 100%;
-        animation: trace-drift 28s linear infinite;
+        animation: trace-drift 13s linear infinite;
       }
       .sheen-field {
-        opacity: 0.24;
+        opacity: 0.44;
         background:
           linear-gradient(108deg, transparent 7%, rgba(224, 111, 56, 0.04) 14%, transparent 22%),
           linear-gradient(116deg, transparent 36%, rgba(73, 108, 255, 0.045) 44%, transparent 53%),
           linear-gradient(109deg, transparent 66%, rgba(21, 155, 145, 0.04) 72%, transparent 82%);
-        animation: sheen-drift 14s var(--ease) infinite alternate;
+        animation: sheen-drift 16s var(--ease) infinite alternate;
       }
       .ghost-glyph {
         position: absolute;
         width: 460px;
         height: 472px;
         color: var(--state-a);
-        opacity: 0.046;
+        opacity: 0.085;
         filter: blur(0.1px);
         transform: rotate(-10deg);
-        animation: glyph-float 11s var(--ease) infinite alternate;
+        animation: glyph-float 15s var(--spring) infinite alternate;
       }
       .ghost-glyph.one { top: 92px; right: -68px; }
       .ghost-glyph.two {
@@ -133,20 +135,31 @@
         left: -120px;
         bottom: 3%;
         color: var(--state-c);
-        animation-duration: 13s;
+        opacity: 0.075;
+        animation-duration: 17.5s;
         animation-direction: alternate-reverse;
+      }
+      .ghost-glyph.three {
+        width: 260px;
+        height: 266px;
+        left: 41%;
+        top: -70px;
+        color: var(--state-b);
+        opacity: 0.06;
+        animation-duration: 21s;
+        animation-delay: -6s;
       }
       @keyframes trace-drift {
         from { background-position: 0 0, 0 0, 0 0; }
         to { background-position: 440px 0, -560px 0, 700px 0; }
       }
       @keyframes sheen-drift {
-        from { transform: translateX(-3%); }
-        to { transform: translateX(3%); }
+        from { transform: translateX(-17%); }
+        to { transform: translateX(17%); }
       }
       @keyframes glyph-float {
         from { transform: translate3d(0, 0, 0) rotate(-10deg) scale(1); }
-        to { transform: translate3d(22px, -18px, 0) rotate(-4deg) scale(1.05); }
+        to { transform: translate3d(110px, -90px, 0) rotate(6deg) scale(1.22); }
       }
 
       .page {
@@ -459,11 +472,11 @@
           repeating-linear-gradient(90deg, transparent 0 19px, rgba(17, 19, 24, 0.025) 20px),
           repeating-linear-gradient(0deg, transparent 0 19px, rgba(17, 19, 24, 0.02) 20px);
         opacity: 0.8;
-        animation: hero-scan 12s var(--ease) infinite alternate;
+        animation: hero-scan 15s var(--ease) infinite alternate;
       }
       @keyframes hero-scan {
-        from { transform: translateX(-4%); }
-        to { transform: translateX(5%); }
+        from { transform: translateX(-17%); }
+        to { transform: translateX(20%); }
       }
       .flow-stage {
         position: relative;
@@ -477,7 +490,7 @@
         padding: 10px 11px;
         border: 1px solid rgba(222, 228, 234, 0.9);
         border-radius: var(--radius);
-        background: rgba(255, 255, 255, 0.94);
+        background: #fff;   /* opaque: each card hides its connector's tail */
         box-shadow: 0 10px 24px rgba(23, 31, 42, 0.07);
       }
       .flow-card.input {
@@ -493,6 +506,60 @@
       .flow-card.out-4 { top: 192px; }
       .flow-card.out-5 { top: 256px; }
       .flow-card.out-6 { top: 320px; }
+
+      /* The tiles sit on a 64px pitch and are 58px tall, so only 6px of
+         clearance separates them. Six independent bobs at this amplitude
+         would collide. Instead they share one 7s period and are offset by
+         0.19s each: a travelling wave down the column, where a neighbour is
+         never more than ~3px out of step. Horizontal drift is rightward:
+         leftward would push the Sign-Off card onto the coverage pill, and the
+         connector keeps ~29px tucked beneath the card either way.
+         The travel is downward: .hero-visual is overflow:hidden and the stage
+         has 28px of slack below the last card, none above the first. */
+      .flow-card.output,
+      .flow-card.input {
+        will-change: transform;
+        animation: tile-wave 7s var(--sine) infinite;
+      }
+      .flow-card.input {
+        animation-name: tile-wave-input;
+        animation-duration: 8.4s;
+        animation-delay: -3.1s;
+      }
+      .flow-card.out-1 { animation-delay: 0s; }
+      .flow-card.out-2 { animation-delay: -0.19s; }
+      .flow-card.out-3 { animation-delay: -0.38s; }
+      .flow-card.out-4 { animation-delay: -0.57s; }
+      .flow-card.out-5 { animation-delay: -0.76s; }
+      .flow-card.out-6 { animation-delay: -0.95s; }
+
+      @keyframes tile-wave {
+        0%, 100% {
+          transform: translate3d(0, 0, 0) rotate(0deg) scale(1);
+          box-shadow: 0 10px 24px rgba(23, 31, 42, 0.07);
+        }
+        50% {
+          transform: translate3d(7px, 18px, 0) rotate(-0.6deg) scale(1.014);
+          box-shadow: 0 26px 44px rgba(23, 31, 42, 0.12);
+        }
+      }
+
+      /* The inputs card has no neighbours, so it can travel further. */
+      @keyframes tile-wave-input {
+        0%, 100% {
+          transform: translate3d(0, 0, 0) rotate(0deg) scale(1);
+          box-shadow: 0 10px 24px rgba(23, 31, 42, 0.07);
+        }
+        50% {
+          transform: translate3d(6px, -22px, 0) rotate(0.7deg) scale(1.02);
+          box-shadow: 0 28px 46px rgba(23, 31, 42, 0.12);
+        }
+      }
+
+      @media (prefers-reduced-motion: reduce) {
+        .flow-card.output,
+        .flow-card.input { animation: none; }
+      }
       .flow-label {
         margin: 0 0 8px;
         color: var(--quiet);
@@ -866,7 +933,7 @@
         right: 58px;
         top: 50%;
         height: 2px;
-        background: linear-gradient(90deg, var(--brand), var(--blue), var(--amber), var(--violet), var(--green));
+        background: linear-gradient(90deg, var(--brand), var(--blue), var(--amber), var(--teal), var(--green));
         opacity: 0.32;
         z-index: 0;
       }
@@ -2573,9 +2640,9 @@
         border-radius: 2px;
         background: #dfe5eb;
       }
-      .code-bar.kw { background: color-mix(in srgb, var(--violet) 38%, #dfe5eb); }
+      .code-bar.kw { background: color-mix(in srgb, var(--teal) 38%, #dfe5eb); }
       .code-bar.id { background: color-mix(in srgb, var(--blue) 32%, #dfe5eb); }
-      .code-bar.num { background: color-mix(in srgb, var(--teal) 32%, #dfe5eb); }
+      .code-bar.num { background: color-mix(in srgb, var(--green) 32%, #dfe5eb); }
 
 
       /* ═══════════════════════════════════════════════════════════════════
@@ -2594,7 +2661,6 @@
         --green: #4ec27a;
         --blue: #7b95ff;
         --teal: #35bfae;
-        --violet: #a08cff;
         position: relative;
         margin-top: 34px;
         padding-top: 92px;
@@ -2651,9 +2717,109 @@
       .band-dark .artifact-view-body p { color: #a49c94; }
       .band-dark .code-row span:first-child { color: #59524c; }
       .band-dark .code-bar { background: #2b2521; }
-      .band-dark .code-bar.kw { background: color-mix(in srgb, var(--violet) 46%, #2b2521); }
+      .band-dark .code-bar.kw { background: color-mix(in srgb, var(--teal) 46%, #2b2521); }
       .band-dark .code-bar.id { background: color-mix(in srgb, var(--blue) 42%, #2b2521); }
-      .band-dark .code-bar.num { background: color-mix(in srgb, var(--teal) 42%, #2b2521); }
+      .band-dark .code-bar.num { background: color-mix(in srgb, var(--green) 42%, #2b2521); }
+
+
+      /* ═══════════════════════════════════════════════════════════════════
+         COMMAND CENTRE — the console on a dark plate.
+         .band-dark already lifts --ink/--muted/--line/--green, so anything
+         reading a token inherits correctly; only the hard-coded light
+         surfaces below need restating. The window loses its 640px cap so
+         the file manifest has room to run.
+         ═══════════════════════════════════════════════════════════════════ */
+      /* Hard cut against the soft band above: no gap, no double hairline. */
+      #surface { margin-top: 0; }
+      #surface::before { display: none; }
+      #surface .agent-console { margin-top: 0; }
+      #surface .agent-window {
+        max-height: none;
+        border: 1px solid var(--line);
+        background: rgba(255, 255, 255, 0.03);
+        box-shadow: 0 34px 80px rgba(0, 0, 0, 0.42);
+      }
+      #surface .agent-appbar { border-bottom-color: var(--line); }
+      /* .agent-workspace pins itself to 604px, which capped the window no
+         matter what the thread wanted. Both have to give. */
+      #surface .agent-workspace { height: auto; }
+      #surface .agent-thread {
+        height: clamp(600px, 78vh, 820px);
+        background:
+          linear-gradient(180deg, rgba(255, 255, 255, 0.02), transparent 70%),
+          radial-gradient(440px 280px at 86% 30%, rgba(224, 111, 56, 0.10), transparent 70%);
+      }
+      #surface .agent-sidebar {
+        border-right-color: var(--line);
+        background: rgba(255, 255, 255, 0.022);
+      }
+      #surface .sidebar-head { color: #9b938b; }
+      #surface .chat-item { color: #a49c94; }
+      #surface .chat-item small { color: #7c746d; }
+      #surface .chat-item.active { background: rgba(224, 111, 56, 0.16); color: #f4f1ee; }
+
+      #surface .project-context { color: #9b938b; }
+      #surface .thread-label { color: #9b938b; }
+      #surface .thread-label .avatar {
+        border-color: var(--line);
+        background: #221d19;
+      }
+      #surface .user-prompt {
+        border-color: rgba(224, 111, 56, 0.3);
+        background: rgba(224, 111, 56, 0.14);
+        color: #f0ece8;
+      }
+      #surface .typing-cursor { background: #f4f1ee; }
+
+      #surface .action-panel.panel {
+        border: 1px solid var(--line);
+        background: rgba(255, 255, 255, 0.03);
+      }
+      #surface .action-head { border-bottom-color: var(--line); color: #ece7e2; }
+      #surface .action-head span:last-child { color: #857d76; }
+      #surface .action-body { background: rgba(255, 255, 255, 0.02); }
+      #surface .tool-step { color: #b6aea6; }
+      #surface .tool-step.is-active { color: #f4f1ee; }
+      #surface .tool-step.is-done { color: #6fce93; }
+      #surface .tool-lines { color: #857d76; }
+
+      #surface .files-panel {
+        border-color: var(--line);
+        background: rgba(255, 255, 255, 0.03);
+      }
+      #surface .files-head { border-bottom-color: var(--line); }
+      #surface .files-path { color: #857d76; }
+      #surface .file-list div { color: #b6aea6; }
+      #surface .file-list div.is-done { color: #6fce93; }
+      #surface .file-list span:last-child { color: #7c746d; }
+      #surface .show-more { border-top-color: var(--line); }
+      #surface .success-line { color: #ece7e2; }
+      #surface .location-line { color: #a49c94; }
+      #surface .location-line code { color: var(--brand); }
+
+      #surface .agent-result-table {
+        border-color: var(--line);
+        background: rgba(255, 255, 255, 0.03);
+      }
+      #surface .agent-result-table .row { border-top-color: var(--line); color: #b6aea6; }
+      #surface .agent-result-table .row:first-child {
+        background: rgba(255, 255, 255, 0.05);
+        color: #f0ece8;
+      }
+
+      #surface .composer {
+        border-color: var(--line);
+        background: rgba(255, 255, 255, 0.04);
+        color: #7c746d;
+      }
+      #surface .composer.is-typing { color: #f4f1ee; border-color: rgba(224, 111, 56, 0.34); }
+      #surface .composer.is-sent { color: #6fce93; }
+
+      @media (max-width: 1080px) {
+        #surface .agent-thread { height: auto; min-height: 520px; }
+        #surface .agent-workspace { height: auto; }
+      }
+
 
       .outcomes {
         position: relative;
@@ -3264,6 +3430,8 @@
           top: auto !important;
           width: 100%;
           margin-bottom: 10px;
+          /* Stacked: nothing to float over, and the drift only jitters. */
+          animation: none !important;
         }
         .agent-core {
           position: relative;
@@ -3711,6 +3879,7 @@
       <div class="sheen-field"></div>
       <svg class="ghost-glyph one"><use href="#agnisys-glyph" /></svg>
       <svg class="ghost-glyph two"><use href="#agnisys-glyph" /></svg>
+      <svg class="ghost-glyph three"><use href="#agnisys-glyph" /></svg>
     </div>
 
     <header class="topbar">
@@ -3754,13 +3923,13 @@
           <div class="hero-visual reveal" aria-label="Inputs flow into IDS-AI and produce design, verification, validation, integration, documentation, and sign-off handoffs.">
             <div class="flow-stage">
               <svg class="flow-lines" viewBox="0 0 590 468" aria-hidden="true">
-                <path d="M155 226 C222 226 225 226 294 226" />
-                <path d="M294 178 C363 40 380 34 438 34" />
-                <path class="alt" d="M294 194 C368 104 383 103 438 103" />
-                <path d="M294 214 C378 166 385 172 438 172" />
-                <path class="alt" d="M294 234 C378 234 385 241 438 241" />
-                <path d="M294 254 C374 304 383 310 438 310" />
-                <path class="alt" d="M294 274 C365 372 383 379 438 379" />
+                <path d="M120 226 C222 226 225 226 294 226" />
+                <path d="M294 178 C363 40 380 34 470 34" />
+                <path class="alt" d="M294 194 C368 104 383 103 470 103" />
+                <path d="M294 214 C378 166 385 172 470 172" />
+                <path class="alt" d="M294 234 C378 234 385 241 470 241" />
+                <path d="M294 254 C374 304 383 310 470 310" />
+                <path class="alt" d="M294 274 C365 372 383 379 470 379" />
               </svg>
 
               <article class="flow-card input">
@@ -4074,7 +4243,7 @@
               <h3>Generate handoffs</h3>
               <p>Correct generators produce RTL IP, RTL SoC, UVM/RAL, headers, IP-XACT, docs, and validation assets.</p>
             </article>
-            <article class="motion-node" style="--tone: var(--violet); --delay: 270ms">
+            <article class="motion-node" style="--tone: var(--teal); --delay: 270ms">
               <span class="num">04</span>
               <h3>Check and self-correct</h3>
               <p>The agent compares generated outputs against the source, resolves drift, and reruns the affected handoffs.</p>
@@ -4127,7 +4296,7 @@
                   <circle class="ring-node active" data-ring="create" cx="36" cy="63" r="8" fill="var(--brand)" /><text x="20" y="35">Create</text>
                   <circle class="ring-node" data-ring="generate" cx="116" cy="28" r="8" fill="var(--blue)" /><text x="92" y="14">Generate</text>
                   <circle class="ring-node" data-ring="check" cx="210" cy="63" r="8" fill="var(--amber)" /><text x="196" y="35">Check</text>
-                  <circle class="ring-node" data-ring="correct" cx="304" cy="98" r="8" fill="var(--violet)" /><text x="274" y="124">Correct</text>
+                  <circle class="ring-node" data-ring="correct" cx="304" cy="98" r="8" fill="var(--teal)" /><text x="274" y="124">Correct</text>
                   <circle class="ring-node" data-ring="signoff" cx="384" cy="63" r="8" fill="var(--green)" /><text x="352" y="35">Sign-Off</text>
                 </g>
               </svg>
@@ -4195,89 +4364,6 @@
               </article>
             </div>
 
-            <div class="agent-console agent-window" aria-label="Prompt-driven IDS-AI agent work surface">
-              <div class="agent-appbar">
-                <span class="traffic" aria-hidden="true"><i></i><i></i><i></i></span>
-                <span class="app-title">IDS Collaboration Framework</span>
-                <span class="app-tools" aria-hidden="true"><i></i><i></i><i></i></span>
-              </div>
-              <div class="agent-workspace">
-                <aside class="agent-sidebar" aria-hidden="true">
-                  <div class="sidebar-head"><span>Chats</span><span>New</span></div>
-                  <div class="chat-item active">Generate CSR verification environment<small>10m ago - 32 msgs</small></div>
-                  <div class="chat-item">Review stale generated files<small>1d ago - 8 msgs</small></div>
-                </aside>
-
-                <div class="agent-thread">
-                  <div class="project-context">Project context / redacted/spec_workspace</div>
-                  <div class="thread-row chat-motion" data-chat-user>
-                    <div class="thread-label"><span class="avatar">U</span><span>User</span></div>
-                    <div class="user-prompt">
-                      <span id="typedPrompt" data-prompt="Using this golden specification, regenerate the CSR verification environment, confirm the bus agent, testbench top, Makefiles, RTL handoff, and exact files created."></span><span class="typing-cursor" aria-hidden="true"></span>
-                    </div>
-                  </div>
-
-                  <div class="thread-row chat-motion" data-chat-agent>
-                    <div class="thread-label"><span class="avatar agent-avatar">A</span><span>Agent</span></div>
-                    <div class="action-panel panel">
-                      <div class="action-head"><span>Agent action plan and tool analysis</span><span class="run-status" id="agentRunStatus">waiting</span></div>
-                      <div class="action-body">
-                        <div class="tool-step" data-agent-step>
-                          <span>1.</span>
-                          <div><span class="ok">ok</span> ids_spec_check
-                            <div class="tool-lines">
-                              <span>Detected width/reset drift in redacted CSR block.</span>
-                              <span>Selected source correction in golden specification.</span>
-                            </div>
-                          </div>
-                        </div>
-                        <div class="tool-step" data-agent-step>
-                          <span>2.</span>
-                          <div><span class="ok">ok</span> ids_generate
-                            <div class="tool-lines">
-                              <span>Regenerated RTL IP, RTL SoC, UVM/RAL, headers, docs, and IP-XACT.</span>
-                              <span>Confirmed all generated artifacts are synchronized.</span>
-                            </div>
-                          </div>
-                        </div>
-                        <div class="tool-step" data-agent-step>
-                          <span>3.</span>
-                          <div><span class="ok">ok</span> list_directory
-                            <div class="tool-lines">
-                              <span>Captured output manifest, file sizes, and generated handoff report.</span>
-                            </div>
-                          </div>
-                        </div>
-
-                        <div class="files-panel" data-files-panel>
-                          <div class="files-head"><span id="filesCreatedCount">Files created - 0</span><span id="filesOpenState">Preparing</span></div>
-                          <div class="files-path">/output/redacted/csr_signoff/</div>
-                          <div class="file-list">
-                            <div data-file-row><span>block_external_ids.sv</span><span>3.5 KB</span></div>
-                            <div data-file-row><span>csr_agent_pkg.sv</span><span>2.0 KB</span></div>
-                            <div data-file-row><span>Makefile.questa</span><span>2.9 KB</span></div>
-                            <div data-file-row><span>ral_model.sv</span><span>8.1 KB</span></div>
-                            <div data-file-row><span>handoff_report.html</span><span>14.2 KB</span></div>
-                          </div>
-                          <div class="show-more" id="showMoreFiles">6 more queued</div>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-
-                  <div class="success-line chat-motion" data-chat-final>CSR verification environment generated successfully</div>
-                  <p class="location-line chat-motion" data-chat-final>Location: <code>output/redacted/csr_signoff/</code></p>
-                  <div class="agent-result-table chat-motion" data-chat-final aria-label="Generated file result table">
-                    <div class="row"><span>File</span><span>Size</span><span>Purpose</span></div>
-                    <div class="row"><span>csr_agent_pkg.sv</span><span>2.0 KB</span><span>Bus agent package</span></div>
-                    <div class="row"><span>ip_registers.sv</span><span>3.5 KB</span><span>RTL IP handoff</span></div>
-                    <div class="row"><span>soc_map.sv</span><span>2.6 KB</span><span>SoC integration map</span></div>
-                  </div>
-                  <div class="composer" id="chatComposer">Message... mention files, Enter to send</div>
-                </div>
-              </div>
-            </div>
-
             <div class="loop-actions">
               <button class="btn btn-secondary" id="replayBtn" type="button" hidden>Replay</button>
               <span class="autoplay-note">Loops while this section is in view.</span>
@@ -4286,6 +4372,103 @@
               The visible product story is the loop itself: a detected specification conflict resolves into
               regenerated outputs and closed CSR coverage without exposing the underlying UI.
             </p>
+          </div>
+        </div>
+      </section>
+
+      <!-- Phase 3: the command centre. A hard colour wall separates the
+           abstract logic above from the literal interface here. -->
+      <section id="surface" class="band-dark" data-state="executing" data-rail-target="act">
+        <div class="shell">
+          <div class="section-head reveal">
+            <h2>One intuitive surface for complex engineering.</h2>
+            <p class="lede">
+              See exactly what the agent is doing: the prompt it received, the tools it ran,
+              and every file it wrote. Nothing happens off-screen.
+            </p>
+          </div>
+
+          <div class="agent-console agent-window reveal" aria-label="Prompt-driven IDS-AI agent work surface">
+            <div class="agent-appbar">
+              <span class="traffic" aria-hidden="true"><i></i><i></i><i></i></span>
+              <span class="app-title">IDS Collaboration Framework</span>
+              <span class="app-tools" aria-hidden="true"><i></i><i></i><i></i></span>
+            </div>
+            <div class="agent-workspace">
+              <aside class="agent-sidebar" aria-hidden="true">
+                <div class="sidebar-head"><span>Chats</span><span>New</span></div>
+                <div class="chat-item active">Generate CSR verification environment<small>10m ago - 32 msgs</small></div>
+                <div class="chat-item">Review stale generated files<small>1d ago - 8 msgs</small></div>
+              </aside>
+
+              <div class="agent-thread">
+                <div class="project-context">Project context / redacted/spec_workspace</div>
+                <div class="thread-row chat-motion" data-chat-user>
+                  <div class="thread-label"><span class="avatar">U</span><span>User</span></div>
+                  <div class="user-prompt">
+                    <span id="typedPrompt" data-prompt="Using this golden specification, regenerate the CSR verification environment, confirm the bus agent, testbench top, Makefiles, RTL handoff, and exact files created."></span><span class="typing-cursor" aria-hidden="true"></span>
+                  </div>
+                </div>
+
+                <div class="thread-row chat-motion" data-chat-agent>
+                  <div class="thread-label"><span class="avatar agent-avatar">A</span><span>Agent</span></div>
+                  <div class="action-panel panel">
+                    <div class="action-head"><span>Agent action plan and tool analysis</span><span class="run-status" id="agentRunStatus">waiting</span></div>
+                    <div class="action-body">
+                      <div class="tool-step" data-agent-step>
+                        <span>1.</span>
+                        <div><span class="ok">ok</span> ids_spec_check
+                          <div class="tool-lines">
+                            <span>Detected width/reset drift in redacted CSR block.</span>
+                            <span>Selected source correction in golden specification.</span>
+                          </div>
+                        </div>
+                      </div>
+                      <div class="tool-step" data-agent-step>
+                        <span>2.</span>
+                        <div><span class="ok">ok</span> ids_generate
+                          <div class="tool-lines">
+                            <span>Regenerated RTL IP, RTL SoC, UVM/RAL, headers, docs, and IP-XACT.</span>
+                            <span>Confirmed all generated artifacts are synchronized.</span>
+                          </div>
+                        </div>
+                      </div>
+                      <div class="tool-step" data-agent-step>
+                        <span>3.</span>
+                        <div><span class="ok">ok</span> list_directory
+                          <div class="tool-lines">
+                            <span>Captured output manifest, file sizes, and generated handoff report.</span>
+                          </div>
+                        </div>
+                      </div>
+
+                      <div class="files-panel" data-files-panel>
+                        <div class="files-head"><span id="filesCreatedCount">Files created - 0</span><span id="filesOpenState">Preparing</span></div>
+                        <div class="files-path">/output/redacted/csr_signoff/</div>
+                        <div class="file-list">
+                          <div data-file-row><span>block_external_ids.sv</span><span>3.5 KB</span></div>
+                          <div data-file-row><span>csr_agent_pkg.sv</span><span>2.0 KB</span></div>
+                          <div data-file-row><span>Makefile.questa</span><span>2.9 KB</span></div>
+                          <div data-file-row><span>ral_model.sv</span><span>8.1 KB</span></div>
+                          <div data-file-row><span>handoff_report.html</span><span>14.2 KB</span></div>
+                        </div>
+                        <div class="show-more" id="showMoreFiles">6 more queued</div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="success-line chat-motion" data-chat-final>CSR verification environment generated successfully</div>
+                <p class="location-line chat-motion" data-chat-final>Location: <code>output/redacted/csr_signoff/</code></p>
+                <div class="agent-result-table chat-motion" data-chat-final aria-label="Generated file result table">
+                  <div class="row"><span>File</span><span>Size</span><span>Purpose</span></div>
+                  <div class="row"><span>csr_agent_pkg.sv</span><span>2.0 KB</span><span>Bus agent package</span></div>
+                  <div class="row"><span>ip_registers.sv</span><span>3.5 KB</span><span>RTL IP handoff</span></div>
+                  <div class="row"><span>soc_map.sv</span><span>2.6 KB</span><span>SoC integration map</span></div>
+                </div>
+                <div class="composer" id="chatComposer">Message... mention files, Enter to send</div>
+              </div>
+            </div>
           </div>
         </div>
       </section>
@@ -4363,7 +4546,7 @@
               <span class="metric"><b>14%</b><i>first-silicon success today</i></span>
               <h3>Fewer design re-spins</h3><p>Moves defect discovery before RTL and silicon.</p>
             </article>
-            <article class="stat" data-step="1" style="--tone: var(--violet)">
+            <article class="stat" data-step="1" style="--tone: var(--teal)">
               <span class="metric"><b>~45%</b><i>of flaws start in the spec</i></span>
               <h3>Higher specification quality</h3><p>Checks completeness and consistency at the source.</p>
             </article>
@@ -4842,14 +5025,20 @@
         queueLoopStart(160);
       });
 
+      // One runLoop() timeline now spans two sections: the abstract trace in
+      // #loop and the console in #surface. Observe both, and if the pass has
+      // already finished upstream, reset so the file manifest actually plays
+      // for someone whose first sight of the console is #surface.
       const loopSection = document.getElementById("loop");
+      const surfaceSection = document.getElementById("surface");
       const loopAutoObserver = new IntersectionObserver((entries) => {
         const visible = entries.some((entry) => entry.isIntersecting);
         if (!visible) return;
         loopShouldCycle = true;
+        if (!loopRunning && loopShell.classList.contains("is-done")) resetLoop();
         queueLoopStart(420);
       }, { threshold: 0.06, rootMargin: "0px 0px -10% 0px" });
-      loopAutoObserver.observe(loopSection);
+      [loopSection, surfaceSection].forEach((s) => s && loopAutoObserver.observe(s));
       const loopRect = loopSection.getBoundingClientRect();
       if (loopRect.top < window.innerHeight && loopRect.bottom > 0) {
         loopShouldCycle = true;
