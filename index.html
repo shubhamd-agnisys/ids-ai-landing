@@ -916,145 +916,170 @@
         margin-right: auto;
         text-align: left;
       }
-      .motion-board {
+      /* ═══════════════════════════════════════════════════════════════════
+         SEAMLESS RIBBON
+         No panels, no borders, no per-step colour. Five columns of type over
+         one continuous rule, and a single orange node that glides to the
+         active step. Orange is reserved for that node and the active number;
+         everything dormant is teal or quiet grey.
+         ═══════════════════════════════════════════════════════════════════ */
+      .ribbon {
+        --active: 0;
         position: relative;
-        isolation: isolate;
+        margin-top: 6px;
+        padding: 8px 0 0;
+      }
+
+      .ribbon-heads,
+      .ribbon-bodies {
         display: grid;
-        grid-template-columns: repeat(5, minmax(0, 1fr));
-        gap: 12px;
-        min-height: 300px;
-        padding: 28px;
-        overflow: hidden;
+        grid-template-columns: repeat(5, 1fr);
+        gap: 6px;
+        gap: 26px;
       }
-      .motion-board::before {
-        content: "";
-        position: absolute;
-        left: 58px;
-        right: 58px;
-        top: 50%;
-        height: 2px;
-        background: linear-gradient(90deg, var(--brand), var(--blue), var(--amber), var(--teal), var(--green));
-        opacity: 0.32;
-        z-index: 0;
+
+      .ribbon-step {
+        display: grid;
+        justify-items: start;
+        gap: 7px;
+        padding: 0 0 20px;
+        border: 0;
+        background: none;
+        text-align: left;
+        cursor: pointer;
+        opacity: 0.45;
+        transition: opacity 620ms var(--ease);
       }
-      .motion-board::after {
-        content: "";
-        position: absolute;
-        inset: -24%;
-        background:
-          linear-gradient(112deg, transparent 32%, rgba(224, 111, 56, 0.1) 39%, transparent 47%),
-          linear-gradient(112deg, transparent 58%, rgba(73, 108, 255, 0.1) 66%, transparent 76%);
-        animation: hero-scan 7s var(--ease) infinite alternate;
-        pointer-events: none;
-        z-index: 0;
-      }
-      .motion-node {
-        position: relative;
-        z-index: 2;
-        min-height: 214px;
-        padding: 18px;
-        border: 1px solid color-mix(in srgb, var(--tone) 24%, #e3e8ed);
-        border-radius: 10px;
-        background: rgba(255, 255, 255, 0.9);
-        box-shadow: 0 14px 34px rgba(23, 31, 42, 0.07);
-        overflow: hidden;
-        opacity: 0;
-        transform: translateY(12px);
-        transition: opacity 560ms var(--ease), transform 560ms var(--ease), border-color 220ms var(--ease);
-        transition-delay: var(--delay);
-      }
-      .motion-board.in-view .motion-node {
-        opacity: 1;
-        transform: none;
-      }
-      .motion-node::before {
-        content: "";
-        position: absolute;
-        inset: -20%;
-        background: linear-gradient(112deg, transparent 36%, color-mix(in srgb, var(--tone) 16%, transparent) 47%, transparent 58%);
-        transform: translateX(-35%);
-        transition: transform 680ms var(--ease);
-      }
-      .motion-node:hover {
-        border-color: color-mix(in srgb, var(--tone) 46%, #dfe5ea);
-      }
-      .motion-node:hover::before {
-        transform: translateX(24%);
-      }
-      .motion-node > * {
-        position: relative;
-        z-index: 1;
-      }
-      .motion-node .num {
-        display: inline-grid;
-        place-items: center;
-        width: 34px;
-        height: 34px;
-        margin-bottom: 18px;
-        border: 1px solid color-mix(in srgb, var(--tone) 32%, #fff);
-        border-radius: 8px;
-        background: color-mix(in srgb, var(--tone) 9%, #fff);
-        color: var(--tone);
+      .ribbon-step.is-active { opacity: 1; }
+
+      .ribbon-num {
+        color: var(--quiet);
         font-family: var(--mono);
-        font-size: 12px;
-        font-weight: 850;
+        font-size: 10.5px;
+        font-weight: 600;
+        letter-spacing: 0.16em;
+        transition: color 620ms var(--ease);
       }
-      .motion-node h3 {
-        margin-bottom: 10px;
+      .ribbon-step.is-active .ribbon-num { color: var(--brand); }
+
+      .ribbon-title {
+        color: var(--muted);
         font-size: 16px;
+        font-weight: 600;
+        line-height: 1.28;
+        letter-spacing: -0.01em;
+        transition: color 620ms var(--ease);
       }
-      .motion-node p {
+      .ribbon-step.is-active .ribbon-title { color: var(--ink); font-weight: 700; }
+
+      /* ── The continuity path ── */
+      .ribbon-track {
+        position: relative;
+        height: 2px;
+        margin-bottom: 24px;
+      }
+      .ribbon-rule {
+        position: absolute;
+        inset: 0;
+        border-radius: 2px;
+        background: var(--line);
+      }
+      .ribbon-tick {
+        position: absolute;
+        top: 50%;
+        width: 5px;
+        height: 5px;
+        margin: -2.5px 0 0 -2.5px;
+        border-radius: 50%;
+        background: var(--teal);
+        opacity: 0.42;
+      }
+      .ribbon-tick[data-step="0"] { left: 10%; }
+      .ribbon-tick[data-step="1"] { left: 30%; }
+      .ribbon-tick[data-step="2"] { left: 50%; }
+      .ribbon-tick[data-step="3"] { left: 70%; }
+      .ribbon-tick[data-step="4"] { left: 90%; }
+
+      /* One node. It glides; it does not blink between positions. */
+      .ribbon-node {
+        position: absolute;
+        top: 50%;
+        left: calc(10% + var(--active) * 20%);
+        width: 9px;
+        height: 9px;
+        margin: -4.5px 0 0 -4.5px;
+        border-radius: 50%;
+        background: var(--brand);
+        box-shadow: 0 0 0 4px rgba(224, 111, 56, 0.16);
+        transition: left 900ms cubic-bezier(0.4, 0, 0.2, 1);
+      }
+      .ribbon-node::after {
+        content: "";
+        position: absolute;
+        inset: -4px;
+        border-radius: 50%;
+        border: 1px solid var(--brand);
+        opacity: 0;
+        animation: node-breathe 2.8s var(--ease) infinite;
+      }
+      @keyframes node-breathe {
+        0%   { transform: scale(0.7); opacity: 0.5; }
+        70%  { transform: scale(1.5); opacity: 0; }
+        100% { transform: scale(1.5); opacity: 0; }
+      }
+
+      .ribbon-copy {
         margin: 0;
         color: var(--muted);
-        font-size: 13.2px;
-        line-height: 1.52;
+        font-size: 13.5px;
+        line-height: 1.6;
+        opacity: 0.45;
+        transition: opacity 620ms var(--ease);
       }
-      .motion-packet {
-        position: absolute;
-        z-index: 1;
-        left: 5%;
-        top: calc(50% - 6px);
-        width: 12px;
-        height: 12px;
-        border-radius: 3px;
-        background: var(--state-a);
-        box-shadow: 0 0 0 7px var(--state-soft);
-        transform: rotate(-14deg);
-        animation: flow-packet 5.8s linear infinite;
+      .ribbon-copy.is-active { opacity: 1; }
+
+      @media (max-width: 900px) {
+        .motion-summary { grid-template-columns: 1fr; gap: 26px; }
+        .ribbon-heads,
+        .ribbon-bodies { grid-template-columns: 1fr; gap: 0; }
+        .ribbon-track { display: none; }
+        .ribbon-step {
+          padding: 16px 0 6px 16px;
+          border-left: 2px solid var(--line);
+        }
+        .ribbon-step.is-active { border-left-color: var(--brand); }
+        .ribbon-copy { padding: 0 0 16px 18px; }
       }
-      .motion-packet.two {
-        background: var(--blue);
-        animation-delay: 1.6s;
+
+      @media (prefers-reduced-motion: reduce) {
+        .ribbon-step,
+        .ribbon-copy { opacity: 1; }
+        .ribbon-node::after { animation: none; }
+        .ribbon-node { transition: none; }
       }
-      .motion-packet.three {
-        background: var(--green);
-        animation-delay: 3.1s;
-      }
-      @keyframes flow-packet {
-        0% { left: 5%; opacity: 0; }
-        8%, 88% { opacity: 1; }
-        100% { left: 94%; opacity: 0; }
-      }
+
+      /* Full width and de-boxed, so it sits under the ribbon rather than
+         floating centred beneath it. A hairline does the separating. */
       .motion-summary {
         display: grid;
-        grid-template-columns: minmax(0, 0.96fr) minmax(0, 0.96fr) minmax(300px, 1.08fr);
-        gap: 14px;
-        width: min(900px, 100%);
-        margin-top: 16px;
-        margin-left: auto;
-        margin-right: auto;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 34px;
+        width: 100%;
+        margin-top: 44px;
+        padding-top: 26px;
+        border-top: 1px solid var(--line);
       }
       .motion-summary article {
         display: flex;
         flex-direction: column;
-        min-height: 132px;
-        padding: 20px;
-        border: 1px solid var(--line);
-        border-radius: 10px;
-        background: rgba(255, 255, 255, 0.88);
+        min-height: 0;
+        padding: 0;
+        border: 0;
+        border-radius: 0;
+        background: none;
       }
       .motion-summary article.feature-fit {
-        padding-right: 24px;
+        padding-right: 0;
       }
       .motion-summary h3 {
         font-size: 16px;
@@ -1074,9 +1099,9 @@
         padding-top: 15px;
       }
       .motion-summary .audience-tags span {
-        border: 1px solid rgba(224, 111, 56, 0.18);
-        background: rgba(224, 111, 56, 0.07);
-        color: #4b5563;
+        border: 1px solid var(--line);
+        background: transparent;
+        color: var(--quiet);
       }
 
       .story {
@@ -2697,6 +2722,10 @@
         color: #9b938b;
       }
       .band-dark .explorer-foot { border-top-color: var(--line); color: #7c746d; }
+      /* Orange means "playing". Idle text stays quiet, or the resting
+         label reads as a live indicator. */
+      #explorerStatus { transition: color 300ms var(--ease); }
+      #explorerStatus.is-touring { color: var(--brand); font-weight: 700; }
       .band-dark .explorer-dir { color: #cdc6bf; }
       .band-dark .explorer-dir .caret { border-left-color: #7c746d; }
       .band-dark .explorer-file { color: #a49c94; }
@@ -3125,6 +3154,25 @@
       .context-beams path:nth-child(even) {
         stroke: var(--state-c);
       }
+      @keyframes packet-a {
+        0%, 100% { left: 18%; top: 18%; opacity: 0; }
+        12%, 86% { opacity: 1; }
+        50% { left: 49%; top: 49%; }
+        78% { left: 76%; top: 19%; }
+      }
+      @keyframes packet-b {
+        0%, 100% { left: 80%; top: 80%; opacity: 0; }
+        12%, 86% { opacity: 1; }
+        50% { left: 49%; top: 49%; }
+        78% { left: 18%; top: 78%; }
+      }
+      @keyframes packet-c {
+        0%, 100% { left: 18%; top: 78%; opacity: 0; }
+        12%, 86% { opacity: 1; }
+        50% { left: 49%; top: 49%; }
+        78% { left: 79%; top: 78%; }
+      }
+
       .context-packet {
         position: absolute;
         z-index: 2;
@@ -3145,23 +3193,284 @@
         animation-name: packet-c;
         animation-delay: 2.2s;
       }
-      @keyframes packet-a {
-        0%, 100% { left: 18%; top: 18%; opacity: 0; }
-        12%, 86% { opacity: 1; }
-        50% { left: 49%; top: 49%; }
-        78% { left: 76%; top: 19%; }
+
+      .approval-stack {
+        display: grid;
+        gap: 14px;
+        scroll-margin-top: 108px;
       }
-      @keyframes packet-b {
-        0%, 100% { left: 80%; top: 80%; opacity: 0; }
-        12%, 86% { opacity: 1; }
-        50% { left: 49%; top: 49%; }
-        78% { left: 18%; top: 78%; }
+      .approval-card {
+        position: relative;
+        min-height: 232px;
+        padding: 16px;
+        overflow: hidden;
+        border: 1px solid var(--line);
+        border-radius: 14px;
+        background: rgba(255, 255, 255, 0.82);
+        box-shadow: 0 16px 46px rgba(21, 30, 42, 0.06);
       }
-      @keyframes packet-c {
-        0%, 100% { left: 18%; top: 78%; opacity: 0; }
-        12%, 86% { opacity: 1; }
-        50% { left: 49%; top: 49%; }
-        78% { left: 79%; top: 78%; }
+      .approval-card::before {
+        content: "";
+        position: absolute;
+        inset: -20%;
+        background:
+          linear-gradient(112deg, transparent 36%, rgba(224, 111, 56, 0.075) 44%, transparent 52%),
+          radial-gradient(280px 160px at 50% 48%, rgba(21, 155, 145, 0.08), transparent 70%);
+        opacity: 0.68;
+        transform: translateX(-14%);
+        transition: transform 900ms var(--ease);
+      }
+      .approval-card.in-view::before,
+      .approval-stack.in-view .approval-card::before {
+        transform: translateX(14%);
+      }
+      .approval-head {
+        position: relative;
+        z-index: 3;
+        display: flex;
+        align-items: flex-start;
+        justify-content: space-between;
+        gap: 14px;
+        margin-bottom: 12px;
+      }
+      .approval-head h3 {
+        margin: 0;
+        font-size: 15px;
+        line-height: 1.2;
+      }
+      .approval-head p {
+        max-width: 36ch;
+        margin: 4px 0 0;
+        color: var(--muted);
+        font-size: 12px;
+        line-height: 1.35;
+      }
+      .approval-tag {
+        flex: 0 0 auto;
+        padding: 5px 8px;
+        border: 1px solid color-mix(in srgb, var(--tone, var(--brand)) 24%, #fff);
+        border-radius: 999px;
+        color: var(--tone, var(--brand));
+        background: color-mix(in srgb, var(--tone, var(--brand)) 8%, #fff);
+        font-family: var(--mono);
+        font-size: 10px;
+        font-weight: 820;
+      }
+
+      .pcb-canvas {
+        position: relative;
+        z-index: 2;
+        height: 150px;
+      }
+      .pcb-svg {
+        position: absolute;
+        inset: 0;
+        width: 100%;
+        height: 100%;
+      }
+      .pcb-route {
+        fill: none;
+        stroke: #cdd5de;
+        stroke-width: 2;
+        stroke-linecap: square;
+        stroke-linejoin: miter;
+        opacity: 0.9;
+      }
+      .pcb-route.hot {
+        stroke: var(--brand);
+        stroke-width: 4;
+        stroke-dasharray: 18 760;
+        stroke-dashoffset: 760;
+        filter: drop-shadow(0 0 5px rgba(224, 111, 56, 0.62));
+        opacity: 0;
+        animation: pcb-flow 3.2s linear infinite;
+      }
+      .pcb-route.hot.out {
+        stroke: var(--teal);
+        animation-delay: 1.08s;
+        filter: drop-shadow(0 0 5px rgba(21, 155, 145, 0.62));
+      }
+      .pcb-route.hot.out.blue {
+        stroke: var(--blue);
+        animation-delay: 1.28s;
+        filter: drop-shadow(0 0 5px rgba(73, 108, 255, 0.58));
+      }
+      @keyframes pcb-flow {
+        0% { stroke-dashoffset: 760; opacity: 0; }
+        8%, 78% { opacity: 1; }
+        100% { stroke-dashoffset: 0; opacity: 0; }
+      }
+      .pcb-node,
+      .blue-node {
+        position: absolute;
+        z-index: 3;
+        display: grid;
+        gap: 3px;
+        width: 124px;
+        padding: 9px 10px;
+        border: 1px solid rgba(223, 229, 234, 0.86);
+        border-radius: 10px;
+        background: rgba(255, 255, 255, 0.86);
+        box-shadow: 0 10px 24px rgba(23, 31, 42, 0.06);
+      }
+      .pcb-node b,
+      .blue-node b {
+        color: var(--ink);
+        font-size: 12px;
+        line-height: 1.15;
+      }
+      .pcb-node span,
+      .blue-node span {
+        color: var(--muted);
+        font-size: 10.5px;
+        line-height: 1.25;
+      }
+      .pcb-node.input { left: 8px; top: 72px; --tone: var(--brand); }
+      .pcb-node.spec { left: 196px; top: 8px; --tone: var(--blue); }
+      .pcb-node.gen { right: 8px; top: 48px; --tone: var(--teal); }
+      .pcb-node.signoff { right: 76px; bottom: 4px; --tone: var(--green); }
+      .pcb-core,
+      .blue-core {
+        position: absolute;
+        z-index: 4;
+        left: 50%;
+        top: 54%;
+        display: grid;
+        place-items: center;
+        width: 92px;
+        height: 92px;
+        border: 1px solid rgba(224, 111, 56, 0.28);
+        border-radius: 50%;
+        color: var(--brand);
+        background: rgba(255, 255, 255, 0.94);
+        box-shadow: 0 18px 44px rgba(224, 111, 56, 0.16);
+        transform: translate(-50%, -50%);
+      }
+      .pcb-core {
+        animation: pcb-core-pulse 3.2s var(--ease) infinite;
+      }
+      .pcb-core svg,
+      .blue-core svg {
+        width: 34px;
+        height: 36px;
+      }
+      @keyframes pcb-core-pulse {
+        0%, 30%, 58%, 100% { transform: translate(-50%, -50%) scale(1); box-shadow: 0 18px 44px rgba(224, 111, 56, 0.16); }
+        39% { transform: translate(-50%, -50%) scale(1.06); box-shadow: 0 18px 54px rgba(224, 111, 56, 0.28); }
+      }
+
+      .blueprint-lab {
+        display: grid;
+        grid-template-columns: 112px minmax(0, 1fr);
+        gap: 12px;
+      }
+      .blueprint-menu {
+        position: relative;
+        z-index: 4;
+        display: grid;
+        align-content: center;
+        gap: 6px;
+      }
+      .blueprint-menu span {
+        display: block;
+        padding: 7px 8px;
+        border: 1px solid rgba(223, 229, 234, 0.72);
+        border-radius: 8px;
+        color: #697485;
+        background: rgba(255, 255, 255, 0.45);
+        font-family: var(--mono);
+        font-size: 10px;
+        font-weight: 760;
+        transition: border-color 260ms var(--ease), color 260ms var(--ease), background 260ms var(--ease);
+      }
+      .blueprint-canvas {
+        position: relative;
+        z-index: 2;
+        min-height: 150px;
+      }
+      .blueprint-svg {
+        position: absolute;
+        inset: 0;
+        width: 100%;
+        height: 100%;
+      }
+      .blueprint-route {
+        fill: none;
+        stroke: #ccd5df;
+        stroke-width: 2;
+        stroke-dasharray: 0;
+        opacity: 0.18;
+        transition: opacity 260ms var(--ease), stroke 260ms var(--ease), stroke-dasharray 260ms var(--ease);
+      }
+      .blue-node {
+        width: 120px;
+        opacity: 0.62;
+        cursor: pointer;
+        font: inherit;
+        text-align: left;
+        backdrop-filter: blur(12px);
+        -webkit-backdrop-filter: blur(12px);
+        transition: opacity 320ms var(--ease), transform 320ms var(--ease), box-shadow 320ms var(--ease), background 320ms var(--ease), border-color 320ms var(--ease);
+      }
+      .blue-node span {
+        max-height: 0;
+        opacity: 0;
+        overflow: hidden;
+        transition: max-height 320ms var(--ease), opacity 320ms var(--ease);
+      }
+      .blue-node.spec { left: 4px; top: 4px; --tone: var(--brand); }
+      .blue-node.batch { right: 8px; top: 8px; --tone: var(--blue); }
+      .blue-node.verify { left: 10px; bottom: 10px; --tone: var(--green); }
+      .blue-node.integrate { right: 12px; bottom: 8px; --tone: var(--teal); }
+      .blueprint-lab[data-active="spec"] { --active-tone: var(--brand); }
+      .blueprint-lab[data-active="batch"] { --active-tone: var(--blue); }
+      .blueprint-lab[data-active="verify"] { --active-tone: var(--green); }
+      .blueprint-lab[data-active="integrate"] { --active-tone: var(--teal); }
+      .blue-core {
+        color: var(--active-tone, var(--brand));
+        transition: color 260ms var(--ease), transform 260ms var(--ease), box-shadow 260ms var(--ease);
+      }
+      .blueprint-lab[data-active="spec"] .blue-node.spec,
+      .blueprint-lab[data-active="batch"] .blue-node.batch,
+      .blueprint-lab[data-active="verify"] .blue-node.verify,
+      .blueprint-lab[data-active="integrate"] .blue-node.integrate {
+        opacity: 1;
+        transform: translateY(-4px);
+        border-color: color-mix(in srgb, var(--tone) 42%, #fff);
+        background: rgba(255, 255, 255, 0.92);
+        box-shadow: 0 13px 32px rgba(23, 31, 42, 0.09), 0 0 0 1px color-mix(in srgb, var(--tone) 30%, transparent);
+      }
+      .blueprint-lab[data-active="spec"] .blue-node.spec span,
+      .blueprint-lab[data-active="batch"] .blue-node.batch span,
+      .blueprint-lab[data-active="verify"] .blue-node.verify span,
+      .blueprint-lab[data-active="integrate"] .blue-node.integrate span {
+        max-height: 44px;
+        opacity: 1;
+      }
+      .blueprint-lab[data-active="spec"] .blueprint-route.spec,
+      .blueprint-lab[data-active="batch"] .blueprint-route.batch,
+      .blueprint-lab[data-active="verify"] .blueprint-route.verify,
+      .blueprint-lab[data-active="integrate"] .blueprint-route.integrate {
+        stroke: var(--active-tone, var(--brand));
+        stroke-dasharray: 6 6;
+        opacity: 1;
+        animation: dash 1.1s linear infinite;
+      }
+      .blueprint-lab[data-active="spec"] [data-blueprint-tool="spec"],
+      .blueprint-lab[data-active="batch"] [data-blueprint-tool="batch"],
+      .blueprint-lab[data-active="verify"] [data-blueprint-tool="verify"],
+      .blueprint-lab[data-active="integrate"] [data-blueprint-tool="integrate"] {
+        color: var(--active-tone, var(--brand));
+        border-color: color-mix(in srgb, var(--active-tone, var(--brand)) 30%, #fff);
+        background: color-mix(in srgb, var(--active-tone, var(--brand)) 8%, #fff);
+      }
+      .blueprint-lab[data-active] .blue-core {
+        animation: blueprint-core-spin 5s linear infinite;
+        box-shadow: 0 18px 48px rgba(224, 111, 56, 0.18);
+      }
+      @keyframes blueprint-core-spin {
+        from { transform: translate(-50%, -50%) rotate(0deg) scale(1.02); }
+        to { transform: translate(-50%, -50%) rotate(360deg) scale(1.02); }
       }
 
       /* ═══════════════════════════════════════════════════════════════════
@@ -3195,37 +3504,77 @@
          section, where sequence actually means something.
          ═══════════════════════════════════════════════════════════════════ */
       #outcomes .statbar {
+        position: relative;
+        isolation: isolate;
         display: grid;
         grid-template-columns: repeat(5, 1fr);
         width: 100%;
         margin: 0;
-        padding: 0;
-        overflow: visible;
+        padding: 6px;
+        overflow: hidden;
         border: 1px solid var(--line);
         border-radius: 14px;
         background: rgba(255, 255, 255, 0.92);
         box-shadow: 0 16px 46px rgba(21, 30, 42, 0.06);
       }
-      #outcomes .statbar::before,
-      #outcomes .statbar::after { display: none; }
+      #outcomes .statbar::before {
+        content: "";
+        position: absolute;
+        left: 20px;
+        right: 20px;
+        top: 16px;
+        height: 2px;
+        border-radius: 999px;
+        background: #e0e6ed;
+        z-index: 0;
+      }
+      #outcomes .statbar::after {
+        content: "";
+        position: absolute;
+        left: 20px;
+        top: 16px;
+        width: calc((100% - 40px) * var(--loop-progress, 0));
+        height: 2px;
+        border-radius: 999px;
+        background: linear-gradient(90deg, var(--brand), var(--teal), var(--blue), var(--green));
+        box-shadow: 0 0 10px rgba(224, 111, 56, 0.28);
+        z-index: 1;
+        transition: width 180ms linear;
+      }
 
       #outcomes .stat {
         position: relative;
+        z-index: 2;
         display: block;
-        padding: 26px 22px 24px;
-        border: 0;
-        background: none;
+        padding: 26px 16px 18px;
+        border: 1px solid rgba(223, 229, 234, 0);
+        border-radius: 10px;
+        background:
+          linear-gradient(135deg, color-mix(in srgb, var(--tone, var(--brand)) 7%, #fff), rgba(255, 255, 255, 0.62) 66%),
+          #fff;
         opacity: 0;
         transform: translateY(10px);
-        transition: opacity 520ms var(--ease), transform 520ms var(--ease);
+        transition:
+          opacity 520ms var(--ease),
+          transform 520ms var(--ease),
+          border-color 260ms var(--ease),
+          box-shadow 260ms var(--ease),
+          background 260ms var(--ease);
       }
-      #outcomes .stat + .stat { border-left: 1px solid #eceef1; }
+      #outcomes .stat + .stat { margin-left: 0; }
       #outcomes .statbar.in-view .stat { opacity: 1; transform: none; }
       #outcomes .statbar.in-view .stat:nth-child(1) { transition-delay: 0ms; }
       #outcomes .statbar.in-view .stat:nth-child(2) { transition-delay: 80ms; }
       #outcomes .statbar.in-view .stat:nth-child(3) { transition-delay: 160ms; }
       #outcomes .statbar.in-view .stat:nth-child(4) { transition-delay: 240ms; }
       #outcomes .statbar.in-view .stat:nth-child(5) { transition-delay: 320ms; }
+      #outcomes .stat.is-active {
+        border-color: color-mix(in srgb, var(--tone, var(--brand)) 36%, #fff);
+        background:
+          linear-gradient(135deg, color-mix(in srgb, var(--tone, var(--brand)) 14%, #fff), #fff 70%),
+          #fff;
+        box-shadow: 0 14px 32px rgba(21, 30, 42, 0.08), 0 0 0 1px color-mix(in srgb, var(--tone, var(--brand)) 18%, transparent);
+      }
 
       /* A short tone rule above each number: the only place per-stat colour
          appears, and it maps to the same state tokens used elsewhere. */
@@ -3237,11 +3586,12 @@
         margin-bottom: 14px;
         border-radius: 2px;
         background: var(--tone, var(--brand));
+        box-shadow: 0 0 10px color-mix(in srgb, var(--tone, var(--brand)) 44%, transparent);
       }
       #outcomes .stat .metric { display: block; }
       #outcomes .stat .metric b {
         display: block;
-        color: var(--ink);
+        color: var(--tone, var(--ink));
         font-size: 34px;
         font-weight: 800;
         letter-spacing: -0.02em;
@@ -3272,17 +3622,24 @@
 
       @media (max-width: 1080px) {
         #outcomes .statbar { grid-template-columns: repeat(2, 1fr); }
-        #outcomes .stat + .stat { border-left: 0; }
-        #outcomes .stat:nth-child(2n) { border-left: 1px solid #eceef1; }
-        #outcomes .stat:nth-child(n + 3) { border-top: 1px solid #eceef1; }
+        #outcomes .stat + .stat { margin-left: 0; }
       }
       @media (max-width: 620px) {
         #outcomes .statbar { grid-template-columns: 1fr; }
-        #outcomes .stat:nth-child(2n) { border-left: 0; }
-        #outcomes .stat + .stat { border-top: 1px solid #eceef1; }
+        #outcomes .statbar::before,
+        #outcomes .statbar::after { display: none; }
       }
       @media (prefers-reduced-motion: reduce) {
         #outcomes .stat { opacity: 1 !important; transform: none !important; }
+        .pcb-route.hot,
+        .pcb-core,
+        .blueprint-route,
+        .blueprint-lab[data-active] .blue-core {
+          animation: none !important;
+        }
+        .pcb-route.hot {
+          opacity: 0.68;
+        }
       }
 
 
@@ -3372,10 +3729,6 @@
         .outcome:last-child {
           border-bottom-width: 1px;
         }
-        .motion-board {
-          grid-template-columns: 1fr;
-        }
-        .motion-board::before,
         .console-token {
           display: none;
         }
@@ -3455,7 +3808,6 @@
         }
         .removal-head,
         .removal-row,
-        .motion-board,
         .motion-summary {
           grid-template-columns: 1fr;
         }
@@ -3464,18 +3816,7 @@
           padding: 15px 18px;
           font-size: 14px;
         }
-        .motion-node {
-          grid-template-columns: 38px 1fr;
-          gap: 11px;
-          min-height: 0;
-        }
-        .motion-node p {
-          grid-column: 2;
-        }
-        .motion-node .num {
-          margin-left: 16px;
-        }
-        .outcome {
+              .outcome {
           grid-template-columns: 82px 1fr;
           gap: 9px 12px;
         }
@@ -3519,6 +3860,49 @@
           bottom: auto !important;
           width: 100%;
           margin-top: 10px;
+        }
+        .approval-card {
+          min-height: 0;
+          padding: 14px;
+        }
+        .approval-head {
+          display: grid;
+        }
+        .pcb-canvas,
+        .blueprint-canvas {
+          height: auto;
+          min-height: 0;
+        }
+        .pcb-svg,
+        .blueprint-svg {
+          display: none;
+        }
+        .pcb-core,
+        .blue-core {
+          position: relative;
+          left: auto;
+          top: auto;
+          width: 96px;
+          height: 96px;
+          margin: 8px auto 12px;
+          transform: none;
+          animation: none !important;
+        }
+        .pcb-node,
+        .blue-node {
+          position: relative;
+          left: auto !important;
+          right: auto !important;
+          top: auto !important;
+          bottom: auto !important;
+          width: 100%;
+          margin-top: 8px;
+        }
+        .blueprint-lab {
+          grid-template-columns: 1fr;
+        }
+        .blueprint-menu {
+          grid-template-columns: repeat(2, 1fr);
         }
         .work-card { min-height: auto; }
         .agent-console-card {
@@ -4224,35 +4608,47 @@
             </p>
           </div>
 
-          <div class="motion-board glass reveal" aria-label="Natural language drives IDS-AI from intent to sign-off">
-            <span class="motion-packet" aria-hidden="true"></span>
-            <span class="motion-packet two" aria-hidden="true"></span>
-            <span class="motion-packet three" aria-hidden="true"></span>
-            <article class="motion-node" style="--tone: var(--brand); --delay: 0ms">
-              <span class="num">01</span>
-              <h3>Prompt the intent</h3>
-              <p>Natural language, data sheets, legacy headers, or notes describe what the user wants changed or generated.</p>
-            </article>
-            <article class="motion-node" style="--tone: var(--blue); --delay: 90ms">
-              <span class="num">02</span>
-              <h3>Shape the spec</h3>
-              <p>IDS-AI turns that request into structured, checked, versioned specification intent.</p>
-            </article>
-            <article class="motion-node" style="--tone: var(--amber); --delay: 180ms">
-              <span class="num">03</span>
-              <h3>Generate handoffs</h3>
-              <p>Correct generators produce RTL IP, RTL SoC, UVM/RAL, headers, IP-XACT, docs, and validation assets.</p>
-            </article>
-            <article class="motion-node" style="--tone: var(--teal); --delay: 270ms">
-              <span class="num">04</span>
-              <h3>Check and self-correct</h3>
-              <p>The agent compares generated outputs against the source, resolves drift, and reruns the affected handoffs.</p>
-            </article>
-            <article class="motion-node" style="--tone: var(--green); --delay: 360ms">
-              <span class="num">05</span>
-              <h3>Close CSR sign-off</h3>
-              <p>End with synchronized artifacts and 100% CSR verification coverage tied to the final specification.</p>
-            </article>
+          <div class="ribbon reveal" id="storyRibbon" aria-label="Natural language drives IDS-AI from intent to sign-off">
+            <div class="ribbon-heads">
+            <button class="ribbon-step is-active" type="button" data-step="0" aria-pressed="true">
+              <span class="ribbon-num">01</span>
+              <span class="ribbon-title">Prompt the intent</span>
+            </button>
+            <button class="ribbon-step" type="button" data-step="1" aria-pressed="false">
+              <span class="ribbon-num">02</span>
+              <span class="ribbon-title">Shape the spec</span>
+            </button>
+            <button class="ribbon-step" type="button" data-step="2" aria-pressed="false">
+              <span class="ribbon-num">03</span>
+              <span class="ribbon-title">Generate handoffs</span>
+            </button>
+            <button class="ribbon-step" type="button" data-step="3" aria-pressed="false">
+              <span class="ribbon-num">04</span>
+              <span class="ribbon-title">Check and self-correct</span>
+            </button>
+            <button class="ribbon-step" type="button" data-step="4" aria-pressed="false">
+              <span class="ribbon-num">05</span>
+              <span class="ribbon-title">Close CSR sign-off</span>
+            </button>
+            </div>
+
+            <div class="ribbon-track" aria-hidden="true">
+              <span class="ribbon-rule"></span>
+              <span class="ribbon-tick" data-step="0"></span>
+              <span class="ribbon-tick" data-step="1"></span>
+              <span class="ribbon-tick" data-step="2"></span>
+              <span class="ribbon-tick" data-step="3"></span>
+              <span class="ribbon-tick" data-step="4"></span>
+              <span class="ribbon-node"></span>
+            </div>
+
+            <div class="ribbon-bodies">
+            <p class="ribbon-copy is-active" data-step="0">Natural language, data sheets, legacy headers, or notes describe what the user wants changed or generated.</p>
+            <p class="ribbon-copy" data-step="1">IDS-AI turns that request into structured, checked, versioned specification intent.</p>
+            <p class="ribbon-copy" data-step="2">Correct generators produce RTL IP, RTL SoC, UVM/RAL, headers, IP-XACT, docs, and validation assets.</p>
+            <p class="ribbon-copy" data-step="3">The agent compares generated outputs against the source, resolves drift, and reruns the affected handoffs.</p>
+            <p class="ribbon-copy" data-step="4">End with synchronized artifacts and 100% CSR verification coverage tied to the final specification.</p>
+            </div>
           </div>
 
           <div class="motion-summary reveal">
@@ -4518,7 +4914,7 @@
             <div class="explorer" role="tree" aria-label="Generated output tree">
               <div class="explorer-head"><span class="explorer-dot"></span>Explorer</div>
               <div class="explorer-body" id="explorerBody"></div>
-              <div class="explorer-foot"><span id="explorerCount">8 files</span><span>regenerated together</span></div>
+              <div class="explorer-foot"><span id="explorerCount">8 files</span><span id="explorerStatus">regenerated together</span></div>
             </div>
 
             <article class="artifact-view glass">
@@ -4582,7 +4978,7 @@
               <div class="tool-row"><b>IDS-CF</b><span>Collaborative specification authoring, versioning, and the agent work surface.</span></div>
             </div>
           </div>
-          <div class="context-motion glass reveal">
+          <div class="context-motion glass reveal" id="animation-options">
             <div class="proof-kicker">Structured context in motion</div>
             <div class="context-grid" aria-label="Structured engineering context flowing into IDS-AI">
               <svg class="context-beams" viewBox="0 0 620 508" aria-hidden="true">
@@ -4654,6 +5050,48 @@
          progress, and rows that populate as they cross the reading line.
          Both directions, because everything derives from scroll position
          rather than from a one-shot trigger. */
+      /* ── Seamless ribbon ───────────────────────────────────────────────
+         One node walks the track while the section is on screen. Slow on
+         purpose: this is a narrative, not a loading bar. Hover previews a
+         step and pauses the walk; leaving resumes it. */
+      const ribbon = document.getElementById("storyRibbon");
+      if (ribbon) {
+        const ribbonSteps = Array.from(ribbon.querySelectorAll(".ribbon-step"));
+        const ribbonCopy = Array.from(ribbon.querySelectorAll(".ribbon-copy"));
+        let ribbonIndex = 0;
+        let ribbonTimer = null;
+
+        function setRibbon(index) {
+          ribbonIndex = index;
+          ribbon.style.setProperty("--active", String(index));
+          ribbonSteps.forEach((step, i) => {
+            step.classList.toggle("is-active", i === index);
+            step.setAttribute("aria-pressed", String(i === index));
+          });
+          ribbonCopy.forEach((copy, i) => copy.classList.toggle("is-active", i === index));
+        }
+
+        const walk = () => setRibbon((ribbonIndex + 1) % ribbonSteps.length);
+        const startRibbon = () => { if (!ribbonTimer && !reduced) ribbonTimer = setInterval(walk, 3400); };
+        const stopRibbon = () => { if (ribbonTimer) { clearInterval(ribbonTimer); ribbonTimer = null; } };
+
+        ribbonSteps.forEach((step, i) => {
+          step.addEventListener("pointerenter", () => { stopRibbon(); setRibbon(i); });
+          step.addEventListener("focus", () => { stopRibbon(); setRibbon(i); });
+          step.addEventListener("click", () => setRibbon(i));
+        });
+        ribbon.addEventListener("pointerleave", startRibbon);
+
+        if (reduced) {
+          setRibbon(0);
+        } else {
+          const ribbonObserver = new IntersectionObserver((entries) => {
+            entries.forEach((entry) => (entry.isIntersecting ? startRibbon() : stopRibbon()));
+          }, { threshold: 0.3 });
+          ribbonObserver.observe(ribbon);
+        }
+      }
+
       const scrollPrompt = document.getElementById("scrollPrompt");
       if (scrollPrompt) {
         const dismiss = () => scrollPrompt.classList.add("gone");
@@ -4677,6 +5115,79 @@
         document.body.dataset.state = section.dataset.state || "idle";
       }, { threshold: [0.28, 0.52], rootMargin: "-18% 0px -35% 0px" });
       document.querySelectorAll("section[data-state]").forEach((section) => stateObserver.observe(section));
+
+      const blueprintLab = document.querySelector("[data-blueprint-lab]");
+      if (blueprintLab) {
+        const blueprintKeys = ["spec", "batch", "verify", "integrate"];
+        const blueprintNodes = Array.from(blueprintLab.querySelectorAll("[data-blueprint-node]"));
+        let blueprintIndex = 0;
+        let blueprintTimer = null;
+
+        const setBlueprint = (key) => {
+          blueprintLab.dataset.active = key;
+          blueprintIndex = Math.max(0, blueprintKeys.indexOf(key));
+          blueprintNodes.forEach((node) => {
+            const active = node.dataset.blueprintNode === key;
+            node.setAttribute("aria-pressed", active ? "true" : "false");
+          });
+        };
+        const startBlueprint = () => {
+          if (reduced || blueprintTimer) return;
+          blueprintTimer = setInterval(() => {
+            blueprintIndex = (blueprintIndex + 1) % blueprintKeys.length;
+            setBlueprint(blueprintKeys[blueprintIndex]);
+          }, 2600);
+        };
+        const stopBlueprint = () => {
+          if (!blueprintTimer) return;
+          clearInterval(blueprintTimer);
+          blueprintTimer = null;
+        };
+
+        blueprintNodes.forEach((node) => {
+          const activate = () => {
+            stopBlueprint();
+            setBlueprint(node.dataset.blueprintNode);
+          };
+          node.addEventListener("pointerenter", activate);
+          node.addEventListener("focus", activate);
+          node.addEventListener("click", activate);
+        });
+        blueprintLab.addEventListener("pointerleave", startBlueprint);
+        setBlueprint(blueprintLab.dataset.active || "spec");
+
+        const blueprintObserver = new IntersectionObserver((entries) => {
+          entries.forEach((entry) => (entry.isIntersecting ? startBlueprint() : stopBlueprint()));
+        }, { threshold: 0.36 });
+        blueprintObserver.observe(blueprintLab);
+      }
+
+      const outcomeLoop = document.getElementById("outcomeLoop");
+      const outcomeStats = Array.from(document.querySelectorAll("#outcomes .stat"));
+      function updateOutcomeLoop() {
+        if (!outcomeLoop || !outcomeStats.length) return;
+        const rect = outcomeLoop.getBoundingClientRect();
+        const start = window.innerHeight * 0.78;
+        const finish = window.innerHeight * 0.24;
+        const range = Math.max(1, rect.height + start - finish);
+        const progress = Math.max(0, Math.min(1, (start - rect.top) / range));
+        const activeIndex = Math.min(outcomeStats.length - 1, Math.floor(progress * outcomeStats.length));
+        outcomeLoop.style.setProperty("--loop-progress", progress.toFixed(3));
+        outcomeStats.forEach((stat, index) => {
+          stat.classList.toggle("is-active", index === activeIndex);
+        });
+      }
+      let outcomeTick = 0;
+      const scheduleOutcomeUpdate = () => {
+        if (outcomeTick) return;
+        outcomeTick = requestAnimationFrame(() => {
+          outcomeTick = 0;
+          updateOutcomeLoop();
+        });
+      };
+      window.addEventListener("scroll", scheduleOutcomeUpdate, { passive: true });
+      window.addEventListener("resize", scheduleOutcomeUpdate);
+      updateOutcomeLoop();
 
       const storyBoard = document.getElementById("storyBoard");
       const storySteps = Array.from(document.querySelectorAll(".story-step"));
@@ -5272,13 +5783,65 @@
       explorerCount.textContent = artifactData.length + " files";
 
       const explorerFiles = Array.from(explorerBody.querySelectorAll(".explorer-file"));
+      const explorerStatus = document.getElementById("explorerStatus");
+
+      function selectArtifact(file) {
+        explorerFiles.forEach((item) => item.setAttribute("aria-selected", String(item === file)));
+        renderArtifact(Number(file.dataset.artifact));
+      }
+
       explorerFiles.forEach((file) => {
         file.addEventListener("click", () => {
-          explorerFiles.forEach((item) => item.setAttribute("aria-selected", String(item === file)));
-          renderArtifact(Number(file.dataset.artifact));
+          takeOver();
+          selectArtifact(file);
         });
       });
       renderArtifact(0);
+
+      /* ── Explorer auto-tour ────────────────────────────────────────────
+         A static tree gives the eye no reason to believe it can be clicked.
+         While the section is on screen the selection walks the files on its
+         own; the first real interaction hands control over for good. */
+      const artifactsSection = document.getElementById("artifacts");
+      let tourTimer = null;
+      let tourIndex = 0;
+      let tourEnded = reduced;
+
+      function stopTour() {
+        if (tourTimer) { clearInterval(tourTimer); tourTimer = null; }
+      }
+
+      function startTour() {
+        if (tourEnded || tourTimer) return;
+        explorerStatus.textContent = "auto-playing - click any file";
+        explorerStatus.classList.add("is-touring");
+        tourTimer = setInterval(() => {
+          tourIndex = (tourIndex + 1) % explorerFiles.length;
+          selectArtifact(explorerFiles[tourIndex]);
+        }, 1900);
+      }
+
+      function takeOver() {
+        if (tourEnded) return;
+        tourEnded = true;
+        stopTour();
+        explorerStatus.textContent = "regenerated together";
+        explorerStatus.classList.remove("is-touring");
+      }
+
+      if (artifactsSection && !reduced) {
+        // Any deliberate input counts as taking the wheel. Plain hover does
+        // not: the tree sits in the scroll path and a passing cursor is not
+        // an intent to browse.
+        ["pointerdown", "keydown", "focusin"].forEach((evt) =>
+          artifactsSection.addEventListener(evt, takeOver, { once: true })
+        );
+
+        const tourObserver = new IntersectionObserver((entries) => {
+          entries.forEach((entry) => (entry.isIntersecting ? startTour() : stopTour()));
+        }, { threshold: 0.35 });
+        tourObserver.observe(artifactsSection);
+      }
 
       /* ── Central corridor ──────────────────────────────────────────────
          Each row resolves as it crosses the reading band: the muted "before"
