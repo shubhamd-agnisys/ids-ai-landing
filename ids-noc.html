@@ -1,0 +1,582 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="description" content="IDS-NoC is a scalable Network-on-Chip interconnect IP generation solution for modern heterogeneous multi-core SoCs." />
+  <title>IDS-NoC - NoC Interconnect IP Generator</title>
+  <style>
+    :root {
+      --paper: #fbfbf8;
+      --paper-2: #f1f4f3;
+      --ink: #111318;
+      --muted: #5d6876;
+      --quiet: #8a95a3;
+      --line: #dce3e7;
+      --brand: #e06f38;
+      --brand-dark: #a7441d;
+      --blue: #496cff;
+      --teal: #159b91;
+      --green: #298a50;
+      --graphite: #24292c;
+      --deep: #171b1e;
+      --radius: 8px;
+      --ease: cubic-bezier(.2,.9,.2,1);
+      --mono: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, monospace;
+    }
+
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      margin: 0;
+      background: var(--paper);
+      color: var(--ink);
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      line-height: 1.5;
+      overflow-x: hidden;
+    }
+    a { color: inherit; }
+    button, a { -webkit-tap-highlight-color: transparent; }
+    svg { display: block; }
+    .shell { width: min(1180px, calc(100% - 40px)); margin: 0 auto; }
+
+    .topbar {
+      position: fixed;
+      top: 18px;
+      left: 50%;
+      z-index: 100;
+      width: min(1180px, calc(100% - 40px));
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 18px;
+      padding: 11px 14px;
+      border: 1px solid #dde4e8;
+      border-radius: var(--radius);
+      background: rgba(255,255,255,.97);
+      box-shadow: 0 2px 8px rgba(21,30,42,.07);
+      transform: translateX(-50%);
+    }
+    .brand { display: inline-flex; align-items: center; gap: 10px; text-decoration: none; min-width: 160px; }
+    .brand-mark { width: 34px; height: 35px; color: var(--brand); }
+    .brand-text { display: flex; flex-direction: column; line-height: 1; }
+    .brand-name { color: var(--brand); font-size: 20px; font-weight: 900; }
+    .brand-tag { margin-top: 3px; color: #68717f; font-size: 5.7px; font-weight: 850; letter-spacing: .04em; text-transform: uppercase; }
+    .topbar nav { display: flex; align-items: center; gap: 2px; }
+    .topbar nav a { padding: 8px 9px; border-radius: 6px; color: #35404d; font-size: 12.5px; font-weight: 680; text-decoration: none; white-space: nowrap; }
+    .topbar nav a:hover, .topbar nav a:focus-visible { background: rgba(224,111,56,.09); color: var(--ink); }
+
+    .btn { display: inline-flex; align-items: center; justify-content: center; min-height: 42px; padding: 11px 17px; border: 1px solid var(--line); border-radius: var(--radius); background: white; color: var(--ink); font-size: 14px; font-weight: 760; text-decoration: none; transition: border-color 180ms ease, background 180ms ease, color 180ms ease; }
+    .btn:hover { border-color: #bfc9cf; background: #f7f8f8; }
+    .btn-primary { border-color: #cf5f2c; background: var(--brand); color: #fff; box-shadow: 0 2px 8px rgba(158,61,22,.14); }
+    .btn-primary:hover { border-color: var(--brand-dark); background: #d86531; }
+    .btn-text { border-color: transparent; background: transparent; color: var(--muted); padding-inline: 8px; }
+
+    .hero {
+      position: relative;
+      min-height: 100svh;
+      display: grid;
+      align-items: center;
+      overflow: hidden;
+      padding: 112px 0 52px;
+      background: #fff;
+    }
+    .hero-bg { position: absolute; inset: 0; pointer-events: none; overflow: hidden; }
+    .trace-field, .sheen-field { position: absolute; inset: 0; }
+    .trace-field { opacity: .42; background-image: linear-gradient(112deg, transparent 0 22%, rgba(24,33,44,.055) 22.12%, transparent 22.5%), linear-gradient(112deg, transparent 0 48%, rgba(224,111,56,.055) 48.12%, transparent 48.5%), linear-gradient(112deg, transparent 0 76%, rgba(21,155,145,.06) 76.12%, transparent 76.48%); background-size: 440px 100%, 560px 100%, 700px 100%; animation: trace-drift 13s linear infinite; }
+    .sheen-field { opacity: .44; background: linear-gradient(108deg, transparent 7%, rgba(224,111,56,.04) 14%, transparent 22%), linear-gradient(116deg, transparent 36%, rgba(73,108,255,.045) 44%, transparent 53%), linear-gradient(109deg, transparent 66%, rgba(21,155,145,.04) 72%, transparent 82%); animation: sheen-drift 16s var(--ease) infinite alternate; }
+    .hero-bg .ghost { position: absolute; width: 460px; height: 472px; opacity: .085; color: var(--brand); transform: rotate(-10deg); animation: glyph-drift 15s var(--ease) infinite alternate; }
+    .hero-bg .ghost.one { right: -68px; top: 92px; }
+    .hero-bg .ghost.two { width: 330px; height: 338px; left: -120px; bottom: 3%; color: var(--teal); opacity: .075; animation-duration: 17.5s; animation-direction: alternate-reverse; }
+    .hero-bg .ghost.three { width: 260px; height: 266px; left: 41%; top: -70px; color: var(--blue); opacity: .06; animation-duration: 21s; animation-delay: -6s; }
+    @keyframes trace-drift { from { background-position: 0 0, 0 0, 0 0; } to { background-position: 440px 0, -560px 0, 700px 0; } }
+    @keyframes sheen-drift { from { transform: translateX(-17%); } to { transform: translateX(17%); } }
+    @keyframes glyph-drift { from { transform: translate3d(0,0,0) rotate(-10deg) scale(1); } to { transform: translate3d(110px,-90px,0) rotate(6deg) scale(1.22); } }
+
+    .hero-grid { position: relative; z-index: 1; display: grid; grid-template-columns: minmax(0,.92fr) minmax(0,1.08fr); gap: 44px; align-items: center; }
+    .hero-copy, .noc-scene { min-width: 0; }
+    .hero-copy h1 { max-width: 680px; margin: 0 0 22px; font-size: clamp(52px, 5.6vw, 78px); line-height: .96; letter-spacing: 0; }
+    .hero-copy .product-type { margin: 0 0 12px; color: var(--brand-dark); font-size: 15px; font-weight: 760; }
+    .hero-copy .claims { display: flex; flex-wrap: wrap; gap: 3px 0; margin: 0 0 22px; color: #364251; font-size: 14px; font-weight: 720; line-height: 1.6; }
+    .hero-copy .claims span:not(:last-child)::after { content: "  •  "; color: var(--brand); white-space: pre; }
+    .hero-copy .summary { max-width: 650px; margin: 0 0 16px; color: var(--muted); font-size: 17px; }
+    .hero-copy .summary + .summary { margin-bottom: 24px; }
+    .hero-actions { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
+
+    .noc-scene { position: relative; min-height: 540px; display: grid; place-items: center; }
+    .noc-scene::before { display: none; }
+    .scene-label { position: absolute; top: 5%; left: 1%; z-index: 2; color: var(--quiet); font-family: var(--mono); font-size: 11px; font-weight: 780; text-transform: uppercase; }
+    .hero-network { position: relative; z-index: 1; width: min(100%, 640px); height: auto; }
+    .hero-network .wire { fill: none; stroke: #ced7dd; stroke-width: 2; }
+    .hero-network .route { fill: none; stroke: var(--brand); stroke-width: 3; stroke-linecap: square; stroke-dasharray: 13 450; animation: packet-route 4.8s linear infinite; filter: drop-shadow(0 0 3px rgba(224,111,56,.3)); }
+    .hero-network .return { stroke: var(--teal); animation-delay: -2.4s; }
+    .hero-network .router { fill: white; stroke: #bfcbd3; stroke-width: 1.5; }
+    .hero-network .router-core { fill: #eef2f4; }
+    .hero-network .router.active { stroke: var(--brand); }
+    .hero-network .endpoint { fill: white; stroke: #d2dce2; stroke-width: 1.5; }
+    .hero-network text { fill: #27313c; font: 700 12px Inter, sans-serif; }
+    .hero-network .small { fill: #7c8794; font: 650 9px var(--mono); }
+    .hero-network .flit { animation: flit-pulse 2.4s ease-in-out infinite; transform-box: fill-box; transform-origin: center; }
+    .hero-network .flit:nth-of-type(2) { animation-delay: -.35s; }
+    .hero-network .flit:nth-of-type(3) { animation-delay: -.7s; }
+    @keyframes packet-route { to { stroke-dashoffset: -463; } }
+    @keyframes flit-pulse { 0%,55%,100% { opacity: .25; transform: scale(.8); } 20%,35% { opacity: 1; transform: scale(1); } }
+
+    .section { position: relative; padding: 100px 0; overflow: hidden; scroll-margin-top: 104px; }
+    .section h2 { max-width: 820px; margin: 0 0 20px; font-size: clamp(38px, 4vw, 58px); line-height: 1.04; letter-spacing: 0; }
+    .section .intro { max-width: 780px; margin: 0 0 34px; color: var(--muted); font-size: 18px; }
+    .section-light { background: var(--paper); }
+    .section-soft { background: var(--paper-2); }
+    .section-dark { background: var(--graphite); color: #f7f7f4; }
+    .section-dark .intro, .section-dark p { color: #b7c0c6; }
+    .section-deep { background: var(--deep); color: #f7f7f4; }
+    .section-deep p { color: #abb4ba; }
+    .split { display: grid; grid-template-columns: 1fr 1fr; gap: 64px; align-items: center; }
+    .split.reverse .visual { order: -1; }
+
+    .crossbar-visual { min-height: 470px; display: grid; grid-template-columns: 1fr 36px 1fr; gap: 14px; align-items: center; }
+    .fabric-panel { min-height: 370px; padding: 22px; border: 1px solid #465158; border-radius: var(--radius); background: #2a3034; }
+    .fabric-panel.legacy { border-color: #724b43; background: #302b2b; }
+    .fabric-panel.scalable { border-color: #315f5b; background: #273331; }
+    .fabric-panel h3 { margin: 0 0 28px; font-size: 17px; }
+    .crossbar-lines { position: relative; height: 250px; }
+    .crossbar-lines .source { position: absolute; left: 0; width: 58px; color: #c7cfd4; font: 700 11px var(--mono); }
+    .crossbar-lines .source:nth-child(1) { top: 10px; }
+    .crossbar-lines .source:nth-child(2) { top: 75px; }
+    .crossbar-lines .source:nth-child(3) { top: 140px; }
+    .crossbar-lines .source:nth-child(4) { top: 205px; }
+    .crossbar-svg { position: absolute; inset: 0; width: 100%; height: 100%; overflow: visible; }
+    .crossbar-svg .lane { fill: none; stroke: #bb654e; stroke-width: 2; vector-effect: non-scaling-stroke; }
+    .crossbar-svg .lane-packet { fill: #f07a58; }
+    .bus { position: absolute; right: 8px; top: 42px; width: 18px; height: 170px; border: 2px solid #d96045; background: #6b3129; animation: bus-load 2.8s ease-in-out infinite; }
+    .bus::after { content: "SATURATED"; position: absolute; left: 50%; top: 50%; transform: translate(-50%,-50%) rotate(-90deg); color: #ffd3c8; font: 800 9px var(--mono); }
+    .choke-gate { position: absolute; right: 31px; top: 106px; width: 4px; height: 38px; background: #ef765b; animation: gate-pressure 2.8s ease-in-out infinite; }
+    @keyframes gate-pressure { 0%,68%,100% { background: #9e4637; } 74%,84% { background: #ff8c70; } }
+    @keyframes bus-load { 0%,68%,100% { background: #592d27; } 74%,84% { background: #8e3b2f; } }
+    .mesh-mini { position: relative; display: grid; grid-template-columns: repeat(3, 44px); gap: 30px 35px; justify-content: center; padding-top: 34px; }
+    .mesh-mini span { position: relative; z-index: 2; width: 44px; height: 44px; display: grid; place-items: center; border: 1px solid #53716e; background: #293735; color: #dbe7e5; font: 750 10px var(--mono); }
+    .mesh-mini span::before { content: ""; position: absolute; left: 100%; top: 50%; width: 36px; height: 1px; background: #45605d; }
+    .mesh-mini span::after { content: ""; position: absolute; left: 50%; top: 100%; width: 1px; height: 31px; background: #45605d; }
+    .mesh-mini span:nth-child(3n)::before, .mesh-mini span:nth-last-child(-n+3)::after { display: none; }
+    .mini-routes { position: absolute; z-index: 1; left: 50%; top: 34px; width: 202px; height: 192px; transform: translateX(-50%); overflow: visible; pointer-events: none; }
+    .mini-routes .base { fill: none; stroke: #3d5552; stroke-width: 2; }
+    .mini-routes .flow { fill: none; stroke: #78ded0; stroke-width: 4; stroke-linecap: square; stroke-dasharray: 20 238; animation: mini-route-flow 2.8s linear infinite; }
+    .mini-routes .flow.two { stroke: #43b5a7; animation-delay: -1.4s; }
+    .mesh-mini .packet-a, .mesh-mini .packet-b { border-color: #67bdb3; animation: router-activity 2.8s ease-in-out infinite; }
+    .mesh-mini .packet-b { animation-delay: -1.4s; }
+    @keyframes mini-route-flow { to { stroke-dashoffset: -258; } }
+    @keyframes router-activity { 0%,72%,100% { background: #293735; border-color: #53716e; } 78%,90% { background: #31514d; border-color: #8ce4d8; } }
+    .transform-arrow { color: var(--brand); font-size: 26px; text-align: center; }
+
+    .challenge-table { margin-top: 52px; border-top: 1px solid rgba(255,255,255,.16); }
+    .challenge-row { display: grid; grid-template-columns: 230px 1fr; gap: 28px; padding: 18px 0; border-bottom: 1px solid rgba(255,255,255,.1); }
+    .challenge-row strong { color: #fff; }
+    .challenge-row span { color: #b7c0c6; }
+
+    .diagram-shell { border: 1px solid var(--line); border-radius: var(--radius); background: white; box-shadow: 0 20px 54px rgba(23,31,42,.09); overflow: hidden; }
+    .diagram-topline { display: flex; flex-wrap: wrap; justify-content: center; gap: 10px 22px; padding: 13px 18px; border-bottom: 1px solid var(--line); color: #53606e; font: 700 11px var(--mono); }
+    .diagram-topline span::before { content: ""; display: inline-block; width: 6px; height: 6px; margin-right: 7px; background: var(--brand); transform: rotate(-14deg); }
+    .architecture { position: relative; display: grid; grid-template-columns: 150px 150px 1fr 150px 150px; gap: 14px; align-items: center; min-height: 490px; padding: 32px 22px; }
+    .arch-column { align-self: stretch; display: flex; flex-direction: column; justify-content: center; gap: 10px; padding: 15px 12px; border: 1px solid var(--line); border-radius: 6px; background: #fbfcfd; }
+    .arch-column h3 { margin: 0 0 8px; color: #304055; font: 800 12px var(--mono); text-align: center; }
+    .arch-node { padding: 10px 8px; border: 1px solid #d6dfe4; border-radius: 5px; background: #fff; color: #4b5865; font-size: 11px; font-weight: 700; text-align: center; }
+    .arch-column.ni { border-color: #efb69b; background: #fff9f5; }
+    .arch-column.targets { border-color: #aed2bd; background: #f7fcf8; }
+    .ni-block { padding: 24px 9px; border-bottom: 1px dashed #e8a789; color: #4b5865; font-size: 11px; text-align: center; }
+    .ni-block:last-child { border: 0; }
+    .ni-block b { display: block; color: #222a32; margin-bottom: 4px; }
+    .mesh-field { position: relative; display: grid; grid-template-columns: repeat(4, 42px); justify-content: space-between; gap: 66px 30px; padding: 40px 14px; }
+    .mesh-field::before { content: "SCALABLE N × M NOC (ROUTERS MESH)"; position: absolute; top: 0; left: 0; right: 0; color: var(--brand-dark); font: 800 11px var(--mono); text-align: center; }
+    .router-node { position: relative; z-index: 1; width: 42px; height: 42px; display: grid; place-items: center; border: 2px solid #e6753f; border-radius: 5px; background: #fff4ed; color: #a8441c; font: 800 9px var(--mono); }
+    .router-node::before { content: ""; position: absolute; left: 100%; top: 50%; width: calc((100vw - 820px)/16 + 30px); min-width: 31px; max-width: 80px; height: 1px; background: #aebbc4; z-index: -1; }
+    .router-node::after { content: ""; position: absolute; left: 50%; top: 100%; width: 1px; height: 68px; background: #aebbc4; z-index: -1; }
+    .router-node:nth-child(4n)::before, .router-node:nth-last-child(-n+4)::after { display: none; }
+    .router-node.active { animation: active-router 4.8s ease-in-out infinite; }
+    .router-node.active:nth-child(6) { animation-delay: -.7s; }
+    .router-node.active:nth-child(7) { animation-delay: -1.4s; }
+    .router-node.active:nth-child(11) { animation-delay: -2.1s; }
+    @keyframes active-router { 0%,70%,100% { background: #fff4ed; box-shadow: none; } 20%,45% { background: var(--brand); color: white; box-shadow: 0 0 0 5px rgba(224,111,56,.13); } }
+    .diagram-footer { display: grid; grid-template-columns: .75fr 1.25fr 1fr; border-top: 1px solid var(--line); }
+    .diagram-note { min-height: 170px; padding: 18px; border-right: 1px solid var(--line); }
+    .diagram-note:last-child { border: 0; }
+    .diagram-note h3 { margin: 0 0 10px; color: #2a3a4d; font: 800 11px var(--mono); }
+    .diagram-note p, .diagram-note li { color: #66717e; font-size: 11px; }
+    .diagram-note ul, .diagram-note ol { margin: 0; padding-left: 18px; }
+    .diagram-note li + li { margin-top: 4px; }
+    .diagram-bottom { padding: 10px; border-top: 1px solid var(--line); color: #4b5865; font: 750 11px var(--mono); text-align: center; }
+
+    .feature-layout { display: grid; grid-template-columns: 280px 1fr; gap: 42px; }
+    .feature-nav { position: sticky; top: 100px; align-self: start; display: grid; gap: 4px; }
+    .feature-nav button { width: 100%; padding: 11px 12px; border: 0; border-left: 2px solid rgba(255,255,255,.14); background: transparent; color: #98a3aa; font: 700 12px var(--mono); text-align: left; cursor: pointer; }
+    .feature-nav button.active { border-left-color: var(--brand); color: white; background: rgba(224,111,56,.08); }
+    .feature-table { border-top: 1px solid rgba(255,255,255,.14); }
+    .feature-row { display: grid; grid-template-columns: minmax(190px,.7fr) 1.3fr; gap: 32px; padding: 22px 0; border-bottom: 1px solid rgba(255,255,255,.1); transition: background 220ms var(--ease), padding 220ms var(--ease); }
+    .feature-row.active { padding-inline: 16px; background: rgba(255,255,255,.035); }
+    .feature-row strong { color: #fff; }
+    .feature-row span { color: #b7c0c6; }
+
+    #applications { overflow: visible; }
+    .applications-map { display: grid; grid-template-columns: 1fr 120px 1fr; gap: 30px; align-items: stretch; margin-top: 38px; }
+    .application-wing { display: grid; grid-template-rows: repeat(4, minmax(132px,auto)); gap: 18px; }
+    .application { position: relative; display: flex; align-items: center; gap: 16px; min-width: 0; padding: 22px 24px; border: 1px solid rgba(22,35,46,.09); border-radius: 6px; background: rgba(255,255,255,.72); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); transition: border-color 200ms ease, background 200ms ease, transform 200ms var(--ease); }
+    .application:hover { border-color: rgba(21,155,145,.35); background: rgba(255,255,255,.94); transform: translateY(-2px); }
+    .application-wing.left .application { flex-direction: row-reverse; text-align: right; }
+    .application-copy { min-width: 0; }
+    .application h3 { margin: 0 0 7px; font-size: 18px; line-height: 1.2; }
+    .application p { margin: 0; color: var(--muted); font-size: 13px; }
+    .app-icon { flex: 0 0 38px; width: 38px; height: 38px; padding: 5px; color: #526472; transition: color 200ms ease, transform 200ms var(--ease); }
+    .application:hover .app-icon { color: var(--brand); transform: translateY(-1px); }
+    .app-connector { position: absolute; top: 50%; width: 31px; height: 12px; transform: translateY(-50%); overflow: visible; }
+    .application-wing.left .app-connector { left: 100%; }
+    .application-wing.right .app-connector { right: 100%; }
+    .app-connector .base { fill: none; stroke: #b5c2c9; stroke-width: 1; }
+    .app-connector .packet { fill: none; stroke: var(--brand); stroke-width: 2; stroke-linecap: square; stroke-dasharray: 5 39; opacity: .72; animation: connector-packet 5.6s linear infinite; }
+    .application:nth-child(2) .packet { animation-delay: -1.4s; stroke: var(--teal); }
+    .application:nth-child(3) .packet { animation-delay: -2.8s; }
+    .application:nth-child(4) .packet { animation-delay: -4.2s; stroke: var(--teal); }
+    .application-wing.right .packet { animation-direction: reverse; }
+    @keyframes connector-packet { to { stroke-dashoffset: -44; } }
+    .application-spine { position: relative; min-height: 612px; overflow: visible; background: #202528; }
+    .spine-traces { position: absolute; inset: 0; width: 100%; height: 100%; }
+    .spine-traces .rail { stroke: #4b565c; stroke-width: 1; opacity: .62; }
+    .spine-traces .traffic { stroke-width: 3; stroke-linecap: square; stroke-dasharray: 14 286; animation: spine-traffic 7.6s linear infinite; }
+    .spine-traces .traffic.orange { stroke: #d66a38; animation-delay: -1.9s; }
+    .spine-traces .traffic.teal { stroke: #3aa99f; animation-delay: -5.3s; animation-direction: reverse; }
+    @keyframes spine-traffic { to { stroke-dashoffset: -600; } }
+    .spine-lock { position: sticky; top: calc(50vh - 74px); z-index: 2; display: grid; justify-items: center; gap: 9px; padding: 26px 8px; color: #fff; text-align: center; }
+    .spine-lock svg { width: 39px; height: 40px; color: var(--brand); }
+    .spine-lock strong { font-size: 15px; line-height: 1.1; }
+    .spine-lock span { color: #9ba8af; font: 700 8px var(--mono); text-transform: uppercase; }
+    .spine-horizontal { display: none; }
+
+    .benefits { display: grid; gap: 0; margin-top: 40px; border-top: 1px solid rgba(255,255,255,.15); }
+    .benefit { position: relative; display: grid; grid-template-columns: 270px 1fr; gap: 42px; padding: 26px 0; border-bottom: 1px solid rgba(255,255,255,.1); }
+    .benefit strong { color: white; font-size: 18px; }
+    .benefit p { margin: 0; }
+    .benefit-signal { grid-column: 2; display: flex; align-items: center; gap: 8px; height: 12px; margin-top: -12px; opacity: .6; }
+    .benefit-signal i { width: 8px; height: 8px; background: var(--brand); animation: benefit-packet 3s ease-in-out infinite; }
+    .benefit-signal::before, .benefit-signal::after { content: ""; height: 1px; flex: 1; background: #566168; }
+    @keyframes benefit-packet { 50% { transform: translateX(28px); background: var(--teal); } }
+
+    .why-grid { display: grid; grid-template-columns: .8fr 1.2fr; gap: 70px; align-items: start; }
+    .why-list { display: grid; grid-template-columns: 1fr 1fr; gap: 0 34px; margin: 0; padding: 0; list-style: none; }
+    .why-list li { display: grid; grid-template-columns: 62px 1fr; gap: 16px; align-items: center; min-height: 108px; padding: 18px 0; border-top: 1px solid var(--line); color: #364250; }
+    .why-list li:last-child { grid-column: 1 / -1; }
+    .motion-point { position: relative; width: 54px; height: 18px; }
+    .motion-point::before { content: ""; position: absolute; left: 0; right: 0; top: 8px; height: 1px; background: #b8c4ca; }
+    .motion-point::after { content: ""; position: absolute; left: 0; top: 5px; width: 7px; height: 7px; background: var(--brand); animation: point-route 2.8s var(--ease) infinite; }
+    .why-list li:nth-child(even) .motion-point::after { background: var(--teal); animation-delay: -1.4s; }
+    .why-list li:nth-child(3) .motion-point::after { animation-delay: -.7s; }
+    .why-list li:nth-child(5) .motion-point::after { animation-delay: -2.1s; }
+    @keyframes point-route { 0% { left: 0; opacity: 0; } 18%,78% { opacity: 1; } 100% { left: 47px; opacity: 0; } }
+
+    .resources-grid { display: grid; grid-template-columns: .8fr 1.2fr; gap: 80px; align-items: end; }
+    .resource-list { margin: 26px 0 0; padding: 0; list-style: none; border-top: 1px solid rgba(255,255,255,.14); }
+    .resource-list li { padding: 15px 0; border-bottom: 1px solid rgba(255,255,255,.1); color: #c3cbd0; }
+    .cta h2 { font-size: clamp(42px,5vw,68px); }
+    .cta p { max-width: 600px; font-size: 19px; }
+    .cta-actions { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 28px; }
+    .section-deep .btn:not(.btn-primary) { border-color: #4b545a; background: transparent; color: #e5e9eb; }
+
+    .reveal { opacity: 0; transform: translateY(18px); transition: opacity 700ms var(--ease), transform 700ms var(--ease); }
+    .reveal.in-view { opacity: 1; transform: none; }
+
+    @media (max-width: 1050px) {
+      .topbar nav a:nth-child(n+5) { display: none; }
+      .hero-grid { grid-template-columns: 1fr; gap: 10px; }
+      .hero { min-height: auto; }
+      .noc-scene { min-height: 500px; }
+      .architecture { grid-template-columns: 125px 125px 1fr 125px 125px; gap: 8px; padding-inline: 14px; }
+      .applications-map { grid-template-columns: 1fr; gap: 18px; }
+      .application-spine { grid-row: 1; min-height: 158px; }
+      .application-wing { display: contents; }
+      .application-wing.left .application:nth-child(1) { grid-row: 2; }
+      .application-wing.right .application:nth-child(1) { grid-row: 3; }
+      .application-wing.left .application:nth-child(2) { grid-row: 4; }
+      .application-wing.right .application:nth-child(2) { grid-row: 5; }
+      .application-wing.left .application:nth-child(3) { grid-row: 6; }
+      .application-wing.right .application:nth-child(3) { grid-row: 7; }
+      .application-wing.left .application:nth-child(4) { grid-row: 8; }
+      .application-wing.right .application:nth-child(4) { grid-row: 9; }
+      .application-wing.left .application { flex-direction: row; text-align: left; }
+      .app-connector { display: none; }
+      .spine-lock { position: relative; top: auto; min-height: 158px; align-content: center; padding: 20px; }
+      .spine-vertical { display: none; }
+      .spine-horizontal { display: block; }
+    }
+    @media (max-width: 820px) {
+      .shell { width: min(100% - 28px, 680px); }
+      .topbar { width: calc(100% - 24px); top: 10px; }
+      .topbar nav { display: none; }
+      .topbar > .btn { min-height: 36px; padding: 8px 11px; font-size: 12px; }
+      .brand-tag { display: none; }
+      .hero { padding-top: 100px; }
+      .hero-copy h1 { font-size: clamp(50px,14vw,70px); }
+      .section { padding: 74px 0; }
+      .split, .why-grid, .resources-grid { grid-template-columns: 1fr; gap: 36px; }
+      .split.reverse .visual { order: 0; }
+      .crossbar-visual { grid-template-columns: 1fr; }
+      .transform-arrow { transform: rotate(90deg); }
+      .challenge-row { grid-template-columns: 1fr; gap: 5px; }
+      .architecture { grid-template-columns: 1fr 1fr; min-height: 0; }
+      .mesh-field { grid-column: 1 / -1; grid-row: 2; order: 5; }
+      .diagram-footer { grid-template-columns: 1fr; }
+      .diagram-note { border-right: 0; border-bottom: 1px solid var(--line); }
+      .feature-layout { grid-template-columns: 1fr; }
+      .feature-nav { position: static; display: flex; overflow-x: auto; }
+      .feature-nav button { min-width: max-content; border-left: 0; border-bottom: 2px solid rgba(255,255,255,.14); }
+      .feature-row { grid-template-columns: 1fr; gap: 7px; }
+      .application { min-height: 132px; }
+      .why-list { grid-template-columns: 1fr; }
+      .why-list li:last-child { grid-column: auto; }
+      .benefit { grid-template-columns: 1fr; gap: 8px; }
+      .benefit-signal { grid-column: 1; }
+    }
+    @media (max-width: 560px) {
+      .hero-copy .claims span { display: block; white-space: normal; }
+      .hero-copy .claims span::after { display: none; }
+      .hero-actions .btn { width: 100%; }
+      .noc-scene { min-height: 390px; margin-inline: -8px; }
+      .scene-label { top: 4%; }
+      .architecture { grid-template-columns: 1fr; }
+      .mesh-field { grid-column: 1; grid-row: auto; grid-template-columns: repeat(4,34px); gap: 40px 16px; }
+      .router-node { width: 34px; height: 34px; font-size: 7px; }
+      .diagram-topline { justify-content: flex-start; }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      html { scroll-behavior: auto; }
+      *, *::before, *::after { animation-duration: .001ms !important; animation-iteration-count: 1 !important; transition-duration: .001ms !important; }
+      .lane-packet { display: none; }
+      .reveal { opacity: 1; transform: none; }
+    }
+  </style>
+</head>
+<body>
+  <svg width="0" height="0" aria-hidden="true" focusable="false" style="position:absolute">
+    <defs>
+      <symbol id="agnisys-glyph" viewBox="0 0 552 566">
+        <polygon points="92,319 86,561 319,488 319,319" fill="currentColor" />
+        <polygon points="434,153 283,214 396,369 551,277" fill="currentColor" />
+        <polygon points="75,7 5,239 221,296 264,115" fill="currentColor" />
+      </symbol>
+      <symbol id="app-ai" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="square" stroke-linejoin="miter"><rect x="5" y="5" width="14" height="14"/><path d="M9 2v3m6-3v3M9 19v3m6-3v3M2 9h3m-3 6h3m14-6h3m-3 6h3M9 12l6-3m-6 3 6 3m0-6v6"/><circle cx="9" cy="12" r="1"/><circle cx="15" cy="9" r="1"/><circle cx="15" cy="15" r="1"/></symbol>
+      <symbol id="app-multicore" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="square" stroke-linejoin="miter"><rect x="4" y="4" width="16" height="16"/><rect x="7" y="7" width="4" height="4"/><rect x="13" y="7" width="4" height="4"/><rect x="7" y="13" width="4" height="4"/><rect x="13" y="13" width="4" height="4"/><path d="M2 8h2m-2 8h2m16-8h2m-2 8h2"/></symbol>
+      <symbol id="app-edge" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="square" stroke-linejoin="miter"><rect x="3" y="6" width="12" height="12"/><path d="M6 9h6v6H6zm9 3h6m-3-3 3 3-3 3M7 3v3m4-3v3M7 18v3m4-3v3"/></symbol>
+      <symbol id="app-aerospace" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="square" stroke-linejoin="miter"><rect x="9" y="9" width="6" height="6"/><path d="M2 8h5v8H2zm15 0h5v8h-5zM12 4v5m0 6v5M6 4c7-3 12 1 14 5M4 18c5 4 11 3 15-1"/></symbol>
+      <symbol id="app-auto" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="square" stroke-linejoin="miter"><path d="M4 15h16l-2-6H7zm3-6 2-3h6l3 3M2 12h2m16 0h2"/><circle cx="7" cy="17" r="2"/><circle cx="17" cy="17" r="2"/><path d="M10 12h4"/></symbol>
+      <symbol id="app-network" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="square" stroke-linejoin="miter"><rect x="2" y="3" width="6" height="6"/><rect x="16" y="3" width="6" height="6"/><rect x="9" y="15" width="6" height="6"/><path d="M8 6h8M5 9v3h7v3m7-6v3h-7"/><circle cx="12" cy="12" r="1"/></symbol>
+      <symbol id="app-data" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="square" stroke-linejoin="miter"><rect x="4" y="3" width="16" height="18"/><path d="M4 9h16M4 15h16M8 6h7M8 12h7M8 18h7"/><circle cx="17" cy="6" r="1"/><circle cx="17" cy="12" r="1"/><circle cx="17" cy="18" r="1"/></symbol>
+      <symbol id="app-industrial" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="square" stroke-linejoin="miter"><path d="M3 21V9l6 4V9l6 4V5h4v16zM15 9h4"/><path d="M6 17h2m3 0h2m3 0h2"/></symbol>
+    </defs>
+  </svg>
+
+  <header class="topbar">
+    <a class="brand" href="#top" aria-label="Agnisys IDS-NoC">
+      <svg class="brand-mark" aria-hidden="true"><use href="#agnisys-glyph" /></svg>
+      <span class="brand-text"><span class="brand-name">AGNISYS</span><span class="brand-tag">System Development with Certainty</span></span>
+    </a>
+    <nav aria-label="Page">
+      <a href="#challenges">Challenges</a>
+      <a href="#architecture">Architecture</a>
+      <a href="#features">Features</a>
+      <a href="#applications">Applications</a>
+      <a href="#benefits">Benefits</a>
+      <a href="index-v2.html">IDS-AI</a>
+    </nav>
+    <a class="btn btn-primary" href="#contact">Request a Demo</a>
+  </header>
+
+  <main id="top">
+    <section class="hero">
+      <div class="hero-bg" aria-hidden="true">
+        <div class="trace-field"></div>
+        <div class="sheen-field"></div>
+        <svg class="ghost one"><use href="#agnisys-glyph" /></svg>
+        <svg class="ghost two"><use href="#agnisys-glyph" /></svg>
+        <svg class="ghost three"><use href="#agnisys-glyph" /></svg>
+      </div>
+      <div class="shell hero-grid">
+        <div class="hero-copy reveal">
+          <p class="product-type">NoC Interconnect IP Generator</p>
+          <h1>IDS-NoC™</h1>
+          <p class="claims"><span>Multi-Protocol AMBA Support</span><span>Advanced Routing &amp; Arbitration</span><span>Virtual Channel Deadlock Avoidance</span><span>Unlimited Scaling</span></p>
+          <p class="summary">IDS-NoC™ is a scalable Network-on-Chip (NoC) interconnect IP generation solution for modern heterogeneous multi-core SoCs. Built on a packet-switched, distributed architecture, IDS-NoC enables engineering teams to rapidly create, configure, and integrate high-performance interconnect fabrics while eliminating the scalability, timing, and integration limitations of traditional crossbar-based designs. The solution is compatible with Arm® and RISC-V® processor-based systems and supports the development of complex, data-intensive SoCs.</p>
+          <p class="summary">Whether designing an AI accelerator, automotive SoC, multi-core platform, or edge computing device, IDS-NoC provides the scalability, predictability, and automation you need to ship complex SoCs faster.</p>
+          <div class="hero-actions"><a class="btn btn-primary" href="#contact">Request a Demo</a><a class="btn" href="#contact">Free Evaluation</a><a class="btn btn-text" href="#resources">Download Datasheet</a></div>
+        </div>
+        <div class="noc-scene reveal" aria-label="An AXI request is packetized into flits, routed through a scalable Network-on-Chip mesh, and delivered to a target.">
+          <span class="scene-label">Packet-switched fabric / live route</span>
+          <svg class="hero-network" viewBox="0 0 640 520" role="img" aria-label="Animated IDS-NoC router mesh">
+            <g class="wire">
+              <path d="M90 146H170M90 260H170M90 374H170M470 146H555M470 260H555M470 374H555" />
+              <path d="M210 146H430M210 260H430M210 374H430M210 146V374M320 146V374M430 146V374" />
+            </g>
+            <path class="route" d="M90 146H210H320V260H430H555" />
+            <path class="route return" d="M555 374H430H320V260H210H90" />
+            <g>
+              <rect class="endpoint" x="22" y="117" width="68" height="58" rx="5"/><text x="56" y="141" text-anchor="middle">CPU</text><text class="small" x="56" y="158" text-anchor="middle">AXI</text>
+              <rect class="endpoint" x="22" y="231" width="68" height="58" rx="5"/><text x="56" y="255" text-anchor="middle">GPU</text><text class="small" x="56" y="272" text-anchor="middle">AXI</text>
+              <rect class="endpoint" x="22" y="345" width="68" height="58" rx="5"/><text x="56" y="369" text-anchor="middle">NPU</text><text class="small" x="56" y="386" text-anchor="middle">AXI</text>
+              <rect class="endpoint" x="555" y="117" width="68" height="58" rx="5"/><text x="589" y="141" text-anchor="middle">Memory</text><text class="small" x="589" y="158" text-anchor="middle">TARGET</text>
+              <rect class="endpoint" x="555" y="231" width="68" height="58" rx="5"/><text x="589" y="255" text-anchor="middle">Cache</text><text class="small" x="589" y="272" text-anchor="middle">TARGET</text>
+              <rect class="endpoint" x="555" y="345" width="68" height="58" rx="5"/><text x="589" y="369" text-anchor="middle">DMA</text><text class="small" x="589" y="386" text-anchor="middle">TARGET</text>
+            </g>
+            <g>
+              <g transform="translate(190 126)"><rect class="router active" width="40" height="40" rx="5"/><rect class="router-core" x="13" y="13" width="14" height="14"/><text class="small" x="20" y="54" text-anchor="middle">R0,0</text></g>
+              <g transform="translate(300 126)"><rect class="router active" width="40" height="40" rx="5"/><rect class="router-core" x="13" y="13" width="14" height="14"/><text class="small" x="20" y="54" text-anchor="middle">R0,1</text></g>
+              <g transform="translate(410 126)"><rect class="router" width="40" height="40" rx="5"/><rect class="router-core" x="13" y="13" width="14" height="14"/><text class="small" x="20" y="54" text-anchor="middle">R0,2</text></g>
+              <g transform="translate(190 240)"><rect class="router" width="40" height="40" rx="5"/><rect class="router-core" x="13" y="13" width="14" height="14"/><text class="small" x="20" y="54" text-anchor="middle">R1,0</text></g>
+              <g transform="translate(300 240)"><rect class="router active" width="40" height="40" rx="5"/><rect class="router-core" x="13" y="13" width="14" height="14"/><text class="small" x="20" y="54" text-anchor="middle">R1,1</text></g>
+              <g transform="translate(410 240)"><rect class="router active" width="40" height="40" rx="5"/><rect class="router-core" x="13" y="13" width="14" height="14"/><text class="small" x="20" y="54" text-anchor="middle">R1,2</text></g>
+              <g transform="translate(190 354)"><rect class="router" width="40" height="40" rx="5"/><rect class="router-core" x="13" y="13" width="14" height="14"/><text class="small" x="20" y="54" text-anchor="middle">R2,0</text></g>
+              <g transform="translate(300 354)"><rect class="router" width="40" height="40" rx="5"/><rect class="router-core" x="13" y="13" width="14" height="14"/><text class="small" x="20" y="54" text-anchor="middle">R2,1</text></g>
+              <g transform="translate(410 354)"><rect class="router" width="40" height="40" rx="5"/><rect class="router-core" x="13" y="13" width="14" height="14"/><text class="small" x="20" y="54" text-anchor="middle">R2,2</text></g>
+            </g>
+            <g transform="translate(106 134)"><rect class="flit" width="9" height="9" fill="#e06f38"/><rect class="flit" x="13" width="9" height="9" fill="#f1a07b"/><rect class="flit" x="26" width="9" height="9" fill="#496cff"/></g>
+            <text class="small" x="320" y="475" text-anchor="middle">AXI REQUEST → FLITS → XY ROUTE → TARGET → RESPONSE</text>
+          </svg>
+        </div>
+      </div>
+    </section>
+
+    <section class="section section-dark" id="challenges">
+      <div class="shell">
+        <div class="split">
+          <div class="reveal"><h2>From Crossbar Bottlenecks to Scalable NoC</h2><p class="intro">Traditional crossbar interconnects reach their limits as SoC complexity, core counts, and bandwidth requirements grow. IDS-NoC is architected to solve the hardest interconnect challenges teams face today:</p></div>
+          <div class="visual crossbar-visual reveal" aria-label="Traditional crossbar compared with a distributed NoC mesh">
+            <div class="fabric-panel legacy"><h3>Traditional crossbar</h3><div class="crossbar-lines"><span class="source">CPU</span><span class="source">GPU</span><span class="source">NPU</span><span class="source">DMA</span><svg class="crossbar-svg" viewBox="0 0 220 250" preserveAspectRatio="none" aria-hidden="true"><path class="lane" d="M56 18L186 112"/><path class="lane" d="M56 83L186 120"/><path class="lane" d="M56 148L186 128"/><path class="lane" d="M56 213L186 136"/><rect class="lane-packet" x="-4" y="-4" width="8" height="8"><animateMotion dur="2.8s" repeatCount="indefinite" path="M56 18L186 112"/></rect><rect class="lane-packet" x="-4" y="-4" width="8" height="8"><animateMotion dur="2.8s" begin="-.7s" repeatCount="indefinite" path="M56 83L186 120"/></rect><rect class="lane-packet" x="-4" y="-4" width="8" height="8"><animateMotion dur="2.8s" begin="-1.4s" repeatCount="indefinite" path="M56 148L186 128"/></rect><rect class="lane-packet" x="-4" y="-4" width="8" height="8"><animateMotion dur="2.8s" begin="-2.1s" repeatCount="indefinite" path="M56 213L186 136"/></rect></svg><span class="choke-gate"></span><b class="bus"></b></div></div>
+            <div class="transform-arrow">→</div>
+            <div class="fabric-panel scalable"><h3>Distributed NoC</h3><div class="mesh-mini"><svg class="mini-routes" viewBox="0 0 202 192" aria-hidden="true"><path class="base" d="M22 22H180M22 170H101V96H180"/><path class="flow" d="M22 22H180"/><path class="flow two" d="M22 170H101V96H180"/></svg><span class="packet-a">R0,0</span><span class="packet-a">R0,1</span><span class="packet-a">R0,2</span><span>R1,0</span><span>R1,1</span><span>R1,2</span><span class="packet-b">R2,0</span><span class="packet-b">R2,1</span><span class="packet-b">R2,2</span></div></div>
+          </div>
+        </div>
+        <div class="challenge-table reveal" role="table" aria-label="Industry challenges and Agnisys IDS-NoC solutions">
+          <div class="challenge-row" role="row"><strong>Wiring Congestion</strong><span>Packet-switched distributed routing eliminates centralized wiring bottlenecks</span></div>
+          <div class="challenge-row" role="row"><strong>Timing Closure</strong><span>Distributed router paths shorten combinational paths and simplify closure</span></div>
+          <div class="challenge-row" role="row"><strong>Scalability Limits</strong><span>Mesh topology scales linearly; add routers without redesigning the fabric</span></div>
+          <div class="challenge-row" role="row"><strong>Deadlocks</strong><span>Dedicated Virtual Channels per AXI transaction type prevent deadlock</span></div>
+          <div class="challenge-row" role="row"><strong>High Power/Area</strong><span>Modular architecture minimizes die area and reduces power overhead</span></div>
+          <div class="challenge-row" role="row"><strong>Heterogeneous Integration</strong><span>Connects processors, accelerators, memories, and peripherals through a scalable packet-switched fabric</span></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section section-light" id="architecture">
+      <div class="shell">
+        <h2>Scalable N x M NoC Block Diagram for AMBA (AXI) Bus</h2>
+        <div class="diagram-shell reveal">
+          <div class="diagram-topline"><span>Protocol-Agnostic AMBA Support</span><span>Packet-Switched</span><span>Scalable N × M Topology</span><span>Virtual Channel Deadlock Avoidance</span><span>High Performance</span></div>
+          <div class="architecture">
+            <div class="arch-column"><h3>INITIATORS (Ni)</h3><div class="arch-node">CPU</div><div class="arch-node">GPU</div><div class="arch-node">Accelerators</div><div class="arch-node">Peripherals</div><div class="arch-node">Custom IP</div></div>
+            <div class="arch-column ni"><h3>IG NI<br>Ingress Network Interface</h3><div class="ni-block"><b>Packetizer</b>AXI → Flits</div><div class="ni-block"><b>Depacketizer</b>Flits → AXI</div></div>
+            <div class="mesh-field" aria-label="Three row by four column example router mesh"><span class="router-node active">R0,0</span><span class="router-node active">R0,1</span><span class="router-node">R0,2</span><span class="router-node">R0,M-1</span><span class="router-node">R1,0</span><span class="router-node active">R1,1</span><span class="router-node active">R1,2</span><span class="router-node">R1,M-1</span><span class="router-node">RN-1,0</span><span class="router-node">RN-1,1</span><span class="router-node active">RN-1,2</span><span class="router-node">RN-1,M-1</span></div>
+            <div class="arch-column ni"><h3>EG NI<br>Egress Network Interface</h3><div class="ni-block"><b>Depacketizer</b>Flits → AXI</div><div class="ni-block"><b>Packetizer</b>AXI → Flits</div></div>
+            <div class="arch-column targets"><h3>TARGETS (Nt)</h3><div class="arch-node">Memory</div><div class="arch-node">Cache</div><div class="arch-node">DMA</div><div class="arch-node">I/O Complex</div><div class="arch-node">Custom IP</div></div>
+          </div>
+          <div class="diagram-footer">
+            <div class="diagram-note"><h3>LEGEND</h3><p>Router (Rr,c)<br>Initiator Node (In)<br>Target Node (Tn)<br>Horizontal Link (East/West)<br>Vertical Link (North/South)</p></div>
+            <div class="diagram-note"><h3>HOW IT WORKS (IN SIMPLE TERMS)</h3><ol><li>Initiator (I0–I(Ni-1)) generates AMBA (AXI) read/write request.</li><li>Request enters IG NI and is packetized into flits.</li><li>Flits traverse the NoC mesh via routers using shortest path.</li><li>Request reaches EG NI connected to the target.</li><li>EG NI depacketizes flits back to AMBA (AXI) protocol and delivers response.</li></ol></div>
+            <div class="diagram-note"><h3>KEY HIGHLIGHTS</h3><ul><li>Supports AMBA AXI4 / AXI5 Protocol</li><li>Packet-switched NoC architecture</li><li>Virtual Channels for Deadlock Avoidance</li><li>Scalable to any N × M size</li><li>High bandwidth and low latency</li><li>Multiple initiators (Ni) and targets (Nt) support</li></ul></div>
+          </div>
+          <div class="diagram-bottom">Scalable &nbsp; • &nbsp; Flexible &nbsp; • &nbsp; High Performance &nbsp; • &nbsp; AMBA (AXI) Compliant</div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section section-dark" id="features">
+      <div class="shell">
+        <h2>Key Features</h2><p class="intro">IDS-NoC delivers a complete, production-ready NoC fabric with the following capabilities:</p>
+        <div class="feature-layout">
+          <div class="feature-nav" aria-label="Feature groups"><button class="active" data-feature="protocol">Protocol</button><button data-feature="fabric">Fabric</button><button data-feature="scale">Scale</button><button data-feature="delivery">Delivery</button></div>
+          <div class="feature-table reveal">
+            <div class="feature-row active" data-group="protocol"><strong>Multi-Protocol Bus Support</strong><span>AMBA- AXI4, AHB4, APB, AXI5, ACE</span></div>
+            <div class="feature-row" data-group="fabric"><strong>Mesh Topology</strong><span>N×M mesh with N/S/E/W/Local port routing; linear area scaling, simplified timing closure</span></div>
+            <div class="feature-row" data-group="fabric"><strong>Virtual Channel Architecture</strong><span>4 independent VCs (AW/W, B, AR, R); structural deadlock elimination; full QoS configurability</span></div>
+            <div class="feature-row" data-group="fabric"><strong>Network Interface (NI)</strong><span>packetizer AXI &lt;-&gt; FLIT, depacketizer FLIT &lt;-&gt; AXI; Ingress &amp; Egress NI per endpoint</span></div>
+            <div class="feature-row" data-group="fabric"><strong>Pipelined Router Architecture</strong><span>Input Buffers (FIFO), Routing Computation (RC), Virtual Channel Allocator (VCA), Switch Allocator (SA), Crossbar, Output Buffers (FIFO)</span></div>
+            <div class="feature-row" data-group="scale"><strong>Wide Data Bus</strong><span>Up to 2048-bit data bus width</span></div>
+            <div class="feature-row" data-group="scale"><strong>Transaction Depth</strong><span>Up to 1024 pending transactions supported</span></div>
+            <div class="feature-row" data-group="delivery"><strong>Parameterization</strong><span>Generation-time, elaboration-time, and run-time configurability</span></div>
+            <div class="feature-row" data-group="fabric"><strong>Memory Re-order Buffer</strong><span>Optimizes memory transaction ordering to improve bandwidth utilization and overall system performance.</span></div>
+            <div class="feature-row" data-group="delivery"><strong>Optimizations</strong><span>Power management, security, address &amp; data protection, advanced in-circuit debug</span></div>
+            <div class="feature-row" data-group="delivery"><strong>Functional Safety &amp; Reliability</strong><span>Reliability option, Functional Safety</span></div>
+            <div class="feature-row" data-group="scale"><strong>Unlimited Scaling</strong><span>Unlimited NoC instances per design; unlimited Network Interface Units (NIs) per die</span></div>
+            <div class="feature-row" data-group="delivery"><strong>RTL Delivery</strong><span>SystemVerilog, plain-text, unencrypted — full visibility and portability</span></div>
+            <div class="feature-row" data-group="delivery"><strong>Licensing</strong><span>Flexible licensing model suited for small-scale to large-scale SoCs</span></div>
+            <div class="feature-row" data-group="delivery"><strong>Ecosystem Integration</strong><span>Deep integration with IDesignSpec for register maps, connectivity, and bus IPs</span></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section section-light" id="applications">
+      <div class="shell"><h2>Target Applications</h2>
+        <div class="applications-map reveal">
+          <div class="application-wing left">
+            <article class="application"><svg class="app-icon" aria-hidden="true"><use href="#app-ai"/></svg><div class="application-copy"><h3>AI Accelerators</h3><p>High-bandwidth, low-latency interconnect for neural processing units and ML inference engines</p></div><svg class="app-connector" viewBox="0 0 31 12" aria-hidden="true"><path class="base" d="M0 6H31"/><path class="packet" d="M0 6H31"/></svg></article>
+            <article class="application"><svg class="app-icon" aria-hidden="true"><use href="#app-multicore"/></svg><div class="application-copy"><h3>Multi-Core Processors</h3><p>Scalable communication between CPU clusters, caches, and memory controllers</p></div><svg class="app-connector" viewBox="0 0 31 12" aria-hidden="true"><path class="base" d="M0 6H31"/><path class="packet" d="M0 6H31"/></svg></article>
+            <article class="application"><svg class="app-icon" aria-hidden="true"><use href="#app-edge"/></svg><div class="application-copy"><h3>Edge Computing</h3><p>Compact, power-efficient NoC for embedded AI and edge inference SoCs</p></div><svg class="app-connector" viewBox="0 0 31 12" aria-hidden="true"><path class="base" d="M0 6H31"/><path class="packet" d="M0 6H31"/></svg></article>
+            <article class="application"><svg class="app-icon" aria-hidden="true"><use href="#app-aerospace"/></svg><div class="application-copy"><h3>Aerospace &amp; Defence</h3><p>Reliable, certified interconnect fabric for mission-critical and safety-qualified designs</p></div><svg class="app-connector" viewBox="0 0 31 12" aria-hidden="true"><path class="base" d="M0 6H31"/><path class="packet" d="M0 6H31"/></svg></article>
+          </div>
+          <div class="application-spine" aria-hidden="true">
+            <svg class="spine-traces spine-vertical" viewBox="0 0 120 612" preserveAspectRatio="none"><line class="rail" x1="52" y1="0" x2="52" y2="612"/><line class="rail" x1="68" y1="0" x2="68" y2="612"/><line class="traffic orange" x1="52" y1="0" x2="52" y2="612"/><line class="traffic teal" x1="68" y1="0" x2="68" y2="612"/></svg>
+            <svg class="spine-traces spine-horizontal" viewBox="0 0 1000 158" preserveAspectRatio="none"><line class="rail" x1="0" y1="71" x2="1000" y2="71"/><line class="rail" x1="0" y1="87" x2="1000" y2="87"/><line class="traffic orange" x1="0" y1="71" x2="1000" y2="71"/><line class="traffic teal" x1="0" y1="87" x2="1000" y2="87"/></svg>
+            <div class="spine-lock"><svg><use href="#agnisys-glyph" /></svg><strong>IDS-NoC™</strong><span>Core fabric</span></div>
+          </div>
+          <div class="application-wing right">
+            <article class="application"><svg class="app-icon" aria-hidden="true"><use href="#app-auto"/></svg><div class="application-copy"><h3>Automotive SoCs / ADAS</h3><p>ISO 26262-ready interconnect fabric for safety-critical autonomous driving platforms</p></div><svg class="app-connector" viewBox="0 0 31 12" aria-hidden="true"><path class="base" d="M0 6H31"/><path class="packet" d="M0 6H31"/></svg></article>
+            <article class="application"><svg class="app-icon" aria-hidden="true"><use href="#app-network"/></svg><div class="application-copy"><h3>Networking &amp; Comms SoCs</h3><p>High-throughput packet routing for 5G, networking, and protocol processing chips</p></div><svg class="app-connector" viewBox="0 0 31 12" aria-hidden="true"><path class="base" d="M0 6H31"/><path class="packet" d="M0 6H31"/></svg></article>
+            <article class="application"><svg class="app-icon" aria-hidden="true"><use href="#app-data"/></svg><div class="application-copy"><h3>Data Center Accelerators</h3><p>Scalable interconnect for cloud AI chips and custom ASIC accelerators</p></div><svg class="app-connector" viewBox="0 0 31 12" aria-hidden="true"><path class="base" d="M0 6H31"/><path class="packet" d="M0 6H31"/></svg></article>
+            <article class="application"><svg class="app-icon" aria-hidden="true"><use href="#app-industrial"/></svg><div class="application-copy"><h3>Industrial &amp; Consumer Electronics</h3><p>Flexible NoC for diverse SoC architectures across industrial IoT and consumer devices</p></div><svg class="app-connector" viewBox="0 0 31 12" aria-hidden="true"><path class="base" d="M0 6H31"/><path class="packet" d="M0 6H31"/></svg></article>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section section-dark" id="benefits">
+      <div class="shell"><h2>Benefits</h2>
+        <div class="benefits reveal">
+          <div class="benefit"><strong>Faster Time-to-Market</strong><p>Parameter-driven generation eliminates manual implementation of routers, network interfaces, and interconnect fabrics, allowing teams to rapidly create and iterate on NoC architectures.</p><div class="benefit-signal"><i></i></div></div>
+          <div class="benefit"><strong>Unlimited Scalability</strong><p>Deploy as many NoC instances and Network Interface Units (NIUs) as required by your design.</p><div class="benefit-signal"><i></i></div></div>
+          <div class="benefit"><strong>Open and Portable RTL</strong><p>Receive plain-text, unencrypted SystemVerilog RTL with full visibility and auditability.</p><div class="benefit-signal"><i></i></div></div>
+          <div class="benefit"><strong>Deadlock-Free Communication</strong><p>Dedicated virtual channels and configurable arbitration simplify protocol management and improve reliability.</p><div class="benefit-signal"><i></i></div></div>
+          <div class="benefit"><strong>End-to-End Automation</strong><p>Integrated with the IDesignSpec Suite for RTL generation, integration, verification, documentation, and sign-off collateral generation.</p><div class="benefit-signal"><i></i></div></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section section-soft" id="why-noc">
+      <div class="shell why-grid">
+        <div class="reveal"><h2>Why Network-on-Chip?</h2><p class="intro">Traditional interconnects become increasingly difficult to scale as SoCs grow in complexity.</p><p class="intro">IDS-NoC provides:</p></div>
+        <ul class="why-list reveal"><li><span class="motion-point" aria-hidden="true"></span><span>Improved scalability for large heterogeneous multi-core SoCs</span></li><li><span class="motion-point" aria-hidden="true"></span><span>Reduced wiring congestion and simplified floorplanning</span></li><li><span class="motion-point" aria-hidden="true"></span><span>Better timing closure through distributed communication paths</span></li><li><span class="motion-point" aria-hidden="true"></span><span>Efficient support for high-bandwidth AI and accelerator workloads</span></li><li><span class="motion-point" aria-hidden="true"></span><span>Flexible integration across processors, memories, and peripherals</span></li></ul>
+      </div>
+    </section>
+
+    <section class="section section-deep" id="resources">
+      <div class="shell resources-grid">
+        <div class="reveal"><h2>Resources</h2><ul class="resource-list"><li>IDS-NoC Product Datasheet (PDF)</li><li>AXI4-Based NoC: A Scalable Interconnect Solution for Modern SoC Design (Whitepaper)</li><li>IDesignSpec (IDS-GDI) Product Overview</li><li>Request a Live Demo or Free Evaluation</li></ul></div>
+        <div class="cta reveal" id="contact"><h2>Build the Next Generation of Scalable SoCs</h2><p>Automate NoC design, integration, and validation with Agnisys IDS-NoC</p><div class="cta-actions"><a class="btn btn-primary" href="#">Request a Demo</a><a class="btn" href="#">Download Datasheet</a><a class="btn" href="#">Free Evaluation</a><a class="btn btn-text" href="#">Contact</a></div></div>
+      </div>
+    </section>
+  </main>
+
+  <script>
+    const reveals = document.querySelectorAll('.reveal');
+    const revealObserver = new IntersectionObserver((entries) => {
+      entries.forEach((entry) => entry.target.classList.toggle('in-view', entry.isIntersecting));
+    }, { threshold: 0.12 });
+    reveals.forEach((node) => revealObserver.observe(node));
+
+    const featureButtons = document.querySelectorAll('.feature-nav button');
+    const featureRows = document.querySelectorAll('.feature-row');
+    featureButtons.forEach((button) => {
+      button.addEventListener('click', () => {
+        const group = button.dataset.feature;
+        featureButtons.forEach((item) => item.classList.toggle('active', item === button));
+        featureRows.forEach((row) => row.classList.toggle('active', row.dataset.group === group));
+        const firstMatch = document.querySelector(`.feature-row[data-group="${group}"]`);
+        if (firstMatch && window.innerWidth < 821) firstMatch.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      });
+    });
+  </script>
+</body>
+</html>
