@@ -73,6 +73,7 @@
       }
 
       * { box-sizing: border-box; }
+      [hidden] { display: none !important; }
       html { scroll-behavior: smooth; }
       body {
         margin: 0;
@@ -238,6 +239,326 @@
         margin-bottom: 34px;
       }
       .section-head.tight { margin-bottom: 24px; }
+      .hero-product-name {
+        margin: 0 0 10px;
+        color: var(--brand-dark);
+        font-size: 15px;
+        font-weight: 820;
+      }
+      .approved-list {
+        max-width: 900px;
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 0 28px;
+        margin: 22px 0 34px;
+        padding: 0;
+        list-style: none;
+      }
+      .approved-list li {
+        padding: 14px 0;
+        border-top: 1px solid var(--line);
+        color: #465260;
+        line-height: 1.55;
+      }
+      .band-dark .approved-list li { border-color: rgba(255,255,255,.14); color: #c7ced4; }
+      .approved-close { max-width: 900px; margin-top: 28px; }
+      .approved-close p { color: #c7ced4; font-size: 16px; line-height: 1.65; }
+      .difference-field {
+        padding-block: 88px;
+      }
+      .difference-layout {
+        display: grid;
+        grid-template-columns: minmax(0, 1.02fr) minmax(480px, .98fr);
+        gap: clamp(56px, 7vw, 108px);
+        align-items: center;
+      }
+      .difference-copy h2 { max-width: 12ch; }
+      .difference-copy .lede { max-width: 60ch; }
+      .difference-copy .lede + .lede { margin-top: 24px; }
+      .silicon-field-wrap { min-width: 0; }
+      .silicon-field-wrap h3 {
+        margin-bottom: 18px;
+        font-size: 17px;
+      }
+      .silicon-field {
+        position: relative;
+        display: grid;
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+        grid-template-rows: repeat(4, minmax(82px, auto));
+        gap: 1px;
+        overflow: hidden;
+        border: 1px solid #cfd7de;
+        border-radius: 4px;
+        background: #cfd7de;
+        isolation: isolate;
+      }
+      .silicon-cell {
+        position: relative;
+        z-index: 2;
+        display: flex;
+        align-items: flex-end;
+        min-width: 0;
+        padding: 17px 16px;
+        background: rgba(255, 255, 255, .94);
+        color: #26313d;
+        font-size: 13px;
+        font-weight: 730;
+        line-height: 1.3;
+      }
+      .silicon-cell::before {
+        content: "";
+        position: absolute;
+        top: 14px;
+        left: 16px;
+        width: 18px;
+        height: 2px;
+        background: #b8c2cb;
+        transition: width 180ms ease, background-color 180ms ease;
+      }
+      .silicon-cell:hover::before { width: 34px; background: var(--brand); }
+      .silicon-cell.ai { grid-column: 1 / 3; grid-row: 1; }
+      .silicon-cell.auto { grid-column: 3 / 5; grid-row: 1; }
+      .silicon-cell.data { grid-column: 1 / 3; grid-row: 2; }
+      .silicon-cell.network { grid-column: 3 / 5; grid-row: 2; }
+      .silicon-cell.storage { grid-column: 1; grid-row: 3; }
+      .silicon-cell.fpga { grid-column: 4; grid-row: 3; }
+      .silicon-cell.embedded { grid-column: 1 / 3; grid-row: 4; }
+      .silicon-cell.asic { grid-column: 3 / 5; grid-row: 4; }
+      .silicon-core {
+        grid-column: 2 / 4;
+        grid-row: 3;
+        z-index: 3;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 12px;
+        padding: 16px;
+        background: #171b20;
+        color: #fff;
+      }
+      .silicon-core svg { width: 28px; height: 29px; color: var(--brand); }
+      .silicon-core strong { font-size: 14px; letter-spacing: 0; }
+      .silicon-routes {
+        position: absolute;
+        inset: 0;
+        z-index: 4;
+        width: 100%;
+        height: 100%;
+        pointer-events: none;
+      }
+      .silicon-route-base {
+        fill: none;
+        stroke: rgba(224, 111, 56, .18);
+        stroke-width: 1.5;
+        vector-effect: non-scaling-stroke;
+      }
+      .silicon-route-signal {
+        fill: none;
+        stroke: var(--brand);
+        stroke-width: 3;
+        stroke-linecap: square;
+        stroke-dasharray: 13 760;
+        vector-effect: non-scaling-stroke;
+        animation: silicon-signal 5.8s linear infinite;
+        animation-play-state: paused;
+      }
+      .silicon-field-wrap.in-view .silicon-route-signal { animation-play-state: running; }
+      @keyframes silicon-signal {
+        from { stroke-dashoffset: 773; }
+        to { stroke-dashoffset: 0; }
+      }
+      .capability-intro {
+        padding-block: 64px 54px;
+        background: #fff;
+      }
+      .capability-index {
+        display: grid;
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+        border-top: 1px solid var(--line);
+        border-bottom: 1px solid var(--line);
+      }
+      .capability-index-item {
+        position: relative;
+        min-width: 0;
+        padding: 22px 18px 24px;
+        border-right: 1px solid var(--line);
+        color: inherit;
+        text-decoration: none;
+      }
+      .capability-index-item:last-child { border-right: 0; }
+      .capability-index-item::before {
+        content: "";
+        position: absolute;
+        top: -2px;
+        left: 0;
+        width: 0;
+        height: 2px;
+        background: var(--brand);
+        transition: width 300ms var(--ease);
+      }
+      .capability-index-item:is(.is-active, :hover, :focus-visible)::before { width: 100%; }
+      .capability-index-num {
+        display: block;
+        margin-bottom: 12px;
+        color: var(--quiet);
+        font-family: var(--mono);
+        font-size: 11px;
+        font-weight: 700;
+      }
+      .capability-index-item strong {
+        display: block;
+        font-size: 16px;
+        line-height: 1.3;
+      }
+      .capability-index-item > span:last-child {
+        display: block;
+        margin-top: 7px;
+        color: var(--muted);
+        font-size: 13px;
+        line-height: 1.45;
+      }
+
+      .integration-review {
+        margin-bottom: 24px;
+        overflow: hidden;
+        border: 1px solid rgba(255, 255, 255, 0.12);
+        border-radius: 12px;
+        background: #201b17;
+      }
+      .integration-review-head,
+      .verification-lab-head {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 18px;
+        padding: 13px 16px;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        font-family: var(--mono);
+        font-size: 11px;
+        text-transform: uppercase;
+      }
+      .integration-review-head span:last-child { color: #9b938b; }
+      .integration-flow {
+        display: grid;
+        grid-template-columns: minmax(190px, 0.7fr) minmax(300px, 1.45fr) minmax(190px, 0.7fr);
+        gap: 18px;
+        align-items: stretch;
+        padding: 18px;
+      }
+      .integration-source,
+      .integration-output {
+        display: grid;
+        gap: 9px;
+        align-content: center;
+      }
+      .integration-node {
+        padding: 12px 13px;
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        border-radius: 7px;
+        background: rgba(255, 255, 255, 0.035);
+      }
+      .integration-node b { display: block; color: #f4f1ee; font-size: 13px; }
+      .integration-node span { display: block; margin-top: 3px; color: #8f8780; font-size: 11px; }
+      .integration-fabric {
+        position: relative;
+        min-height: 220px;
+        border: 1px solid rgba(123, 149, 255, 0.22);
+        background:
+          linear-gradient(rgba(123, 149, 255, 0.06) 1px, transparent 1px),
+          linear-gradient(90deg, rgba(123, 149, 255, 0.06) 1px, transparent 1px),
+          rgba(255, 255, 255, 0.025);
+        background-size: 28px 28px;
+      }
+      .integration-fabric svg { position: absolute; inset: 0; width: 100%; height: 100%; }
+      .integration-fabric .route { fill: none; stroke: #4d5768; stroke-width: 1.5; }
+      .integration-fabric .packet {
+        fill: none;
+        stroke: var(--brand);
+        stroke-width: 3;
+        stroke-linecap: square;
+        stroke-dasharray: 10 420;
+        animation: integration-packet 3.8s linear infinite;
+      }
+      .integration-fabric .packet.second { stroke: var(--teal); animation-delay: -1.8s; }
+      @keyframes integration-packet { to { stroke-dashoffset: -430; } }
+      .fabric-core {
+        position: absolute;
+        inset: 50% auto auto 50%;
+        width: 120px;
+        padding: 15px 10px;
+        border: 1px solid rgba(224, 111, 56, 0.54);
+        background: #29211c;
+        color: #f4f1ee;
+        text-align: center;
+        transform: translate(-50%, -50%);
+      }
+      .fabric-core svg { position: static; width: 26px; height: 27px; color: var(--brand); }
+      .fabric-core b { display: block; margin-top: 5px; font-size: 12px; }
+      .fabric-core span { color: #8f8780; font-family: var(--mono); font-size: 9px; }
+
+      .verification-lab {
+        overflow: hidden;
+        border: 1px solid var(--line);
+        border-radius: 10px;
+        background: #fff;
+        box-shadow: 0 18px 50px rgba(28, 36, 46, 0.07);
+      }
+      .verification-lab-head {
+        border-bottom-color: var(--line);
+        background: #f7f8f9;
+        color: #667180;
+      }
+      .verification-lab-head strong { color: var(--ink); font-size: 12px; }
+      .verification-metrics {
+        display: grid;
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+        border-bottom: 1px solid var(--line);
+      }
+      .verification-metric { padding: 17px 18px; border-right: 1px solid var(--line); }
+      .verification-metric:last-child { border-right: 0; }
+      .verification-metric span { display: block; color: var(--quiet); font-size: 11px; }
+      .verification-metric b { display: block; margin-top: 5px; font-family: var(--mono); font-size: 22px; }
+      .verification-body {
+        display: grid;
+        grid-template-columns: minmax(0, 1.3fr) minmax(260px, 0.7fr);
+        min-height: 340px;
+      }
+      .verification-results { padding: 20px; border-right: 1px solid var(--line); }
+      .verification-progress-head { display: flex; justify-content: space-between; gap: 18px; margin-bottom: 10px; }
+      .verification-progress-head strong { font-size: 14px; }
+      .verification-progress-head span { color: var(--green); font-family: var(--mono); font-size: 12px; }
+      .verification-track { height: 7px; margin-bottom: 20px; background: #e9edf0; }
+      .verification-fill { width: 78%; height: 100%; background: var(--green); transition: width 650ms var(--ease); }
+      .verification-table { display: grid; }
+      .verification-row {
+        display: grid;
+        grid-template-columns: 1fr 84px 74px;
+        gap: 10px;
+        padding: 10px 8px;
+        border-top: 1px solid var(--line);
+        color: #4a5664;
+        font-family: var(--mono);
+        font-size: 11px;
+      }
+      .verification-row.header { color: #8a95a3; text-transform: uppercase; }
+      .verification-row .result { color: #9aa4af; }
+      .verification-row.is-complete .result { color: var(--green); font-weight: 700; }
+      .verification-iterations { padding: 20px; background: #fafbfb; }
+      .verification-iterations h3 { margin: 0 0 18px; font-size: 14px; }
+      .iteration-step { position: relative; padding: 0 0 20px 24px; color: #8b95a1; font-size: 12px; line-height: 1.45; }
+      .iteration-step::before { content: ""; position: absolute; left: 2px; top: 3px; width: 8px; height: 8px; border: 2px solid #cbd3da; background: #fff; }
+      .iteration-step:not(:last-child)::after { content: ""; position: absolute; left: 6px; top: 15px; bottom: 3px; width: 1px; background: #dfe4e8; }
+      .iteration-step b { display: block; color: #56616e; }
+      .iteration-step.is-active::before { border-color: var(--brand); background: var(--brand); }
+      .iteration-step.is-complete::before { border-color: var(--green); background: var(--green); }
+      .iteration-step:is(.is-active, .is-complete) b { color: var(--ink); }
+
+      .output-register-view { overflow: hidden; border: 1px solid var(--line); background: rgba(255, 255, 255, 0.025); }
+      .output-register-row { display: grid; grid-template-columns: 1.3fr .65fr .65fr .8fr; }
+      .output-register-row span { padding: 9px 10px; border-right: 1px solid var(--line); border-bottom: 1px solid var(--line); color: #a49c94; font-family: var(--mono); font-size: 10.5px; }
+      .output-register-row span:last-child { border-right: 0; }
+      .output-register-row:last-child span { border-bottom: 0; }
+      .output-register-row.header span { background: rgba(255, 255, 255, 0.045); color: #d0c9c2; font-weight: 700; text-transform: uppercase; }
 
       .topbar {
         position: fixed;
@@ -424,6 +745,8 @@
       .hero .lede {
         margin: 20px 0 0;
       }
+      .hero-copy .lede { max-width: 64ch; font-size: clamp(14px, 1.02vw, 16px); line-height: 1.52; }
+      .hero-copy .lede + .lede { margin-top: 10px; }
       .punchline {
         display: inline-flex;
         align-items: center;
@@ -3961,6 +4284,12 @@
         .loop-top {
           grid-template-columns: 1fr;
         }
+        .difference-layout {
+          grid-template-columns: 1fr;
+          gap: 42px;
+        }
+        .difference-copy h2 { max-width: none; }
+        .silicon-field-wrap { max-width: 720px; }
         .hero {
           padding-top: 132px;
           padding-bottom: 20px;
@@ -4465,10 +4794,152 @@
       }
       .explorer-file[aria-selected="true"] .tick { background: var(--brand); }
 
+      .surface-panel {
+        grid-template-columns: minmax(0, 0.84fr) minmax(360px, 1.16fr);
+        min-height: 520px;
+      }
+      .cap-demo {
+        min-width: 0;
+        align-self: stretch;
+        overflow: hidden;
+        border: 1px solid color-mix(in srgb, var(--tone) 24%, #dfe5ea);
+        border-radius: 9px;
+        background: #f8f9fa;
+      }
+      .cap-demo-head {
+        display: flex;
+        justify-content: space-between;
+        gap: 12px;
+        padding: 10px 12px;
+        border-bottom: 1px solid #dfe5ea;
+        background: #fff;
+        color: #6d7886;
+        font-family: var(--mono);
+        font-size: 9.5px;
+        text-transform: uppercase;
+      }
+      .cap-demo-head b { color: var(--tone); }
+      .spec-demo-body { padding: 14px; }
+      .spec-run-progress { height: 5px; margin-bottom: 14px; background: #e4e8eb; }
+      .spec-run-progress span { display: block; width: 0; height: 100%; background: var(--tone); animation: spec-progress 7.2s var(--ease) infinite; }
+      @keyframes spec-progress { 0%, 8% { width: 0; } 75%, 100% { width: 100%; } }
+      .spec-run-step {
+        display: grid;
+        grid-template-columns: 18px 1fr auto;
+        gap: 8px;
+        padding: 10px 0;
+        border-bottom: 1px solid #e3e7ea;
+        color: #7b8591;
+        font-family: var(--mono);
+        font-size: 10px;
+        animation: spec-step 7.2s infinite;
+      }
+      .spec-run-step:nth-child(3) { animation-delay: .9s; }
+      .spec-run-step:nth-child(4) { animation-delay: 1.8s; }
+      .spec-run-step:nth-child(5) { animation-delay: 2.7s; }
+      .spec-run-step i { width: 8px; height: 8px; margin-top: 2px; border: 1px solid #c6ced5; background: #fff; }
+      .spec-run-step b { color: #35404d; font-weight: 700; }
+      .spec-run-step em { color: #9aa4ae; font-style: normal; }
+      @keyframes spec-step { 0%, 15% { opacity: .38; } 28%, 82% { opacity: 1; } 100% { opacity: .38; } }
+      .spec-report {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 8px;
+        margin-top: 12px;
+      }
+      .spec-report span { padding: 10px; border: 1px solid #dfe5ea; background: #fff; color: #64707e; font-size: 10px; }
+      .spec-report b { display: block; margin-bottom: 3px; color: var(--ink); }
+
+      .design-demo-stage { position: relative; min-height: 392px; background: #eef1f3; }
+      .design-run-layer,
+      .connectivity-shot { position: absolute; inset: 0; margin: 0; }
+      .design-run-layer {
+        z-index: 2;
+        padding: 14px;
+        background: #f8f9fa;
+        animation: design-run 10s var(--ease) infinite;
+      }
+      .connectivity-shot { z-index: 1; overflow: hidden; background: #fff; animation: design-shot 10s var(--ease) infinite; }
+      .connectivity-shot img { width: 100%; height: 100%; object-fit: cover; object-position: center; transform: scale(1.04); animation: graph-pan 10s var(--ease) infinite; }
+      @keyframes design-run { 0%, 38% { opacity: 1; } 48%, 90% { opacity: 0; } 100% { opacity: 1; } }
+      @keyframes design-shot { 0%, 38% { opacity: 0; } 48%, 90% { opacity: 1; } 100% { opacity: 0; } }
+      @keyframes graph-pan { 0%, 45% { transform: scale(1.04); } 82% { transform: scale(1.13); } 100% { transform: scale(1.04); } }
+      .design-plan { display: grid; gap: 8px; }
+      .design-plan-row { display: grid; grid-template-columns: 18px 1fr auto; gap: 8px; padding: 9px; border: 1px solid #dde3e7; background: #fff; font-family: var(--mono); font-size: 9.5px; }
+      .design-plan-row strong { color: #303b48; }
+      .design-plan-row span:last-child { color: var(--green); }
+      .design-files { margin-top: 12px; border: 1px solid #dfe5e9; background: #fff; }
+      .design-files b { display: block; padding: 9px 10px; border-bottom: 1px solid #e1e6e9; font-size: 10px; }
+      .design-files span { display: flex; justify-content: space-between; padding: 7px 10px; color: #66717e; font-family: var(--mono); font-size: 9px; }
+
+      .cap-demo .verification-lab { border: 0; border-radius: 0; box-shadow: none; }
+      .cap-demo .verification-lab-head { padding: 10px 12px; }
+      .cap-demo .verification-metrics { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+      .cap-demo .verification-metric { padding: 12px; }
+      .cap-demo .verification-metric:nth-child(2) { border-right: 0; }
+      .cap-demo .verification-metric:nth-child(-n+2) { border-bottom: 1px solid var(--line); }
+      .cap-demo .verification-body { grid-template-columns: 1fr; min-height: auto; }
+      .cap-demo .verification-results { padding: 14px; border-right: 0; }
+      .cap-demo .verification-iterations { display: none; }
+      .cap-demo .verification-row { grid-template-columns: minmax(0, 1fr) 58px 56px; font-size: 9px; }
+
+      .output-demo-body { display: grid; grid-template-columns: .78fr 1.22fr; min-height: 390px; }
+      .output-mini-tree { padding: 10px; border-right: 1px solid #dfe5ea; background: #f3f5f6; font-family: var(--mono); font-size: 9px; }
+      .output-mini-tree b,
+      .output-mini-tree span { display: block; padding: 6px 7px; }
+      .output-mini-tree span { color: #77828e; }
+      .output-mini-tree span::before { content: ""; display: inline-block; width: 6px; height: 6px; margin-right: 7px; background: #c7cfd6; }
+      .output-mini-tree span.active { background: rgba(224, 111, 56, .1); color: var(--ink); }
+      .output-mini-tree span.active::before { background: var(--brand); }
+      .output-preview-pane { padding: 12px; background: #fff; }
+      .output-preview-pane > b { display: block; margin-bottom: 12px; font-family: var(--mono); font-size: 10px; }
+      .output-demo .output-register-row { grid-template-columns: 1.25fr .62fr .62fr .78fr; }
+      .output-demo .output-register-row span { padding: 8px 6px; color: #5e6976; font-size: 8px; }
+      .output-demo .output-register-row.header span { color: #495461; }
+
       @media (max-width: 900px) {
         .explorer-body { max-height: 320px; overflow-y: auto; }
       }
 
+      @media (max-width: 780px) {
+        .approved-list { grid-template-columns: 1fr; }
+        .difference-field { padding-block: 66px; }
+        .silicon-field { grid-template-rows: repeat(4, minmax(74px, auto)); }
+        .silicon-cell { padding: 15px 13px; font-size: 12px; }
+        .silicon-cell::before { top: 12px; left: 13px; }
+        .capability-index { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+        .capability-index-item:nth-child(2n) { border-right: 0; }
+        .capability-index-item:nth-child(-n+2) { border-bottom: 1px solid var(--line); }
+        .integration-flow { grid-template-columns: 1fr; }
+        .integration-fabric { min-height: 240px; }
+        .verification-metrics { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+        .verification-metric:nth-child(2) { border-right: 0; }
+        .verification-metric:nth-child(-n+2) { border-bottom: 1px solid var(--line); }
+        .verification-body { grid-template-columns: 1fr; }
+        .verification-results { border-right: 0; border-bottom: 1px solid var(--line); }
+        .surface-panel { grid-template-columns: 1fr; min-height: 0; }
+        .cap-demo { min-height: 390px; }
+      }
+      @media (max-width: 480px) {
+        .silicon-field {
+          grid-template-columns: repeat(2, minmax(0, 1fr));
+          grid-template-rows: repeat(5, minmax(70px, auto));
+        }
+        .silicon-cell.ai { grid-column: 1; grid-row: 1; }
+        .silicon-cell.auto { grid-column: 2; grid-row: 1; }
+        .silicon-cell.data { grid-column: 1; grid-row: 2; }
+        .silicon-cell.network { grid-column: 2; grid-row: 2; }
+        .silicon-cell.storage { grid-column: 1; grid-row: 3; }
+        .silicon-cell.fpga { grid-column: 2; grid-row: 3; }
+        .silicon-core { grid-column: 1 / 3; grid-row: 4; }
+        .silicon-cell.embedded { grid-column: 1; grid-row: 5; }
+        .silicon-cell.asic { grid-column: 2; grid-row: 5; }
+        .silicon-routes { display: none; }
+        .capability-index { grid-template-columns: 1fr; }
+        .capability-index-item,
+        .capability-index-item:nth-child(2n) { border-right: 0; }
+        .capability-index-item:not(:last-child) { border-bottom: 1px solid var(--line); }
+      }
     </style>
   </head>
   <body data-state="idle">
@@ -4504,11 +4975,11 @@
         </span>
       </a>
       <nav aria-label="Page">
-        <a href="#flow-removal">Changes</a>
+        <a href="#story">Platform</a>
         <a href="#story">NL flow</a>
         <a href="#leverage">Why spec</a>
         <a href="#loop">Loop</a>
-        <a href="#capabilities">Capabilities</a>
+        <a href="#capability-intro">Capabilities</a>
         <a href="#artifacts">Artifacts</a>
         <a href="#why">Why Agnisys</a>
         <a href="ids-noc.html">NoC</a>
@@ -4520,13 +4991,12 @@
       <section class="hero" data-state="idle" data-rail-target="spec">
         <div class="shell hero-grid">
           <div class="hero-copy reveal">
-            <h1>From engineering intent to <span class="accent">sign-off</span> with IDS-AI</h1>
-            <p class="lede">
-              IDS-AI turns natural-language requests and structured inputs into design,
-              verification, validation, integration, documentation, and sign-off handoffs
-              while keeping the golden specification in control.
-            </p>
-            <div class="punchline"><span></span>One source of truth. 100% CSR verification coverage.</div>
+            <p class="hero-product-name">IDS-AI</p>
+            <h1>Specification to Signoff with Agentic AI</h1>
+            <p class="lede">Agnisys IDS-AI gets your team from specification to first-pass silicon sign-off dramatically faster.</p>
+            <p class="lede">It's the industry's first agentic AI framework built specifically to understand semiconductor design functional specification, CSR, SoC hierarchy &amp; connectivity and RTL. Instead of stitching together point tools and manual handoffs, you get Agentic AI that drives the entire flow — from golden specification creation to RTL sign-off — on your behalf.</p>
+            <p class="lede">It is built on Agnisys' IDesignSpec Suite, which has been refined over the past two decades of production use, so you get the reasoning and productivity of AI with the certainty and accuracy of rule-based tools.</p>
+            <div class="punchline"><span></span>Design Smarter. Verify Faster. Reach Sign-Off with Confidence.</div>
             <div class="hero-actions">
               <a class="btn btn-primary" href="#cta">Request a Demo</a>
               <a class="btn btn-secondary" href="#cta">Talk to an Expert</a>
@@ -4600,15 +5070,15 @@
         <div class="shell">
           <div class="proof-shell reveal">
             <div>
-              <div class="proof-kicker">Industry reality</div>
+              <div class="proof-kicker">Root cause of ASIC and FPGA functional flaws*</div>
               <div class="proof-left">
                 <div class="stat">
                   <strong data-count="45" data-prefix="~" data-suffix="%">~45%</strong>
                   <p>of ASIC functional flaws trace to incorrect or incomplete specifications.</p>
                 </div>
                 <div class="stat">
-                  <strong data-count="29" data-prefix="~" data-suffix="%">~29%</strong>
-                  <p>are caused by changes to the specification after it is agreed.</p>
+                  <strong data-count="30" data-prefix="~" data-suffix="%">~30%</strong>
+                  <p>are caused by changes to the specification.</p>
                 </div>
                 <div class="stat">
                   <strong data-count="14" data-suffix="%">14%</strong>
@@ -4618,13 +5088,12 @@
             </div>
             <div class="proof-rule" aria-hidden="true"></div>
             <div class="proof-right">
-              <div class="proof-kicker">With IDS-AI</div>
+              <div class="proof-kicker">IDS-AI</div>
               <strong data-count="100" data-suffix="%">100%</strong>
               <p>CSR verification coverage at sign-off.</p>
             </div>
             <p class="citation">
-              Source: 2024 Wilson Research Group Functional Verification Study, Siemens EDA.
-              Multiple responses permitted. Industry data and IDS-AI product claims are separated intentionally.
+              * 2024 Wilson Research Group Study by Siemens EDA
             </p>
           </div>
         </div>
@@ -4633,16 +5102,15 @@
       <section id="leverage" data-state="caution" data-rail-target="check">
         <div class="shell">
           <div class="section-head reveal">
-            <h2>The specification is where a defect is cheapest to kill.</h2>
-            <p class="lede">
-              Design error remains the largest root cause. The specification is still the best lever
-              because specification defects can be removed before RTL exists.
-            </p>
+            <h2>Why Specification Matters</h2>
+            <p class="lede">The design specification is the single most important creation in your chip development process. Incorrect or incomplete specifications are the root cause of ~45% of the functional bugs. Furthermore, changes to the specification are the source for another 30% of bugs*. Those numbers are worse for FPGAs (close to 60% and 40% respectively).</p>
+            <p class="lede">For ASIC projects, only 14% have first-silicon success*.</p>
+            <p class="lede">The 1/10/100 rule is a quality management principle which states that the later a defect is discovered, the more expensive it becomes to fix. Finding the bug in the specification and having a correct and unambiguous definition of the functionality is the best way to develop a chip. This is the exact purpose of IDS-AI. It allows your engineers to interact with the design flow using natural language. Whether starting from a prompt or an existing specification in simple text, PDF, or HTML format, it helps generate and validate the golden specification, detecting inconsistencies and modeling issues early. It preserves design intent and automatically generates RTL to CSR sign-off collateral consistent with the specification. IDS-AI is an intelligent layer on top of the correct-by-construction Agnisys tools that have been perfected over the last two decades.</p>
           </div>
 
           <div class="leverage-grid">
               <div class="panel chart-panel reveal">
-                <div class="proof-kicker">Root cause of functional flaws - uncropped</div>
+                <div class="proof-kicker">Root cause of ASIC and FPGA functional flaws*</div>
                 <svg viewBox="0 0 680 320" role="img" aria-label="Bar chart comparing design error, specification error, specification changes, internal IP flaws, and external IP flaws.">
                   <g stroke="#edf1f4" stroke-width="1">
                     <line x1="54" y1="44" x2="650" y2="44" />
@@ -4762,7 +5230,7 @@
            "here is the friction we remove." A centre axis rather than a
            comparison table — it reads like a diff, which is what this
            audience looks at all day. -->
-      <section id="flow-removal" class="removal band-soft" data-state="executing" data-rail-target="check">
+      <section id="flow-removal" class="removal band-soft" data-state="executing" data-rail-target="check" hidden>
         <div class="shell">
           <div class="section-head reveal">
             <h2>What IDS-AI takes out of the flow.</h2>
@@ -4830,12 +5298,9 @@
       <section id="story" class="motion-flow-section" data-state="thinking" data-rail-target="spec">
         <div class="shell">
           <div class="section-head reveal">
-            <h2>Natural-language intent becomes checked silicon handoffs.</h2>
-            <p class="lede">
-              The user does not need to think in tool order. They describe the design intent,
-              constraints, or requested output; IDS-AI grounds that request in the golden
-              specification, runs the right generators, checks drift, and closes CSR sign-off.
-            </p>
+            <h2>One Intelligent AI Layer Across the Agnisys Platform</h2>
+            <p class="lede">IDS-AI is built around an agentic AI engine that works across the Agnisys IDesignSpec™ Suite — understanding golden specifications, design intent, CSR verification requirements, and integration flow as a single, connected context rather than isolated inputs handled by individual tools.</p>
+            <p class="lede">The agent coordinates the underlying Agnisys tools automatically, carrying out complex, multi-step engineering tasks with minimal manual effort. IDS-AI is also AI-platform agnostic: teams can use Agnisys' built-in platform, or plug in a platform of their own. It supports both on-site and remote usage.</p>
           </div>
 
           <div class="ribbon reveal" id="storyRibbon" aria-label="Natural language drives IDS-AI from intent to sign-off">
@@ -4881,7 +5346,7 @@
             </div>
           </div>
 
-          <div class="motion-summary reveal">
+          <div class="motion-summary reveal" hidden>
             <article>
               <h3>User prompt, not tool choreography</h3>
               <p>The user asks for engineering work in natural language; IDS-AI chooses the right spec, generation, verification, and integration actions.</p>
@@ -4899,14 +5364,47 @@
         </div>
       </section>
 
+      <section id="capability-intro" class="capability-intro" data-state="executing" data-rail-target="act">
+        <div class="shell">
+          <div class="section-head tight reveal">
+            <h2>Key Agentic AI Capabilities</h2>
+          </div>
+          <nav class="capability-index reveal" aria-label="Key Agentic AI capabilities">
+            <a class="capability-index-item is-active" href="#loop" data-index-target="loop" aria-current="step">
+              <span class="capability-index-num">01</span>
+              <strong>Specification Creation and Intelligence</strong>
+              <span>Creation, verification, validation, and self-correction.</span>
+            </a>
+            <a class="capability-index-item" href="#surface" data-index-target="surface">
+              <span class="capability-index-num">02</span>
+              <strong>Design and Integration Automation</strong>
+              <span>Implementation-ready RTL and intelligent connectivity.</span>
+            </a>
+            <a class="capability-index-item" href="#capabilities" data-index-target="capabilities">
+              <span class="capability-index-num">03</span>
+              <strong>Verification and Sign-Off Automation</strong>
+              <span>Verification environments and CSR coverage closure.</span>
+            </a>
+            <a class="capability-index-item" href="#artifacts" data-index-target="artifacts">
+              <span class="capability-index-num">04</span>
+              <strong>Consistent Output Generation</strong>
+              <span>Implementation-ready collateral from the golden specification.</span>
+            </a>
+          </nav>
+        </div>
+      </section>
+
       <section id="loop" class="band-soft" data-state="executing" data-rail-target="act">
         <div class="shell">
           <div class="section-head reveal">
-            <h2>Detect conflicts, correct the source, regenerate outputs, verify closure.</h2>
-            <p class="lede">
-              This is deliberately abstract. Register names are redacted, content is drawn, and only
-              safe metrics are revealed. The interaction shows the engineering behavior without exposing UI.
-            </p>
+            <h2>Specification Creation and Intelligence</h2>
+            <p class="lede">Accelerate specification development with AI-powered creation, verification, validation, and a self-correcting loop that continuously improves specification quality by detecting and resolving issues automatically.</p>
+            <ul class="approved-list">
+              <li>Create and manage your functional specifications, including CSR specifications and sequences, in a collaborative environment using intuitive text-based and graphical interfaces.</li>
+              <li>Analyze specifications for completeness, correctness, and integrity.</li>
+              <li>Automatically detect and resolve inconsistencies between specifications and CSR definitions.</li>
+              <li>Run a self-correcting loop that automatically corrects IDS-Batch™-reported warnings and errors across supported specification formats, including SystemRDL and IDS-CF™ templates.</li>
+            </ul>
           </div>
 
           <div class="loop-shell glass reveal">
@@ -4994,7 +5492,7 @@
               <button class="btn btn-secondary" id="replayBtn" type="button" hidden>Replay</button>
               <span class="autoplay-note">Loops while this section is in view.</span>
             </div>
-            <p class="loop-note">
+            <p class="loop-note" hidden>
               The visible product story is the loop itself: a detected specification conflict resolves into
               regenerated outputs and closed CSR coverage without exposing the underlying UI.
             </p>
@@ -5007,11 +5505,14 @@
       <section id="surface" class="band-dark" data-state="executing" data-rail-target="act">
         <div class="shell">
           <div class="section-head reveal">
-            <h2>One intuitive surface for complex engineering.</h2>
-            <p class="lede">
-              See exactly what the agent is doing: the prompt it received, the tools it ran,
-              and every file it wrote. Nothing happens off-screen.
-            </p>
+            <h2>Design and Integration Automation</h2>
+            <p class="lede">Go from golden specification to implementation-ready design faster, with less manual RTL work and fewer integration errors — whether you're working with generated logic, existing IP, or hand-written RTL.</p>
+            <ul class="approved-list">
+              <li>Generate implementation-ready RTL design directly from the golden specification.</li>
+              <li>Create and maintain connections to in-house and third-party IPs.</li>
+              <li>Assist with integrating generated RTL and manually developed RTL, ensuring that generated and user-created content remains synchronized and consistent.</li>
+              <li>Perform intelligent logic assembly and connectivity based on natural-language instructions.</li>
+            </ul>
           </div>
 
           <div class="agent-console agent-window reveal" aria-label="Prompt-driven IDS-AI agent work surface">
@@ -5101,30 +5602,36 @@
 
       <section id="capabilities" data-state="executing" data-rail-target="act">
         <div class="shell">
-          <div class="section-head tight reveal">
-            <h2>Four outcomes. One product surface.</h2>
+          <div class="section-head reveal">
+            <h2>Verification and Sign-Off Automation</h2>
+            <p class="lede">Reduce verification effort and accelerate sign-off through AI-powered automation that generates complete verification environments and ensures comprehensive CSR verification coverage.</p>
+            <ul class="approved-list">
+              <li>Automatically generate verification testbenches and tests.</li>
+              <li>Generate validation environments and tests.</li>
+              <li>Achieve CSR sign-off with 100% RTL verification coverage.</li>
+              <li>Extend verification automation to full-chip verification, including user logic and application-specific functionality.</li>
+            </ul>
           </div>
 
           <div class="surface reveal">
             <div class="surface-tabs" role="tablist" aria-label="IDS-AI capabilities">
               <button class="surface-tab" role="tab" aria-selected="true" data-cap="0" style="--tone: var(--brand)">
                 <span class="emblem"><svg aria-hidden="true"><use href="#tile-glyph" /></svg></span>
-                <span><b>Specification Quality</b><span>Design intent, completeness, consistency.</span></span>
+                <span><b>Specification Creation and Intelligence</b><span>Creation, verification, validation, and self-correction.</span></span>
               </button>
               <button class="surface-tab" role="tab" aria-selected="false" data-cap="1" style="--tone: var(--blue)">
                 <span class="emblem"><svg aria-hidden="true"><use href="#tile-glyph" /></svg></span>
-                <span><b>RTL and SoC Integration</b><span>IP RTL, SoC RTL, connectivity.</span></span>
+                <span><b>Design and Integration Automation</b><span>Implementation-ready RTL and intelligent connectivity.</span></span>
               </button>
               <button class="surface-tab" role="tab" aria-selected="false" data-cap="2" style="--tone: var(--green)">
                 <span class="emblem"><svg aria-hidden="true"><use href="#tile-glyph" /></svg></span>
-                <span><b>CSR Verification</b><span>UVM, RAL, formal, coverage closure.</span></span>
+                <span><b>Verification and Sign-Off Automation</b><span>Verification environments and CSR coverage closure.</span></span>
               </button>
               <button class="surface-tab" role="tab" aria-selected="false" data-cap="3" style="--tone: var(--teal)">
                 <span class="emblem"><svg aria-hidden="true"><use href="#tile-glyph" /></svg></span>
-                <span><b>Artifact Sync</b><span>Regenerate together. Nothing drifts.</span></span>
+                <span><b>Consistent Output Generation</b><span>Implementation-ready collateral from the golden specification.</span></span>
               </button>
             </div>
-
             <div class="surface-stack" id="capStack"></div>
           </div>
         </div>
@@ -5133,11 +5640,15 @@
       <section id="artifacts" class="band-dark" data-state="executing" data-rail-target="verify">
         <div class="shell">
           <div class="section-head reveal">
-            <h2>Generated outputs stay synchronized.</h2>
-            <p class="lede">
-              RTL design, SoC integration, UVM tests, validation collateral, headers, and
-              documentation are produced together from the same checked specification.
-            </p>
+            <h2>Consistent Output Generation</h2>
+            <p class="lede">Generate implementation-ready collateral directly from the golden specification, including:</p>
+            <ul class="approved-list">
+              <li>RTL design</li>
+              <li>IP integration artifacts</li>
+              <li>Verification testbenches and tests</li>
+              <li>Validation environments and tests</li>
+              <li>Documentation</li>
+            </ul>
           </div>
 
           <div class="artifact-stage reveal">
@@ -5159,35 +5670,71 @@
               </div>
             </article>
           </div>
+          <div class="approved-close reveal">
+            <p>Every generated artifact remains synchronized with the golden specification, providing a single source of truth throughout the development lifecycle.</p>
+            <p>The result is a streamlined, specification-driven flow that enables your engineering teams to move from golden specification to sign-off faster, with higher quality and significantly reduced manual effort.</p>
+          </div>
         </div>
       </section>
 
       <section id="outcomes" data-state="verified" data-rail-target="signoff">
         <div class="shell">
           <div class="section-head tight reveal">
-            <h2>Closed loops from intent to sign-off.</h2>
+            <h2>Benefits</h2>
           </div>
           <div class="statbar reveal" id="outcomeLoop">
             <article class="stat" data-step="0" style="--tone: var(--brand)">
-              <span class="metric"><b>14%</b><i>first-silicon success today</i></span>
-              <h3>Fewer design re-spins</h3><p>Moves defect discovery before RTL and silicon.</p>
+              <span class="metric" hidden><b>14%</b><i>first-silicon success today</i></span>
+              <h3>Reduce Design Re-Spins</h3><p>Catch specification defects before implementation begins.</p>
             </article>
             <article class="stat" data-step="1" style="--tone: var(--teal)">
-              <span class="metric"><b>~45%</b><i>of flaws start in the spec</i></span>
-              <h3>Higher specification quality</h3><p>Checks completeness and consistency at the source.</p>
+              <span class="metric" hidden><b>~45%</b><i>of flaws start in the spec</i></span>
+              <h3>Improve Engineering Productivity</h3><p>Automate repetitive engineering tasks so teams can focus on innovation.</p>
             </article>
             <article class="stat" data-step="2" style="--tone: var(--blue)">
-              <span class="metric"><b>1</b><i>pass, not a hand-off chain</i></span>
-              <h3>Less manual effort</h3><p>Finds, recommends, regenerates, and verifies in one pass.</p>
+              <span class="metric" hidden><b>1</b><i>pass, not a hand-off chain</i></span>
+              <h3>Accelerate Verification</h3><p>Auto-generate verification environments and close coverage faster.</p>
             </article>
             <article class="stat" data-step="3" style="--tone: var(--amber)">
-              <span class="metric"><b>0</b><i>artifacts left to drift</i></span>
-              <h3>One source of truth</h3><p>RTL, tests, headers, docs, and integration stay synchronized.</p>
+              <span class="metric" hidden><b>0</b><i>artifacts left to drift</i></span>
+              <h3>Improve Specification Quality</h3><p>Maintain complete, correct, and consistent golden specifications throughout the project lifecycle.</p>
             </article>
             <article class="stat" data-step="4" style="--tone: var(--green)">
-              <span class="metric"><b>100%</b><i>CSR verification coverage</i></span>
-              <h3>Faster coverage closure</h3><p>Generated tests align with generated design intent.</p>
+              <span class="metric" hidden><b>100%</b><i>CSR verification coverage</i></span>
+              <h3>Enable First-Silicon Success</h3><p>Reduce costly design iterations and improve project predictability.</p>
             </article>
+          </div>
+        </div>
+      </section>
+
+      <section id="different" class="band-soft difference-field" data-state="thinking" data-rail-target="signoff">
+        <div class="shell difference-layout">
+          <div class="difference-copy reveal">
+            <h2>What Makes IDS-AI Different?</h2>
+            <p class="lede">Unlike generic AI assistants, IDS-AI, the agentic AI framework, coordinates multiple engineering tasks instead of answering isolated questions — delivering real engineering automation, not just a chat assistant bolted onto existing tools.</p>
+            <p class="lede">IDS-AI understands semiconductor design intent. It leverages the core Agnisys tools to generate correct-by-construction collateral for design, integration, verification, validation, and documentation, adding the power of agentic AI to catch and fix issues upfront in your ASIC development flow, and remove the drudgery of design/verification engineers, to produce sign-off-quality outputs.</p>
+          </div>
+
+          <div id="built-for" class="silicon-field-wrap reveal">
+            <h3>Built For</h3>
+            <div class="silicon-field" aria-label="Semiconductor applications supported by IDS-AI">
+              <span class="silicon-cell ai">AI accelerators</span>
+              <span class="silicon-cell auto">Automotive SoCs</span>
+              <span class="silicon-cell data">Data center processors</span>
+              <span class="silicon-cell network">Networking chips</span>
+              <span class="silicon-cell storage">Storage controllers</span>
+              <div class="silicon-core" aria-hidden="true">
+                <svg><use href="#agnisys-glyph" /></svg>
+                <strong>IDS-AI core</strong>
+              </div>
+              <span class="silicon-cell fpga">FPGA platforms</span>
+              <span class="silicon-cell embedded">Embedded systems</span>
+              <span class="silicon-cell asic">Custom ASIC development</span>
+              <svg class="silicon-routes" viewBox="0 0 520 420" preserveAspectRatio="none" aria-hidden="true">
+                <path class="silicon-route-base" d="M0 52 H182 V262 H338 V368 H520" />
+                <path class="silicon-route-signal" d="M0 52 H182 V262 H338 V368 H520" />
+              </svg>
+            </div>
           </div>
         </div>
       </section>
@@ -5195,12 +5742,8 @@
       <section id="why" data-state="idle" data-rail-target="signoff">
         <div class="shell why-grid">
           <div class="reveal">
-            <h2>Two decades of specification-driven automation become the agent's action layer.</h2>
-            <p class="lede">
-              Agentic AI needs structured engineering context to act on. Agnisys already has that
-              substrate: golden specifications, CSR automation, correct-by-construction generators,
-              verification assets, integration flows, and batch execution.
-            </p>
+            <h2>Why Agnisys?</h2>
+            <p class="lede">For over two decades, Agnisys has helped semiconductor companies automate specification-driven design. IDS-AI builds on this proven foundation, combining correct-by-construction automation with next-generation Agentic AI into one unified platform — for specification creation, design generation, verification, validation, integration, and sign-off.</p>
             <div class="tool-stack">
               <div class="tool-row"><b>IDS-Batch</b><span>Generation engine for RTL, UVM/RAL, headers, IP-XACT, and documentation.</span></div>
               <div class="tool-row"><b>IDS-Verify</b><span>UVM environments, formal properties, and CSR verification assets.</span></div>
@@ -5296,11 +5839,8 @@
       <section class="cta" id="cta" data-state="verified" data-rail-target="signoff">
         <div class="shell reveal">
           <svg class="big-mark" aria-hidden="true"><use href="#agnisys-glyph" /></svg>
-          <h2>Turn the golden specification into the sign-off system.</h2>
-          <p class="lede">
-            See IDS-AI create, check, correct, regenerate, and close CSR verification coverage
-            from one source of truth.
-          </p>
+          <h2>Ready to Transform Specification-Driven Chip Development?</h2>
+          <p class="lede">See how Agnisys IDS-AI takes you from Golden Specification to CSR Sign-Off — faster, with higher quality and greater confidence.</p>
           <div class="hero-actions">
             <a class="btn btn-primary" href="#">Request a Demo</a>
             <a class="btn btn-secondary" href="#">Talk to an Expert</a>
@@ -5850,48 +6390,54 @@
         {
           tone: "var(--brand)",
           chip: "batch__check_spec",
-          title: "Specification Quality and Design Intent",
-          desc: "Author functional and CSR specifications through text or graphical editing, then let IDS-AI review them for completeness, correctness, and internal consistency before generation begins.",
+          title: "Specification Creation and Intelligence",
+          desc: "Accelerate specification development with AI-powered creation, verification, validation, and a self-correcting loop that continuously improves specification quality by detecting and resolving issues automatically.",
           bullets: [
-            "Checks completeness, correctness, and integrity before generation begins.",
-            "Detects inconsistencies between functional specification and CSR definitions.",
-            "Corrects IDS-Batch warnings across SystemRDL, IP-XACT, and IDS-CF templates."
+            "Create and manage your functional specifications, including CSR specifications and sequences, in a collaborative environment using intuitive text-based and graphical interfaces.",
+            "Analyze specifications for completeness, correctness, and integrity.",
+            "Automatically detect and resolve inconsistencies between specifications and CSR definitions.",
+            "Run a self-correcting loop that automatically corrects IDS-Batch™-reported warnings and errors across supported specification formats, including SystemRDL and IDS-CF™ templates."
           ],
           shape: [92, 74, 58, 88, 45]
         },
         {
           tone: "var(--blue)",
           chip: "ids__integrate_run",
-          title: "RTL Generation and SoC Integration",
-          desc: "Implementation-ready RTL at IP level and SoC level, with natural-language connectivity instructions resolved into checked integration collateral.",
+          title: "Design and Integration Automation",
+          desc: "Go from golden specification to implementation-ready design faster, with less manual RTL work and fewer integration errors — whether you're working with generated logic, existing IP, or hand-written RTL.",
           bullets: [
-            "Generates synthesizable Verilog, SystemVerilog, and VHDL from the golden spec.",
-            "Assembles SoC topology and processor-peripheral interconnect.",
-            "Keeps generated and hand-written RTL aligned through the specification."
+            "Generate implementation-ready RTL design directly from the golden specification.",
+            "Create and maintain connections to in-house and third-party IPs.",
+            "Assist with integrating generated RTL and manually developed RTL, ensuring that generated and user-created content remains synchronized and consistent.",
+            "Perform intelligent logic assembly and connectivity based on natural-language instructions."
           ],
           shape: [68, 86, 54, 92, 63, 48]
         },
         {
           tone: "var(--green)",
           chip: "ids__arv_sim_generate",
-          title: "CSR Verification and Coverage Closure",
-          desc: "Verification assets generate from the same source that generated the design, so tests and RTL cannot disagree about what a register does.",
+          title: "Verification and Sign-Off Automation",
+          desc: "Reduce verification effort and accelerate sign-off through AI-powered automation that generates complete verification environments and ensures comprehensive CSR verification coverage.",
           bullets: [
-            "Generates UVM environments, RAL models, sequences, agents, and Makefiles.",
-            "Produces formal properties for declared register behavior.",
-            "Achieves 100% CSR verification coverage at sign-off."
+            "Automatically generate verification testbenches and tests.",
+            "Generate validation environments and tests.",
+            "Achieve CSR sign-off with 100% RTL verification coverage.",
+            "Extend verification automation to full-chip verification, including user logic and application-specific functionality."
           ],
           shape: [78, 50, 82, 66, 92, 44]
         },
         {
           tone: "var(--teal)",
           chip: "self-correcting loop",
-          title: "Artifact Synchronization",
-          desc: "When the specification changes, every downstream artifact regenerates together and the agent explains exactly what moved.",
+          title: "Consistent Output Generation",
+          desc: "Generate implementation-ready collateral directly from the golden specification, including:",
           bullets: [
-            "Tracks which specification version produced each artifact.",
-            "Detects drift between spec, RTL, tests, headers, and documentation.",
-            "Regenerates dependent outputs in one auditable pass."
+            "RTL design",
+            "IP integration artifacts",
+            "Verification testbenches and tests",
+            "Validation environments and tests",
+            "Documentation",
+            "Every generated artifact remains synchronized with the golden specification, providing a single source of truth throughout the development lifecycle."
           ],
           shape: [58, 76, 90, 64, 80, 46]
         }
@@ -5901,9 +6447,94 @@
       const capStack = document.getElementById("capStack");
       const capTabs = Array.from(document.querySelectorAll(".surface-tab"));
 
+      function capabilityVisual(index) {
+        if (index === 0) return `
+          <div class="cap-demo spec-demo" aria-label="Specification analysis agent run">
+            <div class="cap-demo-head"><span>Agent run / specification check</span><b>polling</b></div>
+            <div class="spec-demo-body">
+              <div class="spec-run-progress"><span></span></div>
+              <div class="spec-run-step"><i></i><b>spec__task_submit</b><em>done</em></div>
+              <div class="spec-run-step"><i></i><b>spec__check_queue</b><em>running</em></div>
+              <div class="spec-run-step"><i></i><b>completeness analysis</b><em>queued</em></div>
+              <div class="spec-run-step"><i></i><b>integrity report</b><em>queued</em></div>
+              <div class="spec-report">
+                <span><b>Specification report</b>Completeness and consistency findings.</span>
+                <span><b>Markdown summary</b>Traceable results for engineering review.</span>
+              </div>
+            </div>
+          </div>`;
+        if (index === 1) return `
+          <div class="cap-demo design-demo" aria-label="Connectivity generation transitions into its generated graph">
+            <div class="cap-demo-head"><span>Integration plan / live</span><b>graph generated</b></div>
+            <div class="design-demo-stage">
+              <div class="design-run-layer">
+                <div class="design-plan">
+                  <div class="design-plan-row"><span>01</span><strong>edit_lines</strong><span>applied</span></div>
+                  <div class="design-plan-row"><span>02</span><strong>integrate_graph</strong><span>resolved</span></div>
+                  <div class="design-plan-row"><span>03</span><strong>get_guidance</strong><span>complete</span></div>
+                  <div class="design-plan-row"><span>04</span><strong>integrate_graph</strong><span>built</span></div>
+                </div>
+                <div class="design-files">
+                  <b>Files created - 3</b>
+                  <span><i>wrapper.graph.json</i><em>9.1 KB</em></span>
+                  <span><i>wrapper.nlv</i><em>3.4 KB</em></span>
+                  <span><i>wrapper.graph.svg</i><em>29.8 KB</em></span>
+                </div>
+              </div>
+              <figure class="connectivity-shot">
+                <img src="assets/ids-cf-connectivity-graph.png" alt="IDS-CF connectivity graph showing mirrored blocks and signal connections" />
+              </figure>
+            </div>
+          </div>`;
+        if (index === 2) return `
+          <div class="cap-demo">
+            <div class="verification-lab" id="verificationLab" aria-label="Regression results and CSR coverage closure">
+              <div class="verification-lab-head"><strong>Regression / csr_signoff</strong><span id="verificationRunState">Iteration 1 running</span></div>
+              <div class="verification-metrics">
+                <div class="verification-metric"><span>Total tests</span><b>42</b></div>
+                <div class="verification-metric"><span>Passed</span><b id="verificationPassed">31</b></div>
+                <div class="verification-metric"><span>Failed</span><b id="verificationFailed">3</b></div>
+                <div class="verification-metric"><span>CSR coverage</span><b id="verificationCoverage">78%</b></div>
+              </div>
+              <div class="verification-body">
+                <div class="verification-results">
+                  <div class="verification-progress-head"><strong>Coverage closure</strong><span id="verificationClosure">78 / 100</span></div>
+                  <div class="verification-track"><div class="verification-fill" id="verificationFill"></div></div>
+                  <div class="verification-table">
+                    <div class="verification-row header"><span>Test</span><span>Seed</span><span>Result</span></div>
+                    <div class="verification-row" data-verification-row><span>csr_reset_values</span><span>18402</span><span class="result">queued</span></div>
+                    <div class="verification-row" data-verification-row><span>csr_access_policy</span><span>28711</span><span class="result">queued</span></div>
+                    <div class="verification-row" data-verification-row><span>csr_address_decode</span><span>39104</span><span class="result">queued</span></div>
+                    <div class="verification-row" data-verification-row><span>full_chip_smoke</span><span>52980</span><span class="result">queued</span></div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>`;
+        return `
+          <div class="cap-demo output-demo" aria-label="Generated output explorer and register view">
+            <div class="cap-demo-head"><span>Output / synchronized</span><b>11 files</b></div>
+            <div class="output-demo-body">
+              <div class="output-mini-tree">
+                <b>output/</b>
+                <span>rtl/</span><span>verification/</span><span>software/</span><span class="active">integration/</span><span>docs/</span><span>validation/</span>
+              </div>
+              <div class="output-preview-pane">
+                <b>generated/register_view</b>
+                <div class="output-register-view">
+                  <div class="output-register-row header"><span>Name</span><span>Access</span><span>Reset</span><span>Address</span></div>
+                  <div class="output-register-row"><span>control.enable</span><span>rw</span><span>0x0</span><span>0x000</span></div>
+                  <div class="output-register-row"><span>status.ready</span><span>ro</span><span>0x0</span><span>0x004</span></div>
+                  <div class="output-register-row"><span>interrupt.mask</span><span>rw</span><span>0x1</span><span>0x008</span></div>
+                </div>
+              </div>
+            </div>
+          </div>`;
+      }
+
       // Build one real panel per capability. They stack and scroll; the rail
       // pins beside them and highlights whichever panel is being read.
-      const capPanels = capabilities.map((cap) => {
+      const capPanels = capStack ? capabilities.map((cap, index) => {
         const panel = document.createElement("article");
         panel.className = "surface-panel glass";
         panel.style.setProperty("--tone", cap.tone);
@@ -5914,20 +6545,10 @@
             <p>${cap.desc}</p>
             <ul>${cap.bullets.map((b) => `<li>${b}</li>`).join("")}</ul>
           </div>
-          <div class="safe-clip" aria-hidden="true">
-            <div class="clip-content">
-              <div class="mock-window">
-                <div class="mock-head"><i></i><i></i><i></i></div>
-                <div class="mock-body">${cap.shape.map((w, i) => `<span class="mock-line ${i % 2 ? "" : "tone"}" style="width:${w}%"></span>`).join("")}</div>
-              </div>
-              <div class="agent-path">
-                <svg viewBox="0 0 260 52"><path d="M8 38 C58 4 104 4 136 29 S208 49 252 12" /></svg>
-              </div>
-            </div>
-          </div>`;
+          ${capabilityVisual(index)}`;
         capStack.appendChild(panel);
         return panel;
-      });
+      }) : [];
 
       let capActive = -1;
       function setCapActive(index) {
@@ -5972,6 +6593,71 @@
         window.addEventListener("resize", onCapScroll);
         setCapActive(0);
         updateCapabilities();
+      }
+
+      const verificationLab = document.getElementById("verificationLab");
+      const verificationFill = document.getElementById("verificationFill");
+      const verificationCoverage = document.getElementById("verificationCoverage");
+      const verificationClosure = document.getElementById("verificationClosure");
+      const verificationPassed = document.getElementById("verificationPassed");
+      const verificationFailed = document.getElementById("verificationFailed");
+      const verificationRunState = document.getElementById("verificationRunState");
+      const verificationRows = Array.from(document.querySelectorAll("[data-verification-row]"));
+      const iterationSteps = Array.from(document.querySelectorAll("[data-iteration-step]"));
+      const verificationStates = [
+        { coverage: 78, passed: 31, failed: 3, complete: 1 },
+        { coverage: 88, passed: 37, failed: 1, complete: 2 },
+        { coverage: 96, passed: 41, failed: 0, complete: 4 },
+        { coverage: 100, passed: 42, failed: 0, complete: 5 }
+      ];
+      let verificationState = 0;
+      let verificationTimer = null;
+
+      function renderVerificationState(index) {
+        const state = verificationStates[index];
+        verificationFill.style.width = state.coverage + "%";
+        verificationCoverage.textContent = state.coverage + "%";
+        verificationClosure.textContent = state.coverage + " / 100";
+        verificationPassed.textContent = state.passed;
+        verificationFailed.textContent = state.failed;
+        verificationRunState.textContent = index === verificationStates.length - 1
+          ? "Regression complete / sign-off ready"
+          : "Iteration " + (index + 1) + " running";
+        verificationRows.forEach((row, rowIndex) => {
+          const complete = rowIndex < state.complete;
+          row.classList.toggle("is-complete", complete);
+          row.querySelector(".result").textContent = complete ? "passed" : "queued";
+        });
+        iterationSteps.forEach((step, stepIndex) => {
+          step.classList.toggle("is-complete", stepIndex < index);
+          step.classList.toggle("is-active", stepIndex === index);
+        });
+      }
+
+      function startVerificationLoop() {
+        if (!verificationLab || verificationTimer || reduced) return;
+        verificationTimer = setInterval(() => {
+          verificationState = (verificationState + 1) % verificationStates.length;
+          renderVerificationState(verificationState);
+        }, 1800);
+      }
+
+      function stopVerificationLoop() {
+        if (verificationTimer) clearInterval(verificationTimer);
+        verificationTimer = null;
+      }
+
+      if (verificationLab) {
+        if (reduced) {
+          verificationState = verificationStates.length - 1;
+          renderVerificationState(verificationState);
+        } else {
+          renderVerificationState(0);
+          const verificationObserver = new IntersectionObserver((entries) => {
+            entries.forEach((entry) => entry.isIntersecting ? startVerificationLoop() : stopVerificationLoop());
+          }, { threshold: 0.35 });
+          verificationObserver.observe(verificationLab);
+        }
       }
 
       const artifactData = [
@@ -6131,6 +6817,50 @@
           entries.forEach((entry) => (entry.isIntersecting ? startTour() : stopTour()));
         }, { threshold: 0.35 });
         tourObserver.observe(artifactsSection);
+      }
+
+      /* Keep the capability index synchronized with the detailed section
+         occupying the reading band. */
+      const capabilityIndexItems = Array.from(document.querySelectorAll(".capability-index-item"));
+      const capabilitySections = capabilityIndexItems
+        .map((item) => document.getElementById(item.dataset.indexTarget))
+        .filter(Boolean);
+
+      if (capabilityIndexItems.length && capabilitySections.length) {
+        const setActiveCapability = (id) => {
+          capabilityIndexItems.forEach((item) => {
+            const active = item.dataset.indexTarget === id;
+            item.classList.toggle("is-active", active);
+            if (active) item.setAttribute("aria-current", "step");
+            else item.removeAttribute("aria-current");
+          });
+        };
+        let capabilityFrame = null;
+        const updateActiveCapability = () => {
+          capabilityFrame = null;
+          const readingLine = window.innerHeight * 0.32;
+          let current = capabilitySections[0];
+          capabilitySections.forEach((section) => {
+            if (section.getBoundingClientRect().top <= readingLine) current = section;
+          });
+          setActiveCapability(current.id);
+        };
+        const queueCapabilityUpdate = () => {
+          if (capabilityFrame === null) capabilityFrame = requestAnimationFrame(updateActiveCapability);
+        };
+        const syncCapabilityHash = () => {
+          const target = window.location.hash.slice(1);
+          if (capabilitySections.some((section) => section.id === target)) setActiveCapability(target);
+          else queueCapabilityUpdate();
+        };
+        capabilityIndexItems.forEach((item) => {
+          item.addEventListener("click", () => setActiveCapability(item.dataset.indexTarget));
+        });
+        window.addEventListener("scroll", queueCapabilityUpdate, { passive: true });
+        window.addEventListener("resize", queueCapabilityUpdate);
+        window.addEventListener("hashchange", syncCapabilityHash);
+        window.addEventListener("load", syncCapabilityHash, { once: true });
+        syncCapabilityHash();
       }
 
       /* ── Central corridor ──────────────────────────────────────────────
