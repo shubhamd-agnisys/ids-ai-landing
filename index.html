@@ -822,6 +822,16 @@
       }
       .flow-card.output {
         right: 0;
+        width: 190px;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+      }
+      .output-icon {
+        flex: 0 0 28px;
+        width: 28px;
+        height: 28px;
+        color: var(--blue);
       }
       .flow-card.out-1 { top: 0; }
       .flow-card.out-2 { top: 64px; }
@@ -896,13 +906,15 @@
         font-size: 13px;
         line-height: 1.25;
       }
+      .flow-card.output h3 { min-width: 0; }
       .flow-card h3 small {
         display: block;
         margin-top: 2px;
         color: var(--muted);
-        font-size: 10.5px;
+        font-size: 10px;
         line-height: 1.2;
       }
+      .flow-card.output h3 small { white-space: nowrap; }
       .input-list {
         display: grid;
         gap: 7px;
@@ -917,16 +929,10 @@
         font-weight: 720;
       }
       .input-icon {
-        display: grid;
-        place-items: center;
         width: 22px;
         height: 22px;
-        border-radius: 5px;
-        background: color-mix(in srgb, var(--brand) 10%, #fff);
-        color: var(--brand);
-        font-family: var(--mono);
-        font-size: 9px;
-        font-weight: 850;
+        padding: 0;
+        color: var(--blue);
       }
       .mini-bars {
         display: grid;
@@ -992,6 +998,30 @@
       .agent-core-label span {
         font-size: 11px;
         font-weight: 760;
+      }
+      .self-correction-label {
+        position: absolute;
+        left: 50%;
+        top: calc(50% + 76px);
+        z-index: 2;
+        display: flex;
+        align-items: center;
+        gap: 7px;
+        padding: 6px 9px;
+        border: 1px solid #dfe5ea;
+        border-radius: 4px;
+        background: #fff;
+        color: #4a5663;
+        font-size: 10px;
+        font-weight: 760;
+        transform: translateX(-50%);
+        white-space: nowrap;
+      }
+      .self-correction-label::before {
+        content: "";
+        width: 13px;
+        height: 2px;
+        background: var(--brand);
       }
       @keyframes rotate-ring {
         to { transform: rotate(360deg); }
@@ -4385,6 +4415,14 @@
           margin: 10px auto 0;
           transform: none;
         }
+        .self-correction-label {
+          position: relative;
+          left: auto;
+          top: auto;
+          width: max-content;
+          margin: 0 auto 12px;
+          transform: none;
+        }
         .artifact-grid {
           grid-template-columns: 1fr;
         }
@@ -4940,6 +4978,151 @@
         .capability-index-item:nth-child(2n) { border-right: 0; }
         .capability-index-item:not(:last-child) { border-bottom: 1px solid var(--line); }
       }
+
+      /* Specification evidence: one chart answers the copy at reading height;
+         the cost curve remains the full-width consequence below it. */
+      #leverage .shell {
+        display: grid;
+        grid-template-columns: minmax(0, 0.92fr) minmax(460px, 1.08fr);
+        gap: 30px 46px;
+        align-items: start;
+      }
+      #leverage .section-head {
+        grid-column: 1;
+        max-width: none;
+        margin: 0;
+      }
+      #leverage .leverage-grid { display: contents !important; }
+      #leverage .chart-panel {
+        grid-column: 2;
+        height: auto !important;
+        align-self: start;
+      }
+      #leverage .cost-panel {
+        grid-column: 1 / -1;
+        margin-top: 4px;
+      }
+
+      /* Platform context occupies the former dead column. The five-step
+         ribbon stays full width and remains the primary interactive control. */
+      #story .shell {
+        display: grid;
+        grid-template-columns: minmax(0, 0.92fr) minmax(420px, 1.08fr);
+        gap: 34px 56px;
+        align-items: center;
+      }
+      #story .section-head {
+        grid-column: 1;
+        max-width: none;
+        margin: 0;
+      }
+      #story .ribbon,
+      #story .motion-summary { grid-column: 1 / -1; }
+      .platform-context-map {
+        position: relative;
+        grid-column: 2;
+        min-height: 292px;
+        padding: 26px 8px;
+        border-top: 1px solid var(--line);
+        border-bottom: 1px solid var(--line);
+      }
+      .platform-context-map svg {
+        position: absolute;
+        inset: 26px 8px;
+        width: calc(100% - 16px);
+        height: calc(100% - 52px);
+        overflow: visible;
+      }
+      .context-route {
+        fill: none;
+        stroke: #d9e0e6;
+        stroke-width: 1.4;
+        transition: stroke 540ms var(--ease), stroke-width 540ms var(--ease);
+      }
+      .platform-context-map[data-active="0"] .route-0,
+      .platform-context-map[data-active="1"] .route-1,
+      .platform-context-map[data-active="2"] .route-2,
+      .platform-context-map[data-active="3"] .route-3,
+      .platform-context-map[data-active="4"] .route-4 {
+        stroke: var(--brand);
+        stroke-width: 2.2;
+      }
+      .context-source,
+      .context-tool,
+      .context-core {
+        position: absolute;
+        z-index: 1;
+        background: var(--panel-solid);
+      }
+      .context-source {
+        left: 8px;
+        top: 50%;
+        width: 136px;
+        padding: 12px 0;
+        transform: translateY(-50%);
+      }
+      .context-source strong,
+      .context-source span { display: block; }
+      .context-source strong { font-size: 13px; }
+      .context-source span { margin-top: 4px; color: var(--muted); font-size: 11px; line-height: 1.4; }
+      .context-core {
+        left: 50%;
+        top: 50%;
+        display: grid;
+        place-items: center;
+        width: 92px;
+        height: 92px;
+        border: 1px solid rgba(224, 111, 56, 0.42);
+        border-radius: 50%;
+        color: var(--brand-dark);
+        font-size: 16px;
+        font-weight: 820;
+        transform: translate(-50%, -50%);
+        box-shadow: 0 0 0 7px rgba(224, 111, 56, 0.06);
+      }
+      .context-tool {
+        right: 8px;
+        width: 112px;
+        padding: 8px 0 8px 12px;
+        border-left: 2px solid #dfe5ea;
+        color: #46515e;
+        font-family: var(--mono);
+        font-size: 11px;
+        font-weight: 680;
+        transition: color 540ms var(--ease), border-color 540ms var(--ease);
+      }
+      .context-tool.tool-0 { top: 31px; }
+      .context-tool.tool-1 { top: 88px; }
+      .context-tool.tool-2 { top: 145px; }
+      .context-tool.tool-3 { top: 202px; }
+      .platform-context-map[data-active="0"] .tool-0,
+      .platform-context-map[data-active="1"] .tool-0,
+      .platform-context-map[data-active="2"] .tool-1,
+      .platform-context-map[data-active="3"] .tool-2,
+      .platform-context-map[data-active="4"] .tool-3 {
+        border-left-color: var(--brand);
+        color: var(--ink);
+      }
+
+      @media (max-width: 1040px) {
+        #leverage .shell,
+        #story .shell { grid-template-columns: 1fr; }
+        #leverage .section-head,
+        #leverage .chart-panel,
+        #leverage .cost-panel,
+        #story .section-head,
+        .platform-context-map,
+        #story .ribbon,
+        #story .motion-summary { grid-column: 1; }
+        .platform-context-map { width: 100%; max-width: 680px; }
+      }
+      @media (max-width: 560px) {
+        .platform-context-map { min-height: 256px; padding-inline: 0; }
+        .platform-context-map svg { inset-inline: 0; width: 100%; }
+        .context-source { left: 0; width: 112px; }
+        .context-tool { right: 0; width: 94px; padding-left: 8px; font-size: 9.5px; }
+        .context-core { width: 72px; height: 72px; font-size: 13px; }
+      }
     </style>
   </head>
   <body data-state="idle">
@@ -4954,6 +5137,37 @@
           <polygon points="92,319 86,561 319,488 319,319" fill="currentColor" opacity="0.95" />
           <polygon points="434,153 283,214 396,369 551,277" fill="currentColor" opacity="0.62" />
           <polygon points="75,7 5,239 221,296 264,115" fill="currentColor" opacity="0.8" />
+        </symbol>
+        <!-- Lucide icons (ISC), vendored as symbols for the standalone page. -->
+        <symbol id="icon-file-text" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M6 22a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h8a2.4 2.4 0 0 1 1.704.706l3.588 3.588A2.4 2.4 0 0 1 20 8v12a2 2 0 0 1-2 2z"/><path d="M14 2v5a1 1 0 0 0 1 1h5"/><path d="M10 9H8"/><path d="M16 13H8"/><path d="M16 17H8"/>
+        </symbol>
+        <symbol id="icon-file-markdown" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+          <rect x="2.5" y="5" width="19" height="14" rx="2"/><path d="M6 15V9l3 3 3-3v6"/><path d="M17 9v6m-2-2 2 2 2-2"/>
+        </symbol>
+        <symbol id="icon-file-code" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M5 3h10l4 4v14H5z"/><path d="M15 3v5h4"/><path d="m10 12-2 2 2 2m4-4 2 2-2 2"/>
+        </symbol>
+        <symbol id="icon-file-pdf" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M5 3h10l4 4v14H5z"/><path d="M15 3v5h4"/><path d="M8 16v-4h2a1.3 1.3 0 0 1 0 2.6H8m5 1.4v-4h1.2c1.4 0 2.3.8 2.3 2s-.9 2-2.3 2z"/>
+        </symbol>
+        <symbol id="icon-file-word" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M5 3h10l4 4v14H5z"/><path d="M15 3v5h4"/><path d="m8 12 1.5 5 2.5-5 2.5 5 1.5-5"/>
+        </symbol>
+        <symbol id="icon-cpu" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M12 20v2M12 2v2M17 20v2M17 2v2M2 12h2M2 17h2M2 7h2M20 12h2M20 17h2M20 7h2M7 20v2M7 2v2"/><rect x="4" y="4" width="16" height="16" rx="2"/><rect x="8" y="8" width="8" height="8" rx="1"/>
+        </symbol>
+        <symbol id="icon-check-square" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M21 10.656V19a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h12.344"/><path d="m9 11 3 3L22 4"/>
+        </symbol>
+        <symbol id="icon-settings" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M9.671 4.136a2.34 2.34 0 0 1 4.659 0 2.34 2.34 0 0 0 3.319 1.915 2.34 2.34 0 0 1 2.33 4.033 2.34 2.34 0 0 0 0 3.831 2.34 2.34 0 0 1-2.33 4.033 2.34 2.34 0 0 0-3.319 1.915 2.34 2.34 0 0 1-4.659 0 2.34 2.34 0 0 0-3.32-1.915 2.34 2.34 0 0 1-2.33-4.033 2.34 2.34 0 0 0 0-3.831A2.34 2.34 0 0 1 6.35 6.051a2.34 2.34 0 0 0 3.319-1.915"/><circle cx="12" cy="12" r="3"/>
+        </symbol>
+        <symbol id="icon-puzzle" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M15.39 4.39a1 1 0 0 0 1.68-.474 2.5 2.5 0 1 1 3.014 3.015 1 1 0 0 0-.474 1.68l1.683 1.682a2.414 2.414 0 0 1 0 3.414L19.61 15.39a1 1 0 0 1-1.68-.474 2.5 2.5 0 1 0-3.014 3.015 1 1 0 0 1 .474 1.68l-1.683 1.682a2.414 2.414 0 0 1-3.414 0L8.61 19.61a1 1 0 0 0-1.68.474 2.5 2.5 0 1 1-3.014-3.015 1 1 0 0 0 .474-1.68l-1.683-1.682a2.414 2.414 0 0 1 0-3.414L4.39 8.61a1 1 0 0 1 1.68.474 2.5 2.5 0 1 0 3.014-3.015 1 1 0 0 1-.474-1.68l1.683-1.682a2.414 2.414 0 0 1 3.414 0z"/>
+        </symbol>
+        <symbol id="icon-badge-check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M3.85 8.62a4 4 0 0 1 4.78-4.77 4 4 0 0 1 6.74 0 4 4 0 0 1 4.78 4.78 4 4 0 0 1 0 6.74 4 4 0 0 1-4.77 4.78 4 4 0 0 1-6.75 0 4 4 0 0 1-4.78-4.77 4 4 0 0 1 0-6.76Z"/><path d="m9 12 2 2 4-4"/>
         </symbol>
       </defs>
     </svg>
@@ -5004,7 +5218,7 @@
             </div>
           </div>
 
-          <div class="hero-visual reveal" aria-label="Inputs flow into IDS-AI and produce design, verification, validation, integration, documentation, and sign-off handoffs.">
+          <div class="hero-visual reveal" aria-label="Inputs flow into IDS-AI, pass through a self-correction loop, and produce design RTL, verification UVM tests, validation environments and tests, SoC integration, documentation, and sign-off handoffs.">
             <div class="flow-stage">
               <svg class="flow-lines" viewBox="0 0 590 468" aria-hidden="true">
                 <path d="M120 226 C222 226 225 226 294 226" />
@@ -5019,11 +5233,11 @@
               <article class="flow-card input">
                 <p class="flow-label">Inputs</p>
                 <div class="input-list">
-                  <div class="input-item"><span class="input-icon">.md</span><span>Markdown</span></div>
-                  <div class="input-item"><span class="input-icon">TXT</span><span>Text</span></div>
-                  <div class="input-item"><span class="input-icon">HTML</span><span>HTML</span></div>
-                  <div class="input-item"><span class="input-icon">PDF</span><span>PDF</span></div>
-                  <div class="input-item"><span class="input-icon">DOC</span><span>Word</span></div>
+                  <div class="input-item"><svg class="input-icon" aria-hidden="true"><use href="#icon-file-markdown" /></svg><span>Markdown</span></div>
+                  <div class="input-item"><svg class="input-icon" aria-hidden="true"><use href="#icon-file-text" /></svg><span>Text</span></div>
+                  <div class="input-item"><svg class="input-icon" aria-hidden="true"><use href="#icon-file-code" /></svg><span>HTML</span></div>
+                  <div class="input-item"><svg class="input-icon" aria-hidden="true"><use href="#icon-file-pdf" /></svg><span>PDF</span></div>
+                  <div class="input-item"><svg class="input-icon" aria-hidden="true"><use href="#icon-file-word" /></svg><span>Word</span></div>
                 </div>
               </article>
 
@@ -5034,26 +5248,27 @@
                   <span>Agentic AI Layer</span>
                 </div>
               </div>
+              <div class="self-correction-label">Self-correction loop</div>
 
               <article class="flow-card output out-1">
-                <h3>Design <small>RTL IP and SoC</small></h3>
+                <svg class="output-icon" aria-hidden="true"><use href="#icon-cpu" /></svg><h3>Design <small>(RTL)</small></h3>
               </article>
               <article class="flow-card output out-2">
-                <h3>Verification <small>UVM and tests</small></h3>
+                <svg class="output-icon" aria-hidden="true"><use href="#icon-check-square" /></svg><h3>Verification <small>(UVM Tests)</small></h3>
               </article>
               <article class="flow-card output out-3">
-                <h3>Validation <small>Environment and tests</small></h3>
+                <svg class="output-icon" aria-hidden="true"><use href="#icon-settings" /></svg><h3>Validation <small>(Environment &amp; Tests)</small></h3>
               </article>
               <article class="flow-card output out-4">
-                <h3>Integration <small>SoC assembly</small></h3>
+                <svg class="output-icon" aria-hidden="true"><use href="#icon-puzzle" /></svg><h3>Integration <small>(SoC Assembly)</small></h3>
               </article>
               <article class="flow-card output out-5">
-                <h3>Documentation <small>HTML, PDF, Word</small></h3>
+                <svg class="output-icon" aria-hidden="true"><use href="#icon-file-text" /></svg><h3>Documentation</h3>
               </article>
               <article class="flow-card output out-6">
-                <h3>Sign-Off <small>CSR coverage closure</small></h3>
+                <svg class="output-icon" aria-hidden="true"><use href="#icon-badge-check" /></svg><h3>Sign-Off</h3>
               </article>
-              <div class="coverage-pill"><span></span>CSR Sign-Off - 100% coverage</div>
+              <div class="coverage-pill"><span></span>Enable First-Silicon Success</div>
             </div>
           </div>
         </div>
@@ -5301,6 +5516,26 @@
             <h2>One Intelligent AI Layer Across the Agnisys Platform</h2>
             <p class="lede">IDS-AI is built around an agentic AI engine that works across the Agnisys IDesignSpec™ Suite — understanding golden specifications, design intent, CSR verification requirements, and integration flow as a single, connected context rather than isolated inputs handled by individual tools.</p>
             <p class="lede">The agent coordinates the underlying Agnisys tools automatically, carrying out complex, multi-step engineering tasks with minimal manual effort. IDS-AI is also AI-platform agnostic: teams can use Agnisys' built-in platform, or plug in a platform of their own. It supports both on-site and remote usage.</p>
+          </div>
+
+          <div class="platform-context-map reveal" id="platformContextMap" data-active="0" aria-label="IDS-AI coordinates the golden specification across the Agnisys tool suite">
+            <svg viewBox="0 0 500 240" aria-hidden="true">
+              <path class="context-route route-0" d="M136 120 H204" />
+              <path class="context-route route-1" d="M136 132 H204" />
+              <path class="context-route route-2" d="M296 110 C334 110 340 34 380 34" />
+              <path class="context-route route-2" d="M296 116 C338 116 342 91 380 91" />
+              <path class="context-route route-3" d="M296 124 C338 124 342 148 380 148" />
+              <path class="context-route route-4" d="M296 130 C334 130 340 205 380 205" />
+            </svg>
+            <div class="context-source">
+              <strong>Golden specification</strong>
+              <span>Design intent and CSR requirements</span>
+            </div>
+            <div class="context-core">IDS-AI</div>
+            <div class="context-tool tool-0">IDS-Batch</div>
+            <div class="context-tool tool-1">IDS-Verify</div>
+            <div class="context-tool tool-2">IDS-Integrate</div>
+            <div class="context-tool tool-3">IDS-CF</div>
           </div>
 
           <div class="ribbon reveal" id="storyRibbon" aria-label="Natural language drives IDS-AI from intent to sign-off">
@@ -5888,6 +6123,7 @@
       if (ribbon) {
         const ribbonSteps = Array.from(ribbon.querySelectorAll(".ribbon-step"));
         const ribbonCopy = Array.from(ribbon.querySelectorAll(".ribbon-copy"));
+        const platformContextMap = document.getElementById("platformContextMap");
         let ribbonIndex = 0;
         let ribbonTimer = null;
 
@@ -5899,6 +6135,7 @@
             step.setAttribute("aria-pressed", String(i === index));
           });
           ribbonCopy.forEach((copy, i) => copy.classList.toggle("is-active", i === index));
+          if (platformContextMap) platformContextMap.dataset.active = String(index);
         }
 
         const walk = () => setRibbon((ribbonIndex + 1) % ribbonSteps.length);
