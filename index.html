@@ -804,7 +804,7 @@
       .flow-stage {
         position: relative;
         z-index: 1;
-        height: 406px;
+        height: 468px;
       }
       .flow-card {
         position: absolute;
@@ -1050,7 +1050,7 @@
       .coverage-pill {
         position: absolute;
         left: 50%;
-        bottom: 8px;
+        bottom: 0;
         display: inline-flex;
         align-items: center;
         gap: 10px;
@@ -1391,10 +1391,21 @@
       }
       .ribbon-copy.is-active { opacity: 1; }
 
+      .suite-inventory {
+        grid-column: 2;
+        margin: 0;
+        padding: 26px 0 0;
+        border-top: 1px solid var(--line);
+      }
+      .suite-inventory h3 { margin: 0 0 10px; font-size: 24px; }
+      .suite-inventory > p { margin: 0; color: var(--muted); }
+      .suite-inventory > .source-note { margin-top: 18px; }
+
       @media (max-width: 900px) {
         .motion-summary { grid-template-columns: 1fr; gap: 26px; }
+        .ribbon { display: grid; grid-template-columns: 1fr; }
         .ribbon-heads,
-        .ribbon-bodies { grid-template-columns: 1fr; gap: 0; }
+        .ribbon-bodies { display: contents; }
         .ribbon-track { display: none; }
         .ribbon-step {
           padding: 16px 0 6px 16px;
@@ -1402,6 +1413,17 @@
         }
         .ribbon-step.is-active { border-left-color: var(--brand); }
         .ribbon-copy { padding: 0 0 16px 18px; }
+        .ribbon-step[data-step="0"] { grid-row: 1; }
+        .ribbon-copy[data-step="0"] { grid-row: 2; }
+        .ribbon-step[data-step="1"] { grid-row: 3; }
+        .ribbon-copy[data-step="1"] { grid-row: 4; }
+        .ribbon-step[data-step="2"] { grid-row: 5; }
+        .ribbon-copy[data-step="2"] { grid-row: 6; }
+        .ribbon-step[data-step="3"] { grid-row: 7; }
+        .ribbon-copy[data-step="3"] { grid-row: 8; }
+        .ribbon-step[data-step="4"] { grid-row: 9; }
+        .ribbon-copy[data-step="4"] { grid-row: 10; }
+        .suite-inventory { grid-column: 1; }
       }
 
       @media (prefers-reduced-motion: reduce) {
@@ -4979,28 +5001,42 @@
         .capability-index-item:not(:last-child) { border-bottom: 1px solid var(--line); }
       }
 
-      /* Specification evidence: one chart answers the copy at reading height;
-         the cost curve remains the full-width consequence below it. */
+      /* Specification evidence is presented as two copy-and-chart pairs. */
       #leverage .shell {
         display: grid;
-        grid-template-columns: minmax(0, 0.92fr) minmax(460px, 1.08fr);
-        gap: 30px 46px;
+        grid-template-columns: minmax(300px, 0.82fr) minmax(520px, 1.18fr);
+        gap: 54px 64px;
         align-items: start;
       }
       #leverage .section-head {
         grid-column: 1;
-        max-width: none;
+        grid-row: 1;
+        max-width: 620px;
         margin: 0;
       }
       #leverage .leverage-grid { display: contents !important; }
       #leverage .chart-panel {
         grid-column: 2;
+        grid-row: 1;
         height: auto !important;
         align-self: start;
       }
+      #leverage .cost-copy {
+        grid-column: 1;
+        grid-row: 2;
+        max-width: 620px;
+        align-self: center;
+      }
+      #leverage .cost-copy .lede:first-child { margin-top: 0; }
       #leverage .cost-panel {
-        grid-column: 1 / -1;
-        margin-top: 4px;
+        grid-column: 2;
+        grid-row: 2;
+        margin-top: 0;
+      }
+      #leverage .source-note {
+        margin-top: 24px;
+        padding-top: 16px;
+        border-top: 1px solid var(--line);
       }
 
       /* Platform context occupies the former dead column. The five-step
@@ -5020,17 +5056,16 @@
       #story .motion-summary { grid-column: 1 / -1; }
       .platform-context-map {
         position: relative;
-        grid-column: 2;
-        min-height: 292px;
-        padding: 26px 8px;
-        border-top: 1px solid var(--line);
+        min-height: 390px;
+        margin-top: 22px;
+        padding: 18px 0 54px;
         border-bottom: 1px solid var(--line);
       }
       .platform-context-map svg {
         position: absolute;
-        inset: 26px 8px;
-        width: calc(100% - 16px);
-        height: calc(100% - 52px);
+        inset: 18px 0 54px;
+        width: 100%;
+        height: calc(100% - 72px);
         overflow: visible;
       }
       .context-route {
@@ -5055,9 +5090,9 @@
         background: var(--panel-solid);
       }
       .context-source {
-        left: 8px;
-        top: 50%;
-        width: 136px;
+        left: 0;
+        top: 45%;
+        width: 118px;
         padding: 12px 0;
         transform: translateY(-50%);
       }
@@ -5066,8 +5101,8 @@
       .context-source strong { font-size: 13px; }
       .context-source span { margin-top: 4px; color: var(--muted); font-size: 11px; line-height: 1.4; }
       .context-core {
-        left: 50%;
-        top: 50%;
+        left: 41%;
+        top: 45%;
         display: grid;
         place-items: center;
         width: 92px;
@@ -5081,20 +5116,50 @@
         box-shadow: 0 0 0 7px rgba(224, 111, 56, 0.06);
       }
       .context-tool {
-        right: 8px;
-        width: 112px;
-        padding: 8px 0 8px 12px;
+        right: 0;
+        width: 190px;
+        padding: 7px 0 7px 12px;
         border-left: 2px solid #dfe5ea;
         color: #46515e;
-        font-family: var(--mono);
-        font-size: 11px;
-        font-weight: 680;
         transition: color 540ms var(--ease), border-color 540ms var(--ease);
       }
-      .context-tool.tool-0 { top: 31px; }
-      .context-tool.tool-1 { top: 88px; }
-      .context-tool.tool-2 { top: 145px; }
-      .context-tool.tool-3 { top: 202px; }
+      .context-tool strong,
+      .context-tool span { display: block; }
+      .context-tool strong {
+        font-family: var(--mono);
+        font-size: 10.5px;
+        font-weight: 760;
+      }
+      .context-tool span {
+        margin-top: 2px;
+        color: var(--muted);
+        font-size: 9.5px;
+        line-height: 1.3;
+      }
+      .context-tool.tool-0 { top: 18px; }
+      .context-tool.tool-1 { top: 78px; }
+      .context-tool.tool-2 { top: 138px; }
+      .context-tool.tool-3 { top: 198px; }
+      .context-tool.tool-4 { top: 258px; }
+      .context-framework {
+        position: absolute;
+        z-index: 1;
+        right: 0;
+        bottom: 14px;
+        width: 59%;
+        padding: 10px 12px;
+        border-top: 1px solid var(--line);
+        color: var(--muted);
+        font-size: 10px;
+        line-height: 1.4;
+      }
+      .context-framework strong {
+        display: block;
+        margin-bottom: 2px;
+        color: var(--ink);
+        font-family: var(--mono);
+        font-size: 10.5px;
+      }
       .platform-context-map[data-active="0"] .tool-0,
       .platform-context-map[data-active="1"] .tool-0,
       .platform-context-map[data-active="2"] .tool-1,
@@ -5103,25 +5168,36 @@
         border-left-color: var(--brand);
         color: var(--ink);
       }
+      .platform-context-map[data-active="4"] .context-framework {
+        border-top-color: var(--brand);
+        color: var(--ink);
+      }
 
       @media (max-width: 1040px) {
         #leverage .shell,
         #story .shell { grid-template-columns: 1fr; }
         #leverage .section-head,
         #leverage .chart-panel,
+        #leverage .cost-copy,
         #leverage .cost-panel,
         #story .section-head,
+        .suite-inventory,
         .platform-context-map,
         #story .ribbon,
-        #story .motion-summary { grid-column: 1; }
+        #story .motion-summary { grid-column: 1; grid-row: auto; }
         .platform-context-map { width: 100%; max-width: 680px; }
       }
       @media (max-width: 560px) {
-        .platform-context-map { min-height: 256px; padding-inline: 0; }
+        .platform-context-map { min-height: 390px; padding-inline: 0; }
         .platform-context-map svg { inset-inline: 0; width: 100%; }
-        .context-source { left: 0; width: 112px; }
-        .context-tool { right: 0; width: 94px; padding-left: 8px; font-size: 9.5px; }
-        .context-core { width: 72px; height: 72px; font-size: 13px; }
+        .context-source { left: 0; width: 92px; }
+        .context-source strong { font-size: 11px; }
+        .context-source span { font-size: 9px; }
+        .context-tool { right: 0; width: 142px; padding-left: 8px; }
+        .context-tool strong { font-size: 9px; }
+        .context-tool span { font-size: 8px; }
+        .context-core { left: 40%; width: 64px; height: 64px; font-size: 12px; }
+        .context-framework { width: 60%; font-size: 8.5px; }
       }
     </style>
   </head>
@@ -5205,11 +5281,9 @@
       <section class="hero" data-state="idle" data-rail-target="spec">
         <div class="shell hero-grid">
           <div class="hero-copy reveal">
-            <p class="hero-product-name">IDS-AI</p>
+            <p class="hero-product-name">IDS-AI Suite</p>
             <h1>Specification to Signoff with Agentic AI</h1>
-            <p class="lede">Agnisys IDS-AI gets your team from specification to first-pass silicon sign-off dramatically faster.</p>
-            <p class="lede">It's the industry's first agentic AI framework built specifically to understand semiconductor design functional specification, CSR, SoC hierarchy &amp; connectivity and RTL. Instead of stitching together point tools and manual handoffs, you get Agentic AI that drives the entire flow — from golden specification creation to RTL sign-off — on your behalf.</p>
-            <p class="lede">It is built on Agnisys' IDesignSpec Suite, which has been refined over the past two decades of production use, so you get the reasoning and productivity of AI with the certainty and accuracy of rule-based tools.</p>
+            <p class="lede">Agnisys IDS-AI Suite is the industry's first agentic AI framework that understands semiconductor design intent and drives the entire development flow—from golden specification creation to RTL sign-off. Built on top of Agnisys' automation platform — perfected over the last two decades, it combines certainty and accuracy of Agnisys tools with reasoning and productivity of AI.</p>
             <div class="punchline"><span></span>Design Smarter. Verify Faster. Reach Sign-Off with Confidence.</div>
             <div class="hero-actions">
               <a class="btn btn-primary" href="#cta">Request a Demo</a>
@@ -5318,9 +5392,14 @@
         <div class="shell">
           <div class="section-head reveal">
             <h2>Why Specification Matters</h2>
-            <p class="lede">The design specification is the single most important creation in your chip development process. Incorrect or incomplete specifications are the root cause of ~45% of the functional bugs. Furthermore, changes to the specification are the source for another 30% of bugs*. Those numbers are worse for FPGAs (close to 60% and 40% respectively).</p>
+            <p class="lede">The design specification is the single most important creation in the Chip development process. Incorrect or incomplete specifications become the root cause of ~45% of the functional bugs, further, changes to specification become the source for another 30% of bugs*. Those numbers are worse for FPGAs (close to 60% and 40% respectively).</p>
             <p class="lede">For ASIC projects, only 14% have first-silicon success*.</p>
-            <p class="lede">The 1/10/100 rule is a quality management principle which states that the later a defect is discovered, the more expensive it becomes to fix. Finding the bug in the specification and having a correct and unambiguous definition of the functionality is the best way to develop a chip. This is the exact purpose of IDS-AI. It allows your engineers to interact with the design flow using natural language. Whether starting from a prompt or an existing specification in simple text, PDF, or HTML format, it helps generate and validate the golden specification, detecting inconsistencies and modeling issues early. It preserves design intent and automatically generates RTL to CSR sign-off collateral consistent with the specification. IDS-AI is an intelligent layer on top of the correct-by-construction Agnisys tools that have been perfected over the last two decades.</p>
+            <p class="source-note">
+              Source: Siemens EDA / Wilson Research Group 2024 functional verification trend reports:
+              <a href="https://resources.sw.siemens.com/en-US/white-paper-2024-wilson-research-group-ic-asic-functional-verification-trend-report/">IC/ASIC report</a>
+              and
+              <a href="https://resources.sw.siemens.com/en-US/white-paper-2024-wilson-research-group-fpga-functional-verification-trend-report/">FPGA report</a>.
+            </p>
           </div>
 
           <div class="leverage-grid">
@@ -5369,11 +5448,17 @@
                     <text x="650" y="304" text-anchor="end" fill="#97a1af" font-size="10">Multiple responses possible</text>
                   </g>
                 </svg>
+              </div>
+
+              <div class="cost-copy reveal">
+                <p class="lede">The 1/10/100 rule is a quality management principle which states that the later a defect is discovered, the more expensive it becomes to fix. Finding the bug in specification and having a correct and unambiguous definition of the functionality is the best way to develop a chip. This is the exact purpose of IDS-AI.</p>
+                <p class="lede">IDS-AI is an intelligent layer on top of the correct-by-construction Agnisys tools that have been perfected over the last two decades.</p>
                 <p class="source-note">
-                  Source: Siemens EDA / Wilson Research Group 2024 functional verification trend reports:
-                  <a href="https://resources.sw.siemens.com/en-US/white-paper-2024-wilson-research-group-ic-asic-functional-verification-trend-report/">IC/ASIC report</a>
+                  Cost curve: illustrative 1 / 10 / 100 defect-cost heuristic, shown separately from the Wilson verification-study data; see
+                  <a href="https://akfpartners.com/growth-blog/1-10-100-rule-in-quality-software-development">AKF Partners</a>
                   and
-                  <a href="https://resources.sw.siemens.com/en-US/white-paper-2024-wilson-research-group-fpga-functional-verification-trend-report/">FPGA report</a>.
+                  <a href="https://www.perforce.com/blog/alm/whats-true-cost-software-defects">Perforce</a>
+                  summaries of the rule.
                 </p>
               </div>
 
@@ -5428,13 +5513,6 @@
                     <text x="368" y="23" text-anchor="middle" fill="#1f6f43" font-size="13" font-weight="830">Find defects in the specification, where they are least expensive to fix.</text>
                   </g>
                 </svg>
-                <p class="source-note">
-                  Cost curve: illustrative 1 / 10 / 100 defect-cost heuristic, shown separately from the Wilson verification-study data; see
-                  <a href="https://akfpartners.com/growth-blog/1-10-100-rule-in-quality-software-development">AKF Partners</a>
-                  and
-                  <a href="https://www.perforce.com/blog/alm/whats-true-cost-software-defects">Perforce</a>
-                  summaries of the rule.
-                </p>
               </div>
 
           </div>
@@ -5514,28 +5592,36 @@
         <div class="shell">
           <div class="section-head reveal">
             <h2>One Intelligent AI Layer Across the Agnisys Platform</h2>
-            <p class="lede">IDS-AI is built around an agentic AI engine that works across the Agnisys IDesignSpec™ Suite — understanding golden specifications, design intent, CSR verification requirements, and integration flow as a single, connected context rather than isolated inputs handled by individual tools.</p>
-            <p class="lede">The agent coordinates the underlying Agnisys tools automatically, carrying out complex, multi-step engineering tasks with minimal manual effort. IDS-AI is also AI-platform agnostic: teams can use Agnisys' built-in platform, or plug in a platform of their own. It supports both on-site and remote usage.</p>
+            <p class="lede">IDS-AI is built around an agentic AI engine that works across the Agnisys platform. Instead of interacting with a separate AI assistant for each tool, engineering teams work with one intelligent assistant that understands golden specifications, design intent, CSR verification requirements and Integration flow.</p>
+            <p class="lede">The AI coordinates the underlying Agnisys tools automatically to carry out complex engineering tasks with minimal manual effort.</p>
+            <p class="lede">IDS-AI is also AI-platform agnostic: teams can use Agnisys' built-in platform — with IDS-CF as the harness — or plug in a platform of their own. It supports both on-site and remote usage.</p>
           </div>
 
-          <div class="platform-context-map reveal" id="platformContextMap" data-active="0" aria-label="IDS-AI coordinates the golden specification across the Agnisys tool suite">
-            <svg viewBox="0 0 500 240" aria-hidden="true">
-              <path class="context-route route-0" d="M136 120 H204" />
-              <path class="context-route route-1" d="M136 132 H204" />
-              <path class="context-route route-2" d="M296 110 C334 110 340 34 380 34" />
-              <path class="context-route route-2" d="M296 116 C338 116 342 91 380 91" />
-              <path class="context-route route-3" d="M296 124 C338 124 342 148 380 148" />
-              <path class="context-route route-4" d="M296 130 C334 130 340 205 380 205" />
-            </svg>
-            <div class="context-source">
-              <strong>Golden specification</strong>
-              <span>Design intent and CSR requirements</span>
+          <div class="suite-inventory reveal">
+            <h3>What's Inside the IDS-AI Suite</h3>
+            <p>The IDS-AI Suite brings all Agnisys tools under one framework, including:</p>
+            <div class="platform-context-map" id="platformContextMap" data-active="0" aria-label="IDS-AI coordinates the golden specification across the Agnisys tool suite">
+              <svg viewBox="0 0 620 320" preserveAspectRatio="none" aria-hidden="true">
+                <path class="context-route route-0" d="M118 144 H208" />
+                <path class="context-route route-1" d="M300 136 C354 136 360 38 430 38" />
+                <path class="context-route route-3" d="M300 140 C356 140 366 98 430 98" />
+                <path class="context-route route-3" d="M300 146 C356 146 366 158 430 158" />
+                <path class="context-route route-2" d="M300 151 C356 151 366 218 430 218" />
+                <path class="context-route route-4" d="M300 156 C352 156 366 278 430 278" />
+              </svg>
+              <div class="context-source">
+                <strong>Golden specification</strong>
+                <span>Design intent and CSR requirements</span>
+              </div>
+              <div class="context-core">IDS-AI</div>
+              <div class="context-tool tool-0"><strong>IDS-GDI</strong><span>Specification and design intelligence</span></div>
+              <div class="context-tool tool-1"><strong>IDS-Verify</strong><span>Verification automation</span></div>
+              <div class="context-tool tool-2"><strong>IDS-Integrate</strong><span>IP and RTL integration</span></div>
+              <div class="context-tool tool-3"><strong>IDS-Batch</strong><span>Batch execution and automation</span></div>
+              <div class="context-tool tool-4"><strong>Additional tools</strong><span>Additional Agnisys automation tools</span></div>
+              <div class="context-framework"><strong>IDS-CF · Common Agentic AI framework</strong>Spec Check · CSR Sign-off · 100% CSR verification coverage</div>
             </div>
-            <div class="context-core">IDS-AI</div>
-            <div class="context-tool tool-0">IDS-Batch</div>
-            <div class="context-tool tool-1">IDS-Verify</div>
-            <div class="context-tool tool-2">IDS-Integrate</div>
-            <div class="context-tool tool-3">IDS-CF</div>
+            <p class="source-note">All operating under a common Agentic AI framework, with capabilities such as Spec Check and CSR Sign-off (100% CSR verification coverage) built directly into IDS-CF.</p>
           </div>
 
           <div class="ribbon reveal" id="storyRibbon" aria-label="Natural language drives IDS-AI from intent to sign-off">
@@ -5573,11 +5659,11 @@
             </div>
 
             <div class="ribbon-bodies">
-            <p class="ribbon-copy is-active" data-step="0">Natural language, data sheets, legacy headers, or notes describe what the user wants changed or generated.</p>
-            <p class="ribbon-copy" data-step="1">IDS-AI turns that request into structured, checked, versioned specification intent.</p>
-            <p class="ribbon-copy" data-step="2">Correct generators produce RTL IP, RTL SoC, UVM/RAL, headers, IP-XACT, docs, and validation assets.</p>
-            <p class="ribbon-copy" data-step="3">The agent compares generated outputs against the source, resolves drift, and reruns the affected handoffs.</p>
-            <p class="ribbon-copy" data-step="4">End with synchronized artifacts and 100% CSR verification coverage tied to the final specification.</p>
+            <p class="ribbon-copy is-active" data-step="0">Describe the required behavior or deliverable in natural language. IDS-AI can ground the request in data sheets, legacy headers, tables, and engineering notes.</p>
+            <p class="ribbon-copy" data-step="1">Convert the request into structured, checked, and versioned design intent. The golden specification remains the source of truth for every downstream action.</p>
+            <p class="ribbon-copy" data-step="2">Run the correct Agnisys generators to produce synchronized RTL IP, RTL SoC, UVM/RAL, headers, IP-XACT, documentation, and validation assets.</p>
+            <p class="ribbon-copy" data-step="3">Compare generated artifacts with the golden specification, identify conflicts or drift, correct the source, and rerun only the affected handoffs.</p>
+            <p class="ribbon-copy" data-step="4">Complete the flow with synchronized artifacts, traceable results, and 100% CSR verification coverage tied to the final approved specification.</p>
             </div>
           </div>
 
@@ -5607,17 +5693,17 @@
           <nav class="capability-index reveal" aria-label="Key Agentic AI capabilities">
             <a class="capability-index-item is-active" href="#loop" data-index-target="loop" aria-current="step">
               <span class="capability-index-num">01</span>
-              <strong>Specification Creation and Intelligence</strong>
-              <span>Creation, verification, validation, and self-correction.</span>
+              <strong>Specification Creation &amp; Intelligence</strong>
+              <span>Creation, validation, and a self-correction loop.</span>
             </a>
             <a class="capability-index-item" href="#surface" data-index-target="surface">
               <span class="capability-index-num">02</span>
-              <strong>Design and Integration Automation</strong>
+              <strong>Design &amp; Integration Automation</strong>
               <span>Implementation-ready RTL and intelligent connectivity.</span>
             </a>
             <a class="capability-index-item" href="#capabilities" data-index-target="capabilities">
               <span class="capability-index-num">03</span>
-              <strong>Verification and Sign-Off Automation</strong>
+              <strong>Verification &amp; Sign-Off Automation</strong>
               <span>Verification environments and CSR coverage closure.</span>
             </a>
             <a class="capability-index-item" href="#artifacts" data-index-target="artifacts">
@@ -5632,13 +5718,13 @@
       <section id="loop" class="band-soft" data-state="executing" data-rail-target="act">
         <div class="shell">
           <div class="section-head reveal">
-            <h2>Specification Creation and Intelligence</h2>
+            <h2>Specification Creation &amp; Intelligence</h2>
             <p class="lede">Accelerate specification development with AI-powered creation, verification, validation, and a self-correcting loop that continuously improves specification quality by detecting and resolving issues automatically.</p>
             <ul class="approved-list">
-              <li>Create and manage your functional specifications, including CSR specifications and sequences, in a collaborative environment using intuitive text-based and graphical interfaces.</li>
+              <li>Create and manage functional specifications, including CSR specifications and sequences, in a collaborative environment using intuitive text-based and graphical interfaces.</li>
               <li>Analyze specifications for completeness, correctness, and integrity.</li>
-              <li>Automatically detect and resolve inconsistencies between specifications and CSR definitions.</li>
-              <li>Run a self-correcting loop that automatically corrects IDS-Batch™-reported warnings and errors across supported specification formats, including SystemRDL and IDS-CF™ templates.</li>
+              <li>Detects and automatically resolves inconsistencies between specifications and CSR definitions.</li>
+              <li>Automatically correct IDS-Batch-reported warnings and errors across supported specification formats, including SystemRDL and IDS-CF templates.</li>
             </ul>
           </div>
 
@@ -5740,7 +5826,7 @@
       <section id="surface" class="band-dark" data-state="executing" data-rail-target="act">
         <div class="shell">
           <div class="section-head reveal">
-            <h2>Design and Integration Automation</h2>
+            <h2>Design &amp; Integration Automation</h2>
             <p class="lede">Go from golden specification to implementation-ready design faster, with less manual RTL work and fewer integration errors — whether you're working with generated logic, existing IP, or hand-written RTL.</p>
             <ul class="approved-list">
               <li>Generate implementation-ready RTL design directly from the golden specification.</li>
@@ -5838,7 +5924,7 @@
       <section id="capabilities" data-state="executing" data-rail-target="act">
         <div class="shell">
           <div class="section-head reveal">
-            <h2>Verification and Sign-Off Automation</h2>
+            <h2>Verification &amp; Sign-Off Automation</h2>
             <p class="lede">Reduce verification effort and accelerate sign-off through AI-powered automation that generates complete verification environments and ensures comprehensive CSR verification coverage.</p>
             <ul class="approved-list">
               <li>Automatically generate verification testbenches and tests.</li>
@@ -5852,15 +5938,15 @@
             <div class="surface-tabs" role="tablist" aria-label="IDS-AI capabilities">
               <button class="surface-tab" role="tab" aria-selected="true" data-cap="0" style="--tone: var(--brand)">
                 <span class="emblem"><svg aria-hidden="true"><use href="#tile-glyph" /></svg></span>
-                <span><b>Specification Creation and Intelligence</b><span>Creation, verification, validation, and self-correction.</span></span>
+                <span><b>Specification Creation &amp; Intelligence</b><span>Creation, validation, and a self-correction loop.</span></span>
               </button>
               <button class="surface-tab" role="tab" aria-selected="false" data-cap="1" style="--tone: var(--blue)">
                 <span class="emblem"><svg aria-hidden="true"><use href="#tile-glyph" /></svg></span>
-                <span><b>Design and Integration Automation</b><span>Implementation-ready RTL and intelligent connectivity.</span></span>
+                <span><b>Design &amp; Integration Automation</b><span>Implementation-ready RTL and intelligent connectivity.</span></span>
               </button>
               <button class="surface-tab" role="tab" aria-selected="false" data-cap="2" style="--tone: var(--green)">
                 <span class="emblem"><svg aria-hidden="true"><use href="#tile-glyph" /></svg></span>
-                <span><b>Verification and Sign-Off Automation</b><span>Verification environments and CSR coverage closure.</span></span>
+                <span><b>Verification &amp; Sign-Off Automation</b><span>Verification environments and CSR coverage closure.</span></span>
               </button>
               <button class="surface-tab" role="tab" aria-selected="false" data-cap="3" style="--tone: var(--teal)">
                 <span class="emblem"><svg aria-hidden="true"><use href="#tile-glyph" /></svg></span>
@@ -5878,10 +5964,10 @@
             <h2>Consistent Output Generation</h2>
             <p class="lede">Generate implementation-ready collateral directly from the golden specification, including:</p>
             <ul class="approved-list">
-              <li>RTL design</li>
-              <li>IP integration artifacts</li>
-              <li>Verification testbenches and tests</li>
-              <li>Validation environments and tests</li>
+              <li>RTL Design</li>
+              <li>IP Integration Artifacts</li>
+              <li>Verification Testbenches and Tests</li>
+              <li>Validation Environments and Tests</li>
               <li>Documentation</li>
             </ul>
           </div>
@@ -5907,7 +5993,7 @@
           </div>
           <div class="approved-close reveal">
             <p>Every generated artifact remains synchronized with the golden specification, providing a single source of truth throughout the development lifecycle.</p>
-            <p>The result is a streamlined, specification-driven flow that enables your engineering teams to move from golden specification to sign-off faster, with higher quality and significantly reduced manual effort.</p>
+            <p>The result is a streamlined, specification-driven flow that enables engineering teams to move from golden specification to sign-off faster, with higher quality and significantly reduced manual effort.</p>
           </div>
         </div>
       </section>
@@ -5946,25 +6032,25 @@
         <div class="shell difference-layout">
           <div class="difference-copy reveal">
             <h2>What Makes IDS-AI Different?</h2>
-            <p class="lede">Unlike generic AI assistants, IDS-AI, the agentic AI framework, coordinates multiple engineering tasks instead of answering isolated questions — delivering real engineering automation, not just a chat assistant bolted onto existing tools.</p>
-            <p class="lede">IDS-AI understands semiconductor design intent. It leverages the core Agnisys tools to generate correct-by-construction collateral for design, integration, verification, validation, and documentation, adding the power of agentic AI to catch and fix issues upfront in your ASIC development flow, and remove the drudgery of design/verification engineers, to produce sign-off-quality outputs.</p>
+            <p class="lede">Unlike generic AI assistants, IDS-AI, the agentic AI framework coordinates multiple engineering tasks instead of answering isolated questions — delivering real engineering automation, not just a chat assistant bolted onto existing tools.</p>
+            <p class="lede">IDS-AI understands semiconductor design intent. It leverages the core Agnisys tools to generate correct-by-construction collaterals for Design, Integration, Verification &amp; Validation and combines it with the power of agentic AI to catch and fix issues upfront in the ASIC development flow and remove the drudgery of design/verification engineers to produce signoff quality outputs.</p>
           </div>
 
           <div id="built-for" class="silicon-field-wrap reveal">
             <h3>Built For</h3>
             <div class="silicon-field" aria-label="Semiconductor applications supported by IDS-AI">
-              <span class="silicon-cell ai">AI accelerators</span>
+              <span class="silicon-cell ai">AI Accelerators</span>
               <span class="silicon-cell auto">Automotive SoCs</span>
-              <span class="silicon-cell data">Data center processors</span>
-              <span class="silicon-cell network">Networking chips</span>
-              <span class="silicon-cell storage">Storage controllers</span>
+              <span class="silicon-cell data">Data Center Processors</span>
+              <span class="silicon-cell network">Networking Chips</span>
+              <span class="silicon-cell storage">Storage Controllers</span>
               <div class="silicon-core" aria-hidden="true">
                 <svg><use href="#agnisys-glyph" /></svg>
-                <strong>IDS-AI core</strong>
+                <strong>IDS-AI</strong>
               </div>
-              <span class="silicon-cell fpga">FPGA platforms</span>
-              <span class="silicon-cell embedded">Embedded systems</span>
-              <span class="silicon-cell asic">Custom ASIC development</span>
+              <span class="silicon-cell fpga">FPGA Platforms</span>
+              <span class="silicon-cell embedded">Embedded Systems</span>
+              <span class="silicon-cell asic">Custom ASIC Development</span>
               <svg class="silicon-routes" viewBox="0 0 520 420" preserveAspectRatio="none" aria-hidden="true">
                 <path class="silicon-route-base" d="M0 52 H182 V262 H338 V368 H520" />
                 <path class="silicon-route-signal" d="M0 52 H182 V262 H338 V368 H520" />
@@ -5978,7 +6064,7 @@
         <div class="shell why-grid">
           <div class="reveal">
             <h2>Why Agnisys?</h2>
-            <p class="lede">For over two decades, Agnisys has helped semiconductor companies automate specification-driven design. IDS-AI builds on this proven foundation, combining correct-by-construction automation with next-generation Agentic AI into one unified platform — for specification creation, design generation, verification, validation, integration, and sign-off.</p>
+            <p class="lede">For over two decades, Agnisys has helped semiconductor companies automate specification-driven design. IDS-AI builds on this proven foundation, combining correct-by-construction automation with next-generation Agentic AI into one unified platform — for specification creation, design generation, verification, integration, and sign-off.</p>
             <div class="tool-stack">
               <div class="tool-row"><b>IDS-Batch</b><span>Generation engine for RTL, UVM/RAL, headers, IP-XACT, and documentation.</span></div>
               <div class="tool-row"><b>IDS-Verify</b><span>UVM environments, formal properties, and CSR verification assets.</span></div>
@@ -6075,7 +6161,7 @@
         <div class="shell reveal">
           <svg class="big-mark" aria-hidden="true"><use href="#agnisys-glyph" /></svg>
           <h2>Ready to Transform Specification-Driven Chip Development?</h2>
-          <p class="lede">See how Agnisys IDS-AI takes you from Golden Specification to CSR Sign-Off — faster, with higher quality and greater confidence.</p>
+          <p class="lede">See how the Agnisys IDS-AI Suite takes you from Golden Specification to CSR Sign-Off — faster, with higher quality and greater confidence.</p>
           <div class="hero-actions">
             <a class="btn btn-primary" href="#">Request a Demo</a>
             <a class="btn btn-secondary" href="#">Talk to an Expert</a>
@@ -6093,7 +6179,7 @@
               <span class="brand-tag">System Development with Certainty</span>
             </span>
           </a>
-          <p>V2 prototype. Product content is redacted; all motion is CSS/SVG.</p>
+          <p><strong>Social Media</strong><br>Reduce stress, improve quality of life - get IDS-AI</p>
         </div>
       </footer>
     </main>

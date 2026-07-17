@@ -107,6 +107,11 @@
     .noc-scene::before { display: none; }
     .scene-label { position: absolute; top: 5%; left: 1%; z-index: 2; color: var(--quiet); font-family: var(--mono); font-size: 11px; font-weight: 780; text-transform: uppercase; }
     .hero-network { position: relative; z-index: 1; width: min(100%, 640px); height: auto; }
+    .approved-noc-image { display: block; width: 100%; height: auto; object-fit: contain; }
+    .approved-noc-image--hero { position: relative; z-index: 1; max-width: 640px; margin: auto; }
+    .approved-noc-image--architecture { width: 100%; }
+    .noc-scene.has-approved-visual > :not(.approved-noc-image),
+    .diagram-shell.has-approved-visual > :not(.approved-noc-image) { display: none; }
     .hero-network .wire { fill: none; stroke: #ced7dd; stroke-width: 2; }
     .hero-network .axi-route { fill: none; stroke: #71808c; stroke-width: 2.5; stroke-linecap: square; stroke-dasharray: 8 76; animation: axi-route 5.4s linear infinite; }
     .hero-network .axi-route.egress { animation-delay: 3.55s; }
@@ -125,9 +130,23 @@
     .hero-network .flit { opacity: 0; animation: flit-pulse 5.4s ease-in-out infinite .7s; transform-box: fill-box; transform-origin: center; }
     .hero-network .flit:nth-of-type(2) { animation-delay: .9s; }
     .hero-network .flit:nth-of-type(3) { animation-delay: 1.1s; }
+    .hero-chip-svg { width: min(100%, 640px); height: auto; }
+    .hero-chip-svg .diagram-frame { fill: rgba(255,255,255,.82); stroke: #d3dce2; stroke-width: 1.2; }
+    .hero-chip-svg .mesh-wire { fill: none; stroke: #6f7f8e; stroke-width: 1.5; marker-start: url(#hero-arrow); marker-end: url(#hero-arrow); }
+    .hero-chip-svg .target-wire { fill: none; stroke: #6f7f8e; stroke-width: 1.5; marker-end: url(#hero-arrow-end); }
+    .hero-chip-svg .router-shape { fill: #fff8f3; stroke: #d96731; stroke-width: 1.5; }
+    .hero-chip-svg .router-label { fill: #7d3115; font: 800 11px var(--mono); }
+    .hero-chip-svg .initiator-shape { fill: #f1f5ff; stroke: #6f84bd; stroke-width: 1.25; }
+    .hero-chip-svg .initiator-label { fill: #405786; font: 800 11px var(--mono); }
+    .hero-chip-svg .target-shape { fill: #fff8ef; stroke: #c6925d; stroke-width: 1.25; }
+    .hero-chip-svg .target-label { fill: #815427; font: 800 9px var(--mono); }
+    .hero-chip-svg .hero-route { fill: none; stroke: #db6a35; stroke-width: 3; stroke-linecap: square; stroke-dasharray: 9 410; animation: hero-chip-route 6.8s linear infinite; }
+    .hero-chip-svg .hero-route.secondary { stroke: #24998e; animation-delay: -3.4s; }
+    .hero-chip-svg .topology-label { fill: #7b8791; font: 750 10px var(--mono); }
     @keyframes axi-route { to { stroke-dashoffset: -84; } }
     @keyframes packet-route { to { stroke-dashoffset: -393; } }
     @keyframes flit-pulse { 0%,12%,40%,100% { opacity: 0; transform: scale(.75); } 17%,31% { opacity: 1; transform: scale(1); } }
+    @keyframes hero-chip-route { to { stroke-dashoffset: -419; } }
 
     .section { position: relative; padding: 100px 0; overflow: hidden; scroll-margin-top: 104px; }
     .section h2 { max-width: 820px; margin: 0 0 20px; font-size: clamp(38px, 4vw, 58px); line-height: 1.04; letter-spacing: 0; }
@@ -141,38 +160,38 @@
     .split { display: grid; grid-template-columns: 1fr 1fr; gap: 64px; align-items: center; }
     .split.reverse .visual { order: -1; }
 
-    .crossbar-visual { min-height: 470px; display: grid; grid-template-columns: 1fr 36px 1fr; gap: 14px; align-items: center; }
-    .fabric-panel { min-height: 370px; padding: 22px; border: 1px solid #465158; border-radius: var(--radius); background: #2a3034; }
-    .fabric-panel.legacy { border-color: #724b43; background: #302b2b; }
-    .fabric-panel.scalable { border-color: #315f5b; background: #273331; }
-    .fabric-panel h3 { margin: 0 0 28px; font-size: 17px; }
-    .crossbar-lines { position: relative; height: 250px; }
-    .crossbar-lines .source { position: absolute; left: 0; width: 58px; color: #c7cfd4; font: 700 11px var(--mono); }
-    .crossbar-lines .source:nth-child(1) { top: 10px; }
-    .crossbar-lines .source:nth-child(2) { top: 75px; }
-    .crossbar-lines .source:nth-child(3) { top: 140px; }
-    .crossbar-lines .source:nth-child(4) { top: 205px; }
-    .crossbar-svg { position: absolute; inset: 0; width: 100%; height: 100%; overflow: visible; }
-    .crossbar-svg .lane { fill: none; stroke: #bb654e; stroke-width: 2; vector-effect: non-scaling-stroke; }
-    .crossbar-svg .lane-packet { fill: #f07a58; }
-    .bus { position: absolute; right: 8px; top: 42px; width: 18px; height: 170px; border: 2px solid #d96045; background: #6b3129; animation: bus-load 2.8s ease-in-out infinite; }
-    .bus::after { content: "SATURATED"; position: absolute; left: 50%; top: 50%; transform: translate(-50%,-50%) rotate(-90deg); color: #ffd3c8; font: 800 9px var(--mono); }
-    .choke-gate { position: absolute; right: 31px; top: 106px; width: 4px; height: 38px; background: #ef765b; animation: gate-pressure 2.8s ease-in-out infinite; }
-    @keyframes gate-pressure { 0%,68%,100% { background: #9e4637; } 74%,84% { background: #ff8c70; } }
-    @keyframes bus-load { 0%,68%,100% { background: #592d27; } 74%,84% { background: #8e3b2f; } }
-    .mesh-mini { position: relative; display: grid; grid-template-columns: repeat(3, 44px); gap: 30px 35px; justify-content: center; padding-top: 34px; }
-    .mesh-mini span { position: relative; z-index: 2; width: 44px; height: 44px; display: grid; place-items: center; border: 1px solid #53716e; background: #293735; color: #dbe7e5; font: 750 10px var(--mono); }
-    .mesh-mini span::before { content: ""; position: absolute; left: 100%; top: 50%; width: 36px; height: 1px; background: #45605d; }
-    .mesh-mini span::after { content: ""; position: absolute; left: 50%; top: 100%; width: 1px; height: 31px; background: #45605d; }
-    .mesh-mini span:nth-child(3n)::before, .mesh-mini span:nth-last-child(-n+3)::after { display: none; }
-    .mini-routes { position: absolute; z-index: 1; left: 50%; top: 34px; width: 202px; height: 192px; transform: translateX(-50%); overflow: visible; pointer-events: none; }
-    .mini-routes .base { fill: none; stroke: #3d5552; stroke-width: 2; }
-    .mini-routes .flow { fill: none; stroke: #78ded0; stroke-width: 4; stroke-linecap: square; stroke-dasharray: 20 238; animation: mini-route-flow 2.8s linear infinite; }
-    .mini-routes .flow.two { stroke: #43b5a7; animation-delay: -1.4s; }
-    .mesh-mini .packet-a, .mesh-mini .packet-b { border-color: #67bdb3; animation: router-activity 2.8s ease-in-out infinite; }
-    .mesh-mini .packet-b { animation-delay: -1.4s; }
-    @keyframes mini-route-flow { to { stroke-dashoffset: -258; } }
-    @keyframes router-activity { 0%,72%,100% { background: #293735; border-color: #53716e; } 78%,90% { background: #31514d; border-color: #8ce4d8; } }
+    .comparison-split { grid-template-columns: minmax(330px,42fr) minmax(0,58fr); gap: 42px; align-items: stretch; }
+    .comparison-copy { align-self: center; }
+    .comparison-copy .intro { font-size: 15px; line-height: 1.55; }
+    .comparison-legend { display: grid; gap: 9px; margin-top: 28px; color: #aeb8ba; font: 700 11px var(--mono); }
+    .comparison-legend span { display: flex; align-items: center; gap: 9px; }
+    .comparison-legend i { display: block; width: 24px; height: 2px; background: #f4744b; }
+    .comparison-legend span:last-child i { background: #56b6aa; }
+    .crossbar-visual { min-height: 520px; display: grid; grid-template-columns: minmax(0,1fr) 30px minmax(0,1fr); gap: 10px; align-items: stretch; }
+    .fabric-panel { display: grid; grid-template-rows: auto 1fr auto; min-width: 0; min-height: 500px; padding: 18px; border: 1px solid #465158; border-radius: 4px; background: #252f32; }
+    .fabric-panel.legacy { border-color: #7c4a3a; background: rgba(111,60,44,.15); }
+    .fabric-panel.scalable { border-color: #37766f; background: rgba(50,110,101,.15); }
+    .fabric-panel h3 { margin: 0 0 4px; font-size: 17px; }
+    .fabric-panel .panel-subtitle { margin: 0; color: #9eaaad; font: 650 10px var(--mono); }
+    .comparison-diagram { display: block; width: 100%; height: auto; align-self: center; }
+    .comparison-diagram text { font-family: var(--mono); }
+    .comparison-diagram .muted-line { fill: none; stroke: #526063; stroke-width: 1; opacity: .7; }
+    .comparison-diagram .node-label { fill: #dbe1e3; font-size: 10px; font-weight: 750; }
+    .comparison-diagram .micro-label { fill: #879497; font-size: 8px; font-weight: 700; }
+    .comparison-diagram .active-crossbar { fill: none; stroke: #f4744b; stroke-width: 2.5; }
+    .comparison-diagram .active-crossbar.secondary { stroke: #ff9a76; stroke-width: 2; }
+    .comparison-diagram .crosspoint { fill: #687477; }
+    .comparison-diagram .crosspoint.active { fill: #f4744b; }
+    .comparison-diagram .router { fill: #27383a; stroke: #5d8c87; stroke-width: 1.2; }
+    .comparison-diagram .endpoint { fill: #2d3538; stroke: #6b777b; stroke-width: 1; }
+    .comparison-diagram .noc-link { fill: none; stroke: #4a6663; stroke-width: 1.5; }
+    .comparison-diagram .noc-route-a { fill: none; stroke: #56b6aa; stroke-width: 3; }
+    .comparison-diagram .noc-route-b { fill: none; stroke: #8ed8d0; stroke-width: 2.3; }
+    .comparison-diagram .noc-route-a, .comparison-diagram .noc-route-b { marker-end: url(#comparison-route-arrow); }
+    .comparison-diagram .packet { fill: #dffbf7; filter: drop-shadow(0 0 2px rgba(86,182,170,.5)); }
+    .comparison-diagram .packet.crossbar { fill: #ffd8ca; filter: none; }
+    .panel-facts { display: grid; gap: 7px; padding-top: 13px; border-top: 1px solid rgba(255,255,255,.1); color: #aeb8ba; font-size: 10px; line-height: 1.4; }
+    .panel-facts strong { color: #eef1f0; font-weight: 750; }
     .transform-arrow { color: var(--brand); font-size: 26px; text-align: center; }
 
     .challenge-table { margin-top: 52px; border-top: 1px solid rgba(255,255,255,.16); }
@@ -212,6 +231,34 @@
     .diagram-note ul, .diagram-note ol { margin: 0; padding-left: 18px; }
     .diagram-note li + li { margin-top: 4px; }
     .diagram-bottom { padding: 10px; border-top: 1px solid var(--line); color: #4b5865; font: 750 11px var(--mono); text-align: center; }
+
+    .noc-diagram-stage { overflow-x: auto; background: #fbfcfc; }
+    .noc-architecture-svg { display: block; width: 100%; min-width: 900px; height: auto; }
+    .noc-architecture-svg .frame { fill: #fff; stroke: #d8e0e5; stroke-width: 1.5; }
+    .noc-architecture-svg .endpoint-frame { fill: #fff; stroke-width: 1.5; }
+    .noc-architecture-svg .endpoint-frame.initiator { stroke: #b8a9dc; }
+    .noc-architecture-svg .endpoint-frame.target { stroke: #9dc9ac; }
+    .noc-architecture-svg .endpoint-card { fill: #fff; stroke-width: 1.25; }
+    .noc-architecture-svg .endpoint-card.initiator { stroke: #c6b8e5; }
+    .noc-architecture-svg .endpoint-card.target { stroke: #acd2b8; }
+    .noc-architecture-svg .ni-frame { fill: #fffaf7; stroke: #e99a73; stroke-width: 1.5; }
+    .noc-architecture-svg .ni-divider { stroke: #e99a73; stroke-width: 1; stroke-dasharray: 5 4; }
+    .noc-architecture-svg .router-box { fill: #fff8f4; stroke: #dc6b36; stroke-width: 1.5; }
+    .noc-architecture-svg .router-cross { fill: none; stroke: #dc6b36; stroke-width: 2; stroke-linecap: square; }
+    .noc-architecture-svg .link { fill: none; stroke: #52616c; stroke-width: 1.6; marker-start: url(#noc-arrow); marker-end: url(#noc-arrow); }
+    .noc-architecture-svg .mesh-link { fill: none; stroke: #74838d; stroke-width: 1.5; marker-start: url(#noc-arrow-small); marker-end: url(#noc-arrow-small); }
+    .noc-architecture-svg .mesh-link-vertical { marker-start: none; marker-end: none; }
+    .noc-architecture-svg .mesh-direction { fill: #52616c; }
+    .noc-architecture-svg .packet-flow { fill: none; stroke: #df6e38; stroke-width: 3; stroke-linecap: square; stroke-dasharray: 10 510; animation: noc-packet-flow 6s linear infinite; opacity: .9; }
+    .noc-architecture-svg .packet-flow.return { stroke: #24998e; animation-delay: -3s; animation-direction: reverse; opacity: .7; }
+    .noc-architecture-svg .label { fill: #18212a; font: 700 14px Inter, sans-serif; }
+    .noc-architecture-svg .small-label { fill: #66727e; font: 650 11px var(--mono); }
+    .noc-architecture-svg .group-label { font: 800 12px var(--mono); letter-spacing: 0; }
+    .noc-architecture-svg .group-label.initiator { fill: #5e3f99; }
+    .noc-architecture-svg .group-label.ni { fill: #b8491b; }
+    .noc-architecture-svg .group-label.target { fill: #24763d; }
+    .noc-architecture-svg .dimension-note { fill: #fff; stroke: #d9a084; stroke-width: 1.2; stroke-dasharray: 5 3; }
+    @keyframes noc-packet-flow { to { stroke-dashoffset: -520; } }
 
     .feature-layout { display: grid; grid-template-columns: 280px 1fr; gap: 42px; }
     .feature-nav { position: sticky; top: 100px; align-self: start; display: grid; gap: 4px; }
@@ -401,12 +448,65 @@
         <div class="hero-copy reveal">
           <p class="product-type">NoC Interconnect IP Generator</p>
           <h1>IDS-NoC™</h1>
-          <p class="claims"><span>Multi-Protocol AMBA Support</span><span>Advanced Routing and Arbitration</span><span>Virtual Channel Deadlock Avoidance</span><span>Unlimited Scaling</span></p>
+          <p class="claims"><span>Multi-Protocol AMBA Support</span><span>Advanced Routing &amp; Arbitration</span><span>Virtual Channel Deadlock Avoidance</span><span>Unlimited Scaling</span></p>
           <p class="summary">IDS-NoC™ is a scalable Network-on-Chip (NoC) interconnect IP generation solution for modern heterogeneous multi-core SoCs. Built on a packet-switched, distributed architecture, IDS-NoC enables engineering teams to rapidly create, configure, and integrate high-performance interconnect fabrics while eliminating the scalability, timing, and integration limitations of traditional crossbar-based designs. The solution is compatible with Arm® and RISC-V® processor-based systems and supports the development of complex, data-intensive SoCs.</p>
           <p class="summary">Whether designing an AI accelerator, automotive SoC, multi-core platform, or edge computing device, IDS-NoC provides the scalability, predictability, and automation you need to ship complex SoCs faster.</p>
-          <div class="hero-actions"><a class="btn btn-primary" href="#contact">Request a Demo</a><a class="btn" href="#contact">Free Evaluation</a><a class="btn btn-text" href="#resources">Download Datasheet</a></div>
+          <div class="hero-actions"><a class="btn btn-primary" href="#contact">Request a Demo</a><a class="btn" href="#contact">Talk to an Expert</a><a class="btn" href="#resources">Download Datasheet</a></div>
         </div>
-        <div class="noc-scene reveal" aria-label="An AXI request is packetized into flits, routed through a scalable Network-on-Chip mesh, and delivered to a target.">
+        <div class="noc-scene reveal has-approved-visual" aria-label="Approved IDS-NoC crossbar and Network-on-Chip technical diagram.">
+          <svg class="approved-noc-image hero-chip-svg" viewBox="0 0 640 520" role="img" aria-label="Four by four bidirectional Network-on-Chip mesh with initiators I0 through I3, routers R0 through R15, and targets T0 through T11">
+            <defs><marker id="hero-arrow" viewBox="0 0 10 10" refX="5" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M1 1L9 5L1 9Z" fill="#6f7f8e"/></marker><marker id="hero-arrow-end" viewBox="0 0 10 10" refX="5" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M1 1L9 5L1 9Z" fill="#6f7f8e"/></marker></defs>
+            <rect class="diagram-frame" x="1" y="1" width="638" height="518" rx="6"/>
+            <g class="mesh-wires">
+              <path class="mesh-wire" d="M129 125H206"/><path class="mesh-wire" d="M274 125H351"/><path class="mesh-wire" d="M419 125H496"/>
+              <path class="mesh-wire" d="M129 230H206"/><path class="mesh-wire" d="M274 230H351"/><path class="mesh-wire" d="M419 230H496"/>
+              <path class="mesh-wire" d="M129 335H206"/><path class="mesh-wire" d="M274 335H351"/><path class="mesh-wire" d="M419 335H496"/>
+              <path class="mesh-wire" d="M129 440H206"/><path class="mesh-wire" d="M274 440H351"/><path class="mesh-wire" d="M419 440H496"/>
+              <path class="mesh-wire" d="M95 151V204"/><path class="mesh-wire" d="M95 256V309"/><path class="mesh-wire" d="M95 361V414"/>
+              <path class="mesh-wire" d="M240 151V204"/><path class="mesh-wire" d="M240 256V309"/><path class="mesh-wire" d="M240 361V414"/>
+              <path class="mesh-wire" d="M385 151V204"/><path class="mesh-wire" d="M385 256V309"/><path class="mesh-wire" d="M385 361V414"/>
+              <path class="mesh-wire" d="M530 151V204"/><path class="mesh-wire" d="M530 256V309"/><path class="mesh-wire" d="M530 361V414"/>
+              <path class="mesh-wire" d="M95 78V99"/><path class="mesh-wire" d="M240 78V99"/><path class="mesh-wire" d="M385 78V99"/><path class="mesh-wire" d="M530 78V99"/>
+              <path class="target-wire" d="M126 216L136 201"/><path class="target-wire" d="M271 216L281 201"/><path class="target-wire" d="M416 216L426 201"/><path class="target-wire" d="M561 216L571 201"/>
+              <path class="target-wire" d="M126 321L136 306"/><path class="target-wire" d="M271 321L281 306"/><path class="target-wire" d="M416 321L426 306"/><path class="target-wire" d="M561 321L571 306"/>
+              <path class="target-wire" d="M126 426L136 411"/><path class="target-wire" d="M271 426L281 411"/><path class="target-wire" d="M416 426L426 411"/><path class="target-wire" d="M561 426L571 411"/>
+            </g>
+
+            <g class="initiators">
+              <g transform="translate(69 30)"><rect class="initiator-shape" width="52" height="42" rx="3"/><text class="initiator-label" x="26" y="26" text-anchor="middle">I0</text></g>
+              <g transform="translate(214 30)"><rect class="initiator-shape" width="52" height="42" rx="3"/><text class="initiator-label" x="26" y="26" text-anchor="middle">I1</text></g>
+              <g transform="translate(359 30)"><rect class="initiator-shape" width="52" height="42" rx="3"/><text class="initiator-label" x="26" y="26" text-anchor="middle">I2</text></g>
+              <g transform="translate(504 30)"><rect class="initiator-shape" width="52" height="42" rx="3"/><text class="initiator-label" x="26" y="26" text-anchor="middle">I3</text></g>
+            </g>
+
+            <g class="routers">
+              <g transform="translate(67 105)"><rect class="router-shape" width="56" height="40" rx="20"/><text class="router-label" x="28" y="25" text-anchor="middle">R0</text></g>
+              <g transform="translate(212 105)"><rect class="router-shape" width="56" height="40" rx="20"/><text class="router-label" x="28" y="25" text-anchor="middle">R1</text></g>
+              <g transform="translate(357 105)"><rect class="router-shape" width="56" height="40" rx="20"/><text class="router-label" x="28" y="25" text-anchor="middle">R2</text></g>
+              <g transform="translate(502 105)"><rect class="router-shape" width="56" height="40" rx="20"/><text class="router-label" x="28" y="25" text-anchor="middle">R3</text></g>
+              <g transform="translate(67 210)"><rect class="router-shape" width="56" height="40" rx="20"/><text class="router-label" x="28" y="25" text-anchor="middle">R4</text></g>
+              <g transform="translate(212 210)"><rect class="router-shape" width="56" height="40" rx="20"/><text class="router-label" x="28" y="25" text-anchor="middle">R5</text></g>
+              <g transform="translate(357 210)"><rect class="router-shape" width="56" height="40" rx="20"/><text class="router-label" x="28" y="25" text-anchor="middle">R6</text></g>
+              <g transform="translate(502 210)"><rect class="router-shape" width="56" height="40" rx="20"/><text class="router-label" x="28" y="25" text-anchor="middle">R7</text></g>
+              <g transform="translate(67 315)"><rect class="router-shape" width="56" height="40" rx="20"/><text class="router-label" x="28" y="25" text-anchor="middle">R8</text></g>
+              <g transform="translate(212 315)"><rect class="router-shape" width="56" height="40" rx="20"/><text class="router-label" x="28" y="25" text-anchor="middle">R9</text></g>
+              <g transform="translate(357 315)"><rect class="router-shape" width="56" height="40" rx="20"/><text class="router-label" x="28" y="25" text-anchor="middle">R10</text></g>
+              <g transform="translate(502 315)"><rect class="router-shape" width="56" height="40" rx="20"/><text class="router-label" x="28" y="25" text-anchor="middle">R11</text></g>
+              <g transform="translate(67 420)"><rect class="router-shape" width="56" height="40" rx="20"/><text class="router-label" x="28" y="25" text-anchor="middle">R12</text></g>
+              <g transform="translate(212 420)"><rect class="router-shape" width="56" height="40" rx="20"/><text class="router-label" x="28" y="25" text-anchor="middle">R13</text></g>
+              <g transform="translate(357 420)"><rect class="router-shape" width="56" height="40" rx="20"/><text class="router-label" x="28" y="25" text-anchor="middle">R14</text></g>
+              <g transform="translate(502 420)"><rect class="router-shape" width="56" height="40" rx="20"/><text class="router-label" x="28" y="25" text-anchor="middle">R15</text></g>
+            </g>
+
+            <g class="targets">
+              <g transform="translate(140 170)"><rect class="target-shape" width="38" height="28" rx="2"/><text class="target-label" x="19" y="18" text-anchor="middle">T0</text></g><g transform="translate(285 170)"><rect class="target-shape" width="38" height="28" rx="2"/><text class="target-label" x="19" y="18" text-anchor="middle">T1</text></g><g transform="translate(430 170)"><rect class="target-shape" width="38" height="28" rx="2"/><text class="target-label" x="19" y="18" text-anchor="middle">T2</text></g><g transform="translate(575 170)"><rect class="target-shape" width="38" height="28" rx="2"/><text class="target-label" x="19" y="18" text-anchor="middle">T3</text></g>
+              <g transform="translate(140 275)"><rect class="target-shape" width="38" height="28" rx="2"/><text class="target-label" x="19" y="18" text-anchor="middle">T4</text></g><g transform="translate(285 275)"><rect class="target-shape" width="38" height="28" rx="2"/><text class="target-label" x="19" y="18" text-anchor="middle">T5</text></g><g transform="translate(430 275)"><rect class="target-shape" width="38" height="28" rx="2"/><text class="target-label" x="19" y="18" text-anchor="middle">T6</text></g><g transform="translate(575 275)"><rect class="target-shape" width="38" height="28" rx="2"/><text class="target-label" x="19" y="18" text-anchor="middle">T7</text></g>
+              <g transform="translate(140 380)"><rect class="target-shape" width="38" height="28" rx="2"/><text class="target-label" x="19" y="18" text-anchor="middle">T8</text></g><g transform="translate(285 380)"><rect class="target-shape" width="38" height="28" rx="2"/><text class="target-label" x="19" y="18" text-anchor="middle">T9</text></g><g transform="translate(430 380)"><rect class="target-shape" width="38" height="28" rx="2"/><text class="target-label" x="19" y="18" text-anchor="middle">T10</text></g><g transform="translate(575 380)"><rect class="target-shape" width="38" height="28" rx="2"/><text class="target-label" x="19" y="18" text-anchor="middle">T11</text></g>
+            </g>
+
+            <path class="hero-route" d="M129 125H206"/>
+            <path class="hero-route secondary" d="M126 216L136 201"/>
+          </svg>
           <span class="scene-label">Packet-switched fabric / live route</span>
           <svg class="hero-network" viewBox="0 0 640 520" role="img" aria-label="Animated IDS-NoC router mesh">
             <g class="wire">
@@ -459,19 +559,44 @@
 
     <section class="section section-dark" id="challenges">
       <div class="shell">
-        <div class="split">
-          <div class="reveal"><h2>From Crossbar Bottlenecks to Scalable NoC</h2><p class="intro">Traditional crossbar interconnects reach their limits as SoC complexity, core counts, and bandwidth requirements grow. IDS-NoC is architected to solve the hardest interconnect challenges teams face today:</p></div>
+        <div class="split comparison-split">
+          <div class="reveal comparison-copy"><h2>From Crossbar Bottlenecks to Scalable NoC</h2><p class="intro">Traditional crossbar interconnects reach their limits as SoC complexity, core counts, and bandwidth requirements grow. IDS-NoC is architected to solve the hardest interconnect challenges teams face today:</p><div class="comparison-legend" aria-label="Diagram legend"><span><i></i>Centralized switch matrix</span><span><i></i>Distributed router links</span></div></div>
           <div class="visual crossbar-visual reveal" aria-label="Traditional crossbar compared with a distributed NoC mesh">
-            <div class="fabric-panel legacy"><h3>Traditional crossbar</h3><div class="crossbar-lines"><span class="source">CPU</span><span class="source">GPU</span><span class="source">NPU</span><span class="source">DMA</span><svg class="crossbar-svg" viewBox="0 0 220 250" preserveAspectRatio="none" aria-hidden="true"><path class="lane" d="M56 18L186 112"/><path class="lane" d="M56 83L186 120"/><path class="lane" d="M56 148L186 128"/><path class="lane" d="M56 213L186 136"/><rect class="lane-packet" x="-4" y="-4" width="8" height="8"><animateMotion dur="2.8s" repeatCount="indefinite" path="M56 18L186 112"/></rect><rect class="lane-packet" x="-4" y="-4" width="8" height="8"><animateMotion dur="2.8s" begin="-.7s" repeatCount="indefinite" path="M56 83L186 120"/></rect><rect class="lane-packet" x="-4" y="-4" width="8" height="8"><animateMotion dur="2.8s" begin="-1.4s" repeatCount="indefinite" path="M56 148L186 128"/></rect><rect class="lane-packet" x="-4" y="-4" width="8" height="8"><animateMotion dur="2.8s" begin="-2.1s" repeatCount="indefinite" path="M56 213L186 136"/></rect></svg><span class="choke-gate"></span><b class="bus"></b></div></div>
+            <div class="fabric-panel legacy">
+              <header><h3>Traditional crossbar</h3><p class="panel-subtitle">Centralized many-to-many switch matrix</p></header>
+              <svg class="comparison-diagram" viewBox="0 0 280 300" role="img" aria-label="Four initiators connect through a centralized four by four crossbar matrix to four targets. Three simultaneous routes are highlighted.">
+                <text class="micro-label" x="13" y="35">INITIATORS</text><text class="micro-label" x="92" y="35">SWITCH MATRIX</text><text class="micro-label" x="223" y="35">TARGETS</text>
+                <text class="node-label" x="13" y="82">CPU</text><text class="node-label" x="13" y="127">GPU</text><text class="node-label" x="13" y="172">NPU</text><text class="node-label" x="13" y="217">DMA</text>
+                <text class="node-label" x="238" y="67">SRAM</text><text class="node-label" x="238" y="112">DDR</text><text class="node-label" x="238" y="157">PCIe</text><text class="node-label" x="229" y="202">PERIPH</text>
+                <g class="muted-line"><path d="M54 78H220M54 123H220M54 168H220M54 213H220"/><path d="M82 55V235M127 55V235M172 55V235M217 55V235"/><path d="M220 62H233M220 107H233M220 152H233M220 197H224"/></g>
+                <g class="crosspoints"><circle class="crosspoint" cx="82" cy="78" r="2.5"/><circle class="crosspoint active" cx="127" cy="78" r="3.2"/><circle class="crosspoint" cx="172" cy="78" r="2.5"/><circle class="crosspoint" cx="217" cy="78" r="2.5"/><circle class="crosspoint" cx="82" cy="123" r="2.5"/><circle class="crosspoint" cx="127" cy="123" r="2.5"/><circle class="crosspoint" cx="172" cy="123" r="2.5"/><circle class="crosspoint" cx="217" cy="123" r="2.5"/><circle class="crosspoint active" cx="82" cy="168" r="3.2"/><circle class="crosspoint" cx="127" cy="168" r="2.5"/><circle class="crosspoint" cx="172" cy="168" r="2.5"/><circle class="crosspoint" cx="217" cy="168" r="2.5"/><circle class="crosspoint" cx="82" cy="213" r="2.5"/><circle class="crosspoint" cx="127" cy="213" r="2.5"/><circle class="crosspoint active" cx="172" cy="213" r="3.2"/><circle class="crosspoint" cx="217" cy="213" r="2.5"/></g>
+                <path id="cross-route-cpu" class="active-crossbar" d="M54 78H127V107H233"/><path id="cross-route-npu" class="active-crossbar secondary" d="M54 168H82V62H233"/><path id="cross-route-dma" class="active-crossbar" d="M54 213H172V152H233"/>
+                <circle class="packet crossbar" r="3"><animateMotion dur="4.8s" repeatCount="indefinite"><mpath href="#cross-route-cpu"/></animateMotion></circle><circle class="packet crossbar" r="3"><animateMotion dur="5.4s" begin="-2s" repeatCount="indefinite"><mpath href="#cross-route-npu"/></animateMotion></circle><circle class="packet crossbar" r="3"><animateMotion dur="5.1s" begin="-3.2s" repeatCount="indefinite"><mpath href="#cross-route-dma"/></animateMotion></circle>
+                <text class="micro-label" x="140" y="260" text-anchor="middle">SIMULTANEOUS NON-CONFLICTING TRANSFERS</text><text class="micro-label" x="140" y="276" text-anchor="middle">CPU→DDR · NPU→SRAM · DMA→PCIe</text>
+              </svg>
+              <footer class="panel-facts"><span><strong>Parallel transfers:</strong> supported for non-conflicting targets</span><span><strong>Scaling challenge:</strong> centralized wiring, arbitration and matrix complexity</span></footer>
+            </div>
             <div class="transform-arrow">→</div>
-            <div class="fabric-panel scalable"><h3>Distributed NoC</h3><div class="mesh-mini"><svg class="mini-routes" viewBox="0 0 202 192" aria-hidden="true"><path class="base" d="M22 22H180M22 170H101V96H180"/><path class="flow" d="M22 22H180"/><path class="flow two" d="M22 170H101V96H180"/></svg><span class="packet-a">R0,0</span><span class="packet-a">R0,1</span><span class="packet-a">R0,2</span><span>R1,0</span><span>R1,1</span><span>R1,2</span><span class="packet-b">R2,0</span><span class="packet-b">R2,1</span><span class="packet-b">R2,2</span></div></div>
+            <div class="fabric-panel scalable">
+              <header><h3>Distributed NoC</h3><p class="panel-subtitle">Routers, links and attached endpoints</p></header>
+              <svg class="comparison-diagram" viewBox="0 0 280 300" role="img" aria-label="CPU, GPU, DMA and DDR endpoints attach to a three by three router mesh. Two simultaneous multi-hop routes are highlighted.">
+                <defs><marker id="comparison-route-arrow" viewBox="0 0 10 10" refX="5" refY="5" markerWidth="5" markerHeight="5" orient="auto"><path d="M1 1L9 5L1 9Z" fill="#8ed8d0"/></marker></defs>
+                <g class="noc-link"><path d="M78 75H140H202M78 150H140H202M78 225H140H202"/><path d="M78 75V150V225M140 75V150V225M202 75V150V225"/><path d="M42 75H78M202 75H238M42 225H78M202 225H238"/></g>
+                <path id="noc-route-a" class="noc-route-a" d="M42 75H78H140H202H232"/><path id="noc-route-b" class="noc-route-b" d="M42 225H78H140H202H232"/>
+                <g class="endpoints"><rect class="endpoint" x="4" y="60" width="38" height="30" rx="3"/><text class="node-label" x="23" y="79" text-anchor="middle">CPU</text><rect class="endpoint" x="238" y="60" width="38" height="30" rx="3"/><text class="node-label" x="257" y="79" text-anchor="middle">GPU</text><rect class="endpoint" x="4" y="210" width="38" height="30" rx="3"/><text class="node-label" x="23" y="229" text-anchor="middle">DMA</text><rect class="endpoint" x="238" y="210" width="38" height="30" rx="3"/><text class="node-label" x="257" y="229" text-anchor="middle">DDR</text></g>
+                <g class="routers"><rect class="router" x="64" y="61" width="28" height="28"/><text class="node-label" x="78" y="79" text-anchor="middle">R0</text><rect class="router" x="126" y="61" width="28" height="28"/><text class="node-label" x="140" y="79" text-anchor="middle">R1</text><rect class="router" x="188" y="61" width="28" height="28"/><text class="node-label" x="202" y="79" text-anchor="middle">R2</text><rect class="router" x="64" y="136" width="28" height="28"/><text class="node-label" x="78" y="154" text-anchor="middle">R3</text><rect class="router" x="126" y="136" width="28" height="28"/><text class="node-label" x="140" y="154" text-anchor="middle">R4</text><rect class="router" x="188" y="136" width="28" height="28"/><text class="node-label" x="202" y="154" text-anchor="middle">R5</text><rect class="router" x="64" y="211" width="28" height="28"/><text class="node-label" x="78" y="229" text-anchor="middle">R6</text><rect class="router" x="126" y="211" width="28" height="28"/><text class="node-label" x="140" y="229" text-anchor="middle">R7</text><rect class="router" x="188" y="211" width="28" height="28"/><text class="node-label" x="202" y="229" text-anchor="middle">R8</text></g>
+                <circle class="packet" r="3.3"><animateMotion dur="5.2s" repeatCount="indefinite"><mpath href="#noc-route-a"/></animateMotion></circle><circle class="packet" r="3"><animateMotion dur="6.2s" begin="-3.1s" repeatCount="indefinite"><mpath href="#noc-route-b"/></animateMotion></circle>
+                <text class="micro-label" x="140" y="267" text-anchor="middle">TWO INDEPENDENT MULTI-HOP ROUTES</text>
+              </svg>
+              <footer class="panel-facts"><span><strong>Communication:</strong> packetized, multi-hop routing</span><span><strong>Scaling model:</strong> distributed routers and point-to-point links</span><span><strong>Trade-off:</strong> hop latency and network congestion must be managed</span></footer>
+            </div>
           </div>
         </div>
         <div class="challenge-table reveal" role="table" aria-label="Industry challenges and Agnisys IDS-NoC solutions">
           <div class="challenge-header" role="row"><strong>Industry Challenge</strong><span>Agnisys IDS-NoC Solution</span></div>
           <div class="challenge-row" role="row"><strong>Wiring Congestion</strong><span>Packet-switched distributed routing eliminates centralized wiring bottlenecks</span></div>
           <div class="challenge-row" role="row"><strong>Timing Closure</strong><span>Distributed router paths shorten combinational paths and simplify closure</span></div>
-          <div class="challenge-row" role="row"><strong>Scalability Limits</strong><span>Mesh topology scales linearly; you add routers without redesigning the fabric</span></div>
+          <div class="challenge-row" role="row"><strong>Scalability Limits</strong><span>Mesh topology scales linearly; add routers without redesigning the fabric</span></div>
           <div class="challenge-row" role="row"><strong>Deadlocks</strong><span>Dedicated Virtual Channels per AXI transaction type prevent deadlock</span></div>
           <div class="challenge-row" role="row"><strong>High Power/Area</strong><span>Modular architecture minimizes die area and reduces power overhead</span></div>
           <div class="challenge-row" role="row"><strong>Heterogeneous Integration</strong><span>Connects processors, accelerators, memories, and peripherals through a scalable packet-switched fabric</span></div>
@@ -483,20 +608,99 @@
       <div class="shell">
         <h2>Scalable N x M NoC Block Diagram for AMBA (AXI) Bus</h2>
         <div class="diagram-shell reveal">
-          <div class="diagram-topline"><span>Protocol-Agnostic AMBA Support</span><span>Packet-Switched</span><span>Scalable N × M Topology</span><span>Virtual Channel Deadlock Avoidance</span><span>High Performance</span></div>
-          <div class="architecture">
-            <div class="arch-column"><h3>INITIATORS (Ni)</h3><div class="arch-node">CPU</div><div class="arch-node">GPU</div><div class="arch-node">Accelerators</div><div class="arch-node">Peripherals</div><div class="arch-node">Custom IP</div></div>
-            <div class="arch-column ni"><h3>IG NI<br>Ingress Network Interface</h3><div class="ni-block"><b>Packetizer</b>AXI → Flits</div><div class="ni-block"><b>Depacketizer</b>Flits → AXI</div></div>
-            <div class="mesh-field" aria-label="Three row by four column example router mesh"><span class="router-node active">R0,0</span><span class="router-node active">R0,1</span><span class="router-node">R0,2</span><span class="router-node">R0,M-1</span><span class="router-node">R1,0</span><span class="router-node active">R1,1</span><span class="router-node active">R1,2</span><span class="router-node">R1,M-1</span><span class="router-node">RN-1,0</span><span class="router-node">RN-1,1</span><span class="router-node active">RN-1,2</span><span class="router-node">RN-1,M-1</span></div>
-            <div class="arch-column ni"><h3>EG NI<br>Egress Network Interface</h3><div class="ni-block"><b>Depacketizer</b>Flits → AXI</div><div class="ni-block"><b>Packetizer</b>AXI → Flits</div></div>
-            <div class="arch-column targets"><h3>TARGETS (Nt)</h3><div class="arch-node">Memory</div><div class="arch-node">Cache</div><div class="arch-node">DMA</div><div class="arch-node">I/O Complex</div><div class="arch-node">Custom IP</div></div>
+          <div class="noc-diagram-stage" role="img" aria-label="Scalable N by M Network-on-Chip architecture. AXI initiators connect through an ingress network interface to a bidirectional router mesh, then through an egress network interface to AXI targets.">
+            <svg class="noc-architecture-svg" viewBox="0 0 1100 620" aria-hidden="true">
+              <defs>
+                <marker id="noc-arrow" viewBox="0 0 10 10" refX="5" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M1 1L9 5L1 9Z" fill="#52616c"/></marker>
+                <marker id="noc-arrow-small" viewBox="0 0 10 10" refX="5" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M1 1L9 5L1 9Z" fill="#74838d"/></marker>
+              </defs>
+
+              <rect class="frame" x="0.75" y="0.75" width="1098.5" height="618.5" rx="4"/>
+
+              <rect class="endpoint-frame initiator" x="18" y="68" width="154" height="464" rx="5"/>
+              <text class="group-label initiator" x="95" y="48" text-anchor="middle">INITIATORS (Ni)</text>
+              <g><rect class="endpoint-card initiator" x="32" y="92" width="126" height="70" rx="4"/><text class="small-label" x="48" y="119">I0</text><text class="label" x="95" y="135" text-anchor="middle">CPU</text></g>
+              <g><rect class="endpoint-card initiator" x="32" y="184" width="126" height="70" rx="4"/><text class="small-label" x="48" y="211">I1</text><text class="label" x="95" y="227" text-anchor="middle">GPU</text></g>
+              <g><rect class="endpoint-card initiator" x="32" y="276" width="126" height="70" rx="4"/><text class="small-label" x="48" y="303">I2</text><text class="label" x="95" y="319" text-anchor="middle">Accelerators</text></g>
+              <text class="label" x="95" y="380" text-anchor="middle">⋮</text>
+              <g><rect class="endpoint-card initiator" x="32" y="424" width="126" height="70" rx="4"/><text class="small-label" x="48" y="451">I(Ni-1)</text><text class="label" x="95" y="471" text-anchor="middle">DMA</text></g>
+
+              <text class="group-label ni" x="264" y="35" text-anchor="middle">IG NI</text>
+              <text class="small-label" x="264" y="53" text-anchor="middle">Ingress Network Interface</text>
+              <rect class="ni-frame" x="210" y="92" width="108" height="402" rx="5"/>
+              <line class="ni-divider" x1="210" y1="293" x2="318" y2="293"/>
+              <text class="label" x="264" y="177" text-anchor="middle">Packetizer</text><text class="small-label" x="264" y="199" text-anchor="middle">AXI → Flits</text>
+              <text class="label" x="264" y="382" text-anchor="middle">Depacketizer</text><text class="small-label" x="264" y="404" text-anchor="middle">Flits → AXI</text>
+
+              <text class="group-label ni" x="550" y="35" text-anchor="middle">SCALABLE N × M NoC (ROUTERS MESH)</text>
+              <g class="mesh-links">
+                <path class="mesh-link" d="M388 127H464"/><path class="mesh-link" d="M508 127H584"/><path class="mesh-link" d="M628 127H704"/>
+                <path class="mesh-link" d="M388 293H464"/><path class="mesh-link" d="M508 293H584"/><path class="mesh-link" d="M628 293H704"/>
+                <path class="mesh-link" d="M388 459H464"/><path class="mesh-link" d="M508 459H584"/><path class="mesh-link" d="M628 459H704"/>
+                <path class="mesh-link mesh-link-vertical" d="M366 143V277"/><path class="mesh-link mesh-link-vertical" d="M366 309V443"/>
+                <path class="mesh-link mesh-link-vertical" d="M486 143V277"/><path class="mesh-link mesh-link-vertical" d="M486 309V443"/>
+                <path class="mesh-link mesh-link-vertical" d="M606 143V277"/><path class="mesh-link mesh-link-vertical" d="M606 309V443"/>
+                <path class="mesh-link mesh-link-vertical" d="M726 143V277"/><path class="mesh-link mesh-link-vertical" d="M726 309V443"/>
+                <g class="vertical-directions">
+                  <path class="mesh-direction" d="M361 184H371L366 176Z"/><path class="mesh-direction" d="M361 226H371L366 234Z"/>
+                  <path class="mesh-direction" d="M481 184H491L486 176Z"/><path class="mesh-direction" d="M481 226H491L486 234Z"/>
+                  <path class="mesh-direction" d="M601 184H611L606 176Z"/><path class="mesh-direction" d="M601 226H611L606 234Z"/>
+                  <path class="mesh-direction" d="M721 184H731L726 176Z"/><path class="mesh-direction" d="M721 226H731L726 234Z"/>
+                  <path class="mesh-direction" d="M361 350H371L366 342Z"/><path class="mesh-direction" d="M361 392H371L366 400Z"/>
+                  <path class="mesh-direction" d="M481 350H491L486 342Z"/><path class="mesh-direction" d="M481 392H491L486 400Z"/>
+                  <path class="mesh-direction" d="M601 350H611L606 342Z"/><path class="mesh-direction" d="M601 392H611L606 400Z"/>
+                  <path class="mesh-direction" d="M721 350H731L726 342Z"/><path class="mesh-direction" d="M721 392H731L726 400Z"/>
+                </g>
+              </g>
+              <g class="routers">
+                <g transform="translate(350 111)"><rect class="router-box" width="32" height="32" rx="4"/><path class="router-cross" d="M9 9L23 23M23 9L9 23"/><text class="small-label" x="16" y="49" text-anchor="middle">R0,0</text></g>
+                <g transform="translate(470 111)"><rect class="router-box" width="32" height="32" rx="4"/><path class="router-cross" d="M9 9L23 23M23 9L9 23"/><text class="small-label" x="16" y="49" text-anchor="middle">R0,1</text></g>
+                <g transform="translate(590 111)"><rect class="router-box" width="32" height="32" rx="4"/><path class="router-cross" d="M9 9L23 23M23 9L9 23"/><text class="small-label" x="16" y="49" text-anchor="middle">R0,2</text></g>
+                <text class="label" x="666" y="133" text-anchor="middle">…</text>
+                <g transform="translate(710 111)"><rect class="router-box" width="32" height="32" rx="4"/><path class="router-cross" d="M9 9L23 23M23 9L9 23"/><text class="small-label" x="16" y="49" text-anchor="middle">R0,M-1</text></g>
+
+                <g transform="translate(350 277)"><rect class="router-box" width="32" height="32" rx="4"/><path class="router-cross" d="M9 9L23 23M23 9L9 23"/><text class="small-label" x="16" y="49" text-anchor="middle">R1,0</text></g>
+                <g transform="translate(470 277)"><rect class="router-box" width="32" height="32" rx="4"/><path class="router-cross" d="M9 9L23 23M23 9L9 23"/><text class="small-label" x="16" y="49" text-anchor="middle">R1,1</text></g>
+                <g transform="translate(590 277)"><rect class="router-box" width="32" height="32" rx="4"/><path class="router-cross" d="M9 9L23 23M23 9L9 23"/><text class="small-label" x="16" y="49" text-anchor="middle">R1,2</text></g>
+                <text class="label" x="666" y="299" text-anchor="middle">…</text>
+                <g transform="translate(710 277)"><rect class="router-box" width="32" height="32" rx="4"/><path class="router-cross" d="M9 9L23 23M23 9L9 23"/><text class="small-label" x="16" y="49" text-anchor="middle">R1,M-1</text></g>
+
+                <text class="label" x="366" y="385" text-anchor="middle">⋮</text><text class="label" x="486" y="385" text-anchor="middle">⋮</text><text class="label" x="606" y="385" text-anchor="middle">⋮</text><text class="label" x="726" y="385" text-anchor="middle">⋮</text>
+
+                <g transform="translate(350 443)"><rect class="router-box" width="32" height="32" rx="4"/><path class="router-cross" d="M9 9L23 23M23 9L9 23"/><text class="small-label" x="16" y="49" text-anchor="middle">RN-1,0</text></g>
+                <g transform="translate(470 443)"><rect class="router-box" width="32" height="32" rx="4"/><path class="router-cross" d="M9 9L23 23M23 9L9 23"/><text class="small-label" x="16" y="49" text-anchor="middle">RN-1,1</text></g>
+                <g transform="translate(590 443)"><rect class="router-box" width="32" height="32" rx="4"/><path class="router-cross" d="M9 9L23 23M23 9L9 23"/><text class="small-label" x="16" y="49" text-anchor="middle">RN-1,2</text></g>
+                <text class="label" x="666" y="465" text-anchor="middle">…</text>
+                <g transform="translate(710 443)"><rect class="router-box" width="32" height="32" rx="4"/><path class="router-cross" d="M9 9L23 23M23 9L9 23"/><text class="small-label" x="16" y="49" text-anchor="middle">RN-1,M-1</text></g>
+              </g>
+
+              <text class="group-label ni" x="836" y="35" text-anchor="middle">EG NI</text>
+              <text class="small-label" x="836" y="53" text-anchor="middle">Egress Network Interface</text>
+              <rect class="ni-frame" x="782" y="92" width="108" height="402" rx="5"/>
+              <line class="ni-divider" x1="782" y1="293" x2="890" y2="293"/>
+              <text class="label" x="836" y="177" text-anchor="middle">Depacketizer</text><text class="small-label" x="836" y="199" text-anchor="middle">Flits → AXI</text>
+              <text class="label" x="836" y="382" text-anchor="middle">Packetizer</text><text class="small-label" x="836" y="404" text-anchor="middle">AXI → Flits</text>
+
+              <rect class="endpoint-frame target" x="928" y="68" width="154" height="464" rx="5"/>
+              <text class="group-label target" x="1005" y="48" text-anchor="middle">TARGETS (Nt)</text>
+              <g><rect class="endpoint-card target" x="942" y="92" width="126" height="70" rx="4"/><text class="small-label" x="958" y="119">T0</text><text class="label" x="1005" y="135" text-anchor="middle">Memory</text></g>
+              <g><rect class="endpoint-card target" x="942" y="184" width="126" height="70" rx="4"/><text class="small-label" x="958" y="211">T1</text><text class="label" x="1005" y="227" text-anchor="middle">Cache</text></g>
+              <g><rect class="endpoint-card target" x="942" y="276" width="126" height="70" rx="4"/><text class="small-label" x="958" y="303">T2</text><text class="label" x="1005" y="319" text-anchor="middle">I/O Complex</text></g>
+              <text class="label" x="1005" y="380" text-anchor="middle">⋮</text>
+              <g><rect class="endpoint-card target" x="942" y="424" width="126" height="70" rx="4"/><text class="small-label" x="958" y="451">T(Nt-1)</text><text class="label" x="1005" y="471" text-anchor="middle">Custom IP</text></g>
+
+              <path class="link" d="M164 127H204"/><path class="link" d="M164 219H204"/><path class="link" d="M164 311H204"/><path class="link" d="M164 459H204"/>
+              <path class="link" d="M324 127H344"/><path class="link" d="M324 293H344"/><path class="link" d="M324 459H344"/>
+              <path class="link" d="M748 127H776"/><path class="link" d="M748 293H776"/><path class="link" d="M748 459H776"/>
+              <path class="link" d="M896 127H936"/><path class="link" d="M896 219H936"/><path class="link" d="M896 311H936"/><path class="link" d="M896 459H936"/>
+              <path class="packet-flow" d="M318 127H366H486V293H606V459H726H782"/>
+              <path class="packet-flow return" d="M782 293H726H606V127H486H366H318"/>
+
+              <rect class="dimension-note" x="365" y="546" width="370" height="48" rx="4"/>
+              <text class="small-label" x="550" y="566" text-anchor="middle">Mesh dimensions: N (rows) × M (columns)</text>
+              <text class="small-label" x="550" y="584" text-anchor="middle">Number of Initiators: Ni  ·  Number of Targets: Nt</text>
+            </svg>
           </div>
-          <div class="diagram-footer">
-            <div class="diagram-note"><h3>LEGEND</h3><p>Router (Rr,c)<br>Initiator Node (In)<br>Target Node (Tn)<br>Horizontal Link (East/West)<br>Vertical Link (North/South)</p></div>
-            <div class="diagram-note"><h3>HOW IT WORKS (IN SIMPLE TERMS)</h3><ol><li>Initiator (I0–I(Ni-1)) generates AMBA (AXI) read/write request.</li><li>Request enters IG NI and is packetized into flits.</li><li>Flits traverse the NoC mesh via routers using shortest path.</li><li>Request reaches EG NI connected to the target.</li><li>EG NI depacketizes flits back to AMBA (AXI) protocol and delivers response.</li></ol></div>
-            <div class="diagram-note"><h3>KEY HIGHLIGHTS</h3><ul><li>Supports AMBA AXI4 / AXI5 Protocol</li><li>Packet-switched NoC architecture</li><li>Virtual Channels for Deadlock Avoidance</li><li>Scalable to any N × M size</li><li>High bandwidth and low latency</li><li>Multiple initiators (Ni) and targets (Nt) support</li></ul></div>
-          </div>
-          <div class="diagram-bottom">Scalable &nbsp; • &nbsp; Flexible &nbsp; • &nbsp; High Performance &nbsp; • &nbsp; AMBA (AXI) Compliant</div>
         </div>
       </div>
     </section>
@@ -508,21 +712,21 @@
           <div class="feature-nav" aria-label="Feature groups"><button class="active" data-feature="protocol">Protocol</button><button data-feature="fabric">Fabric</button><button data-feature="scale">Scale</button><button data-feature="delivery">Delivery</button></div>
           <div class="feature-table reveal">
             <div class="feature-header"><strong>Feature</strong><span>Details</span></div>
-            <div class="feature-row active" data-group="protocol"><strong>Multi-Protocol Bus Support</strong><span>AMBA: AXI4, AHB4, APB, AXI5, ACE</span></div>
+            <div class="feature-row active" data-group="protocol"><strong>Multi-Protocol Bus Support</strong><span>AMBA- AXI4, AHB4, APB, AXI5, ACE</span></div>
             <div class="feature-row" data-group="fabric"><strong>Mesh Topology</strong><span>N×M mesh with N/S/E/W/Local port routing; linear area scaling, simplified timing closure</span></div>
-            <div class="feature-row" data-group="fabric"><strong>Virtual Channel (VC) Architecture</strong><span>4 independent VCs (AW/W, B, AR, R); structural deadlock elimination; full QoS configurability</span></div>
-            <div class="feature-row" data-group="fabric"><strong>Network Interface (NI)</strong><span>Packetizer AXI &lt;-&gt; FLIT, depacketizer FLIT &lt;-&gt; AXI; Ingress and Egress Network Interface Unit (NI) per endpoint</span></div>
+            <div class="feature-row" data-group="fabric"><strong>Virtual Channel Architecture</strong><span>4 independent VCs (AW/W, B, AR, R); structural deadlock elimination; full QoS configurability</span></div>
+            <div class="feature-row" data-group="fabric"><strong>Network Interface (NI)</strong><span>packetizer AXI &lt;-&gt; FLIT, depacketizer FLIT &lt;-&gt; AXI; Ingress &amp; Egress NI per endpoint</span></div>
             <div class="feature-row" data-group="fabric"><strong>Pipelined Router Architecture</strong><span>Input Buffers (FIFO), Routing Computation (RC), Virtual Channel Allocator (VCA), Switch Allocator (SA), Crossbar, Output Buffers (FIFO)</span></div>
             <div class="feature-row" data-group="scale"><strong>Wide Data Bus</strong><span>Up to 2048-bit data bus width</span></div>
             <div class="feature-row" data-group="scale"><strong>Transaction Depth</strong><span>Up to 1024 pending transactions supported</span></div>
-            <div class="feature-row" data-group="delivery"><strong>Parameterization</strong><span>Generation-time, elaboration-time, run-time configurability</span></div>
-            <div class="feature-row" data-group="fabric"><strong>Memory Re-order Buffer</strong><span>Optimized memory transaction ordering to improve bandwidth utilization and overall system performance.</span></div>
-            <div class="feature-row" data-group="delivery"><strong>Optimizations</strong><span>Power management, security, address and data protection, advanced in-circuit debug</span></div>
-            <div class="feature-row" data-group="delivery"><strong>Functional Safety and Reliability</strong><span>Reliability option, functional safety option</span></div>
-            <div class="feature-row" data-group="scale"><strong>Unlimited Scaling</strong><span>Unlimited NoC instances per design; unlimited NIs per die</span></div>
+            <div class="feature-row" data-group="delivery"><strong>Parameterization</strong><span>Generation-time, elaboration-time, and run-time configurability</span></div>
+            <div class="feature-row" data-group="fabric"><strong>Memory Re-order Buffer</strong><span>Optimizes memory transaction ordering to improve bandwidth utilization and overall system performance.</span></div>
+            <div class="feature-row" data-group="delivery"><strong>Optimizations</strong><span>Power management, security, address &amp; data protection, advanced in-circuit debug</span></div>
+            <div class="feature-row" data-group="delivery"><strong>Functional Safety &amp; Reliability</strong><span>Reliability option, Functional Safety</span></div>
+            <div class="feature-row" data-group="scale"><strong>Unlimited Scaling</strong><span>Unlimited NoC instances per design; unlimited Network Interface Units (NIs) per die</span></div>
             <div class="feature-row" data-group="delivery"><strong>RTL Delivery</strong><span>SystemVerilog, plain-text, unencrypted — full visibility and portability</span></div>
             <div class="feature-row" data-group="delivery"><strong>Licensing</strong><span>Flexible licensing model suited for small-scale to large-scale SoCs</span></div>
-            <div class="feature-row" data-group="delivery"><strong>Ecosystem Integration</strong><span>Deep integration with the IDesignSpec™ Suite for register maps, connectivity, and bus IPs</span></div>
+            <div class="feature-row" data-group="delivery"><strong>Ecosystem Integration</strong><span>Deep integration with IDesignSpec for register maps, connectivity, and bus IPs</span></div>
           </div>
         </div>
       </div>
@@ -559,7 +763,7 @@
           <div class="benefit"><strong>Faster Time-to-Market</strong><p>Parameter-driven generation eliminates manual implementation of routers, network interfaces, and interconnect fabrics, allowing teams to rapidly create and iterate on NoC architectures.</p><div class="benefit-signal"><i></i></div></div>
           <div class="benefit"><strong>Unlimited Scalability</strong><p>Deploy as many NoC instances and Network Interface Units (NIUs) as required by your design.</p><div class="benefit-signal"><i></i></div></div>
           <div class="benefit"><strong>Open and Portable RTL</strong><p>Receive plain-text, unencrypted SystemVerilog RTL with full visibility and auditability.</p><div class="benefit-signal"><i></i></div></div>
-          <div class="benefit"><strong>Deadlock-Free Communication</strong><p>Dedicated Virtual Channels and configurable arbitration simplify protocol management and improve reliability.</p><div class="benefit-signal"><i></i></div></div>
+          <div class="benefit"><strong>Deadlock-Free Communication</strong><p>Dedicated virtual channels and configurable arbitration simplify protocol management and improve reliability.</p><div class="benefit-signal"><i></i></div></div>
           <div class="benefit"><strong>End-to-End Automation</strong><p>Integrated with the IDesignSpec Suite for RTL generation, integration, verification, documentation, and sign-off collateral generation.</p><div class="benefit-signal"><i></i></div></div>
         </div>
       </div>
@@ -574,8 +778,8 @@
 
     <section class="section section-deep" id="resources">
       <div class="shell resources-grid">
-        <div class="reveal"><h2>Resources</h2><ul class="resource-list"><li>Article: AXI4-Based NoC: A Scalable Interconnect Solution for Modern SoC Design</li><li>Request IDesignSpec Suite Datasheet</li></ul></div>
-        <div class="cta reveal" id="contact"><h2>Build the Next Generation of Scalable SoCs</h2><p>Automate NoC design and integration with Agnisys IDS-NoC</p><div class="cta-actions"><a class="btn btn-primary" href="#">Request a Demo</a><a class="btn" href="#">Talk to an expert</a><a class="btn btn-text" href="#">Download Datasheet</a></div></div>
+        <div class="reveal"><h2>Resources</h2><ul class="resource-list"><li>IDS-NoC Product Datasheet (PDF)</li><li>AXI4-Based NoC: A Scalable Interconnect Solution for Modern SoC Design (Whitepaper)</li><li>IDesignSpec (IDS-GDI) Product Overview</li><li>Request a Live Demo or Talk to an Expert</li></ul></div>
+        <div class="cta reveal" id="contact"><h2>Build the Next Generation of Scalable SoCs</h2><p>Automate NoC design, integration, and validation with Agnisys IDS-NoC</p><div class="cta-actions"><a class="btn btn-primary" href="#">Request a Demo</a><a class="btn" href="#">Download Datasheet</a><a class="btn" href="#">Talk to an Expert</a><a class="btn" href="#">Contact</a></div></div>
       </div>
     </section>
   </main>
