@@ -5469,8 +5469,7 @@
 .v5x .chip-body { display: grid; grid-template-columns: minmax(0, 1.15fr) minmax(0, 1fr); gap: 14px; align-items: center; }
 .v5x .iso-wrap { position: relative; }
 .v5x .iso-wrap svg { display: block; width: 100%; height: auto; overflow: visible; shape-rendering: geometricPrecision; text-rendering: geometricPrecision; }
-.v5x .iso { --v5gap: 64; transition: --v5gap 800ms var(--v5-ease); }
-.v5x .iso.open { --v5gap: 86; }
+.v5x .iso { --v5gap: 64; }
 .v5x .iso .ly { transform: translate3d(0, calc(var(--i) * var(--v5gap) * -1px), 0); transition: opacity 400ms var(--v5-ease); }
 .v5x .iso .ly .lift { transform: translate3d(0, 0, 0); transition: transform 500ms var(--v5-ease); will-change: transform; }
 .v5x .iso .ly.hl .lift { transform: translate3d(0, -10px, 0); }
@@ -5512,7 +5511,7 @@
 }
 @media (prefers-reduced-motion: reduce) {
   .v5x .cv .stack-links path, .v5x .iso .spark { animation: none; }
-  .v5x .iso, .v5x .iso .ly .lift, .v5x .cov-fill, .v5x .bits .frame { transition: none; }
+  .v5x .iso .ly .lift, .v5x .cov-fill, .v5x .bits .frame { transition: none; }
   .v5x .cv .orbit-dot { animation: none; }
 }
 
@@ -5524,6 +5523,11 @@
 @media (max-width: 1100px) { #different .difference-layout { align-items: start; } }
 #different .silicon-field { grid-template-rows: repeat(4, minmax(100px, auto)); }
 .hero h1 .tm { font-size: .38em; font-weight: 700; vertical-align: top; position: relative; top: .35em; margin-left: .06em; letter-spacing: 0; }
+/* Scrollytelling for Why Agnisys: tall grid, both columns pinned while the chip unfolds */
+@media (min-width: 901px) {
+  #why .why-grid { align-items: start; min-height: 175vh; }
+  #why .why-grid > .reveal, #why .why-grid > .why-structural { position: sticky; top: 96px; }
+}
 
     </style>
   </head>
@@ -7593,11 +7597,50 @@
         const layers = $$(".ly", svg), rows = $$("#v5Legend li"), phases = $$("#v5Phase span"), wrap = svg.closest(".iso-wrap");
         const hl = (n, focus) => { layers.forEach((l) => l.classList.toggle("hl", l.dataset.layer === n)); rows.forEach((r) => r.classList.toggle("hl", r.dataset.layer === n)); phases.forEach((p) => p.classList.toggle("ison", p.dataset.layer === n)); svg.classList.toggle("focus", !!focus && !!n); };
         let hovering = false, timer = null, kk = 0;
-        const leave = () => { hovering = false; svg.classList.remove("open"); hl(""); };
-        wrap.addEventListener("mouseenter", () => { hovering = true; svg.classList.add("open"); });
+        const leave = () => { hovering = false; hl(""); };
+        wrap.addEventListener("mouseenter", () => { hovering = true; });
         wrap.addEventListener("mouseleave", leave);
-        [...rows, ...phases].forEach((el) => { el.addEventListener("mouseenter", () => { hovering = true; svg.classList.add("open"); hl(el.dataset.layer, true); }); el.addEventListener("mouseleave", leave); });
-        if (!reduced) whileVisible(svg, () => { if (!timer) timer = setInterval(() => { if (hovering) return; kk = kk % 4 + 1; hl(String(kk), false); }, 2200); }, () => { clearInterval(timer); timer = null; });
+        [...rows, ...phases].forEach((el) => { el.addEventListener("mouseenter", () => { hovering = true; hl(el.dataset.layer, true); }); el.addEventListener("mouseleave", leave); });
+        // Scrollytelling: on desktop the Why Agnisys grid is taller than the viewport and both
+        // columns are sticky, so the card stays pinned while the reader scrolls ~1 screen. That
+        // scroll distance drives the explode (0 → 1) and lights the layers bottom-up in order.
+        const MIN = 10, MAX = 86, grid = wrap.closest(".why-grid") || wrap.closest("#why") || wrap;
+        const pinned = () => window.matchMedia("(min-width: 901px)").matches;
+        if (reduced) { svg.style.setProperty("--v5gap", "64"); }
+        else {
+          svg.style.transition = "none";
+          let target = MIN, cur = MIN, raf = 0, lastLayer = "";
+          const measure = () => {
+            const vh = window.innerHeight || 800; let p;
+            if (pinned()) {
+              const r = grid.getBoundingClientRect(), card = wrap.closest(".why-structural") || wrap, ch = card.getBoundingClientRect().height;
+              const travel = Math.max(1, r.height - ch);           // how far the pinned card rides
+              p = (96 - r.top) / travel;                            // 0 when the card pins, 1 when the grid runs out
+              p = Math.min(1, Math.max(0, p + 0.08));               // small pre-roll so it starts moving as it pins
+            } else {
+              const r = wrap.getBoundingClientRect();
+              p = Math.min(1, Math.max(0, (vh * 0.9 - r.top) / (vh * 0.7)));
+            }
+            const e = 1 - Math.pow(1 - p, 2);
+            target = MIN + (MAX - MIN) * e + (hovering ? 10 : 0);
+            if (!hovering && pinned()) {
+              const n = p < 0.06 ? "" : p > 0.94 ? "" : String(Math.min(4, 1 + Math.floor(p * 4.4)));
+              if (n !== lastLayer) { lastLayer = n; hl(n, !!n); }
+            }
+            if (!raf) raf = requestAnimationFrame(tick);
+          };
+          const tick = () => {
+            cur += (target - cur) * 0.18;
+            if (Math.abs(target - cur) < 0.15) cur = target;
+            svg.style.setProperty("--v5gap", cur.toFixed(2));
+            raf = Math.abs(target - cur) > 0 ? requestAnimationFrame(tick) : 0;
+          };
+          window.addEventListener("scroll", measure, { passive: true }); window.addEventListener("resize", measure);
+          wrap.addEventListener("mouseenter", measure); wrap.addEventListener("mouseleave", measure);
+          rows.forEach((el) => { el.addEventListener("mouseenter", measure); el.addEventListener("mouseleave", measure); });
+          measure();
+        }
+        if (!reduced) whileVisible(svg, () => { if (!timer && !pinned()) timer = setInterval(() => { if (hovering) return; kk = kk % 4 + 1; hl(String(kk), false); }, 2200); }, () => { clearInterval(timer); timer = null; });
       })();
 
       /* ── Loop: three findings, one story shape (check → propose → review → regenerate → verify) ── */
