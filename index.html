@@ -1034,6 +1034,8 @@
         position: absolute;
         inset: 0;
         z-index: 0;
+        width: 100%;
+        height: 100%;
       }
       .flow-lines path {
         fill: none;
@@ -5072,6 +5074,7 @@
         fill: none;
         stroke: #d9e0e6;
         stroke-width: 1.4;
+        vector-effect: non-scaling-stroke;
         transition: stroke 540ms var(--ease), stroke-width 540ms var(--ease);
       }
       .platform-context-map[data-active="0"] .route-0,
@@ -5082,6 +5085,26 @@
         stroke: var(--brand);
         stroke-width: 2.2;
       }
+      .context-pulse {
+        fill: none;
+        stroke: var(--brand);
+        stroke-width: 3.2;
+        stroke-linecap: round;
+        stroke-dasharray: 0.022 0.978;
+        vector-effect: non-scaling-stroke;
+        opacity: 0.82;
+        filter: drop-shadow(0 0 2px rgba(224, 111, 56, 0.34));
+        animation: context-signal 4.2s linear infinite;
+      }
+      .context-pulse.pulse-1 { animation-delay: 0.65s; }
+      .context-pulse.pulse-2 { animation-delay: 1.25s; }
+      .context-pulse.pulse-3 { animation-delay: 1.9s; }
+      .context-pulse.pulse-4 { animation-delay: 2.55s; }
+      .context-pulse.pulse-5 { animation-delay: 3.2s; }
+      @keyframes context-signal {
+        from { stroke-dashoffset: 1; }
+        to { stroke-dashoffset: 0; }
+      }
       .context-source,
       .context-tool,
       .context-core {
@@ -5091,7 +5114,7 @@
       }
       .context-source {
         left: 0;
-        top: 45%;
+        top: 50%;
         width: 118px;
         padding: 12px 0;
         transform: translateY(-50%);
@@ -5102,7 +5125,7 @@
       .context-source span { margin-top: 4px; color: var(--muted); font-size: 11px; line-height: 1.4; }
       .context-core {
         left: 41%;
-        top: 45%;
+        top: 50%;
         display: grid;
         place-items: center;
         width: 92px;
@@ -5114,6 +5137,19 @@
         font-weight: 820;
         transform: translate(-50%, -50%);
         box-shadow: 0 0 0 7px rgba(224, 111, 56, 0.06);
+      }
+      .context-core::after {
+        content: "";
+        position: absolute;
+        inset: -8px;
+        border: 1px solid rgba(224, 111, 56, 0.25);
+        border-radius: 50%;
+        animation: context-core-pulse 4.2s ease-out infinite;
+      }
+      @keyframes context-core-pulse {
+        0%, 22% { transform: scale(0.94); opacity: 0; }
+        30% { opacity: 0.7; }
+        52%, 100% { transform: scale(1.16); opacity: 0; }
       }
       .context-tool {
         right: 0;
@@ -5199,6 +5235,296 @@
         .context-core { left: 40%; width: 64px; height: 64px; font-size: 12px; }
         .context-framework { width: 60%; font-size: 8.5px; }
       }
+      @media (prefers-reduced-motion: reduce) {
+        .context-pulse,
+        .context-core::after { animation: none; }
+        .context-pulse { opacity: 0; }
+      }
+    
+/* ═══════════════════════════════════════════════════════════════════
+   V5 VISUALS (Sep 2026) — every rule below is scoped to .v5x by the build.
+   Replaces: hero visual, Spec Check tab visual, loop panel, Verification
+   tab visual, Why Agnisys motion card; adds the comparison under
+   "What Makes IDS-AI Different?". Copy outside these visuals is unchanged.
+   ═══════════════════════════════════════════════════════════════════ */
+@property --v5gap { syntax: "<number>"; inherits: true; initial-value: 64; }
+.v5x { --sans: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; --v5-ease: cubic-bezier(0.2, 0.8, 0.2, 1); }
+
+/* shared bits */
+.v5x .lbl { font-family: var(--mono); font-size: 10px; letter-spacing: .08em; text-transform: uppercase; color: #6d7886; }
+.v5x .icon-sq { display: grid; place-items: center; width: 26px; height: 26px; flex: 0 0 26px; border: 1.5px solid var(--blue); border-radius: 6px; color: var(--blue); font-family: var(--mono); font-size: 7.5px; font-weight: 800; letter-spacing: -.02em; }
+.v5x .pill { display: inline-flex; align-items: center; gap: 6px; padding: 3px 9px; border: 1px solid var(--line); border-radius: 999px; background: #fff; color: #4d5866; font-family: var(--mono); font-size: 10.5px; line-height: 1.5; white-space: nowrap; }
+.v5x .pill.pok { color: var(--green); border-color: #cfe6d8; background: #f1f9f4; }
+.v5x .pill.prun { color: var(--blue); border-color: #d6defe; background: #f3f5ff; }
+.v5x .pill.pwarn { color: var(--amber); border-color: #f0dcb9; background: #fdf7ec; }
+.v5x .success { display: inline-flex; align-items: center; gap: 8px; padding: 6px 13px; border: 1px solid #cfe6d8; border-radius: 999px; background: #fff; color: var(--green); font-family: var(--mono); font-size: 11px; font-weight: 700; white-space: nowrap; }
+.v5x .success::before { content: ""; width: 7px; height: 7px; border-radius: 50%; background: var(--green); }
+.v5x .chips { display: flex; flex-wrap: wrap; gap: 5px; }
+
+/* ── HERO · spec ream → IDS-AI → generated handoff ── */
+.v5x .cv { position: relative; display: grid; grid-template-columns: 126px 140px minmax(0, 1fr); grid-template-rows: auto auto; align-items: center; gap: 4px 10px; min-height: 452px; padding: 6px 0 8px; }
+.v5x .cv .stack-links { position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; }
+.v5x .cv .stack-links path { fill: none; stroke-width: 1.3; stroke-dasharray: 4 5; animation: v5-dash 1.2s linear infinite; }
+@keyframes v5-dash { to { stroke-dashoffset: -18; } }
+.v5x .cv .inp { position: relative; z-index: 2; }
+.v5x .cv .ream svg { display: block; width: 100%; height: auto; overflow: visible; shape-rendering: geometricPrecision; }
+.v5x .cv .ream .pl { transition: transform 700ms var(--v5-ease), opacity 600ms ease; will-change: transform, opacity; }
+.v5x .cv .cap { margin-top: 4px; text-align: center; font-size: 8.5px; }
+.v5x .cv .cap span { display: block; margin-top: 2px; color: var(--ink); font-size: 9.5px; white-space: nowrap; }
+.v5x .cv .core { display: grid; justify-items: center; gap: 8px; position: relative; z-index: 2; }
+.v5x .cv .orbwrap { position: relative; width: 140px; height: 140px; display: grid; place-items: center; }
+.v5x .cv .core { justify-self: center; }
+.v5x .cv .orbit { position: absolute; inset: 0; width: 100%; height: 100%; overflow: visible; }
+.v5x .cv .orbit-ring { fill: none; stroke: #e6cbbd; stroke-width: 1.2; stroke-dasharray: 3 6; r: 64; }
+.v5x .cv .orbit-dot { fill: var(--brand); transform-origin: 80px 80px; cy: 16px; animation: v5-orbit 6s linear infinite; }
+@keyframes v5-orbit { to { transform: rotate(360deg); } }
+.v5x .cv .orb { position: relative; display: grid; place-items: center; align-content: center; width: 88px; height: 88px; border-radius: 50%; background: radial-gradient(circle at 38% 30%, #ff9e63, #e06f38 55%, #c85a26); color: #fff; text-align: center; box-shadow: 0 0 0 8px rgba(224,111,56,.07), 0 18px 36px rgba(158,61,22,.26); will-change: transform; }
+.v5x .cv .orb svg { width: 21px; height: 22px; color: #fff; margin-bottom: 3px; }
+.v5x .cv .orb strong { font-size: 18px; font-weight: 880; line-height: 1; }
+.v5x .cv .orb small { margin-top: 3px; font-size: 8px; font-weight: 700; opacity: .92; }
+.v5x .cv .ot { position: absolute; padding: 2px 6px; border-radius: 4px; background: #fff; color: #5f6875; font-family: var(--mono); font-size: 8.5px; font-weight: 700; letter-spacing: .06em; text-transform: uppercase; transition: color 300ms, background 300ms; }
+.v5x .cv .ot1 { top: 0; left: 50%; transform: translateX(-50%); }
+.v5x .cv .ot2 { top: 120px; left: 94px; }
+.v5x .cv .ot3 { top: 120px; right: 84px; }
+.v5x .cv .ot.ison { color: #fff; background: var(--brand); }
+.v5x .cv .status { grid-column: 1 / -1; justify-self: center; margin-top: 8px; padding: 4px 10px; border: 1px solid var(--line); border-radius: 6px; background: #fff; min-height: 16px; font-size: 10px; color: var(--muted); text-align: center; transition: opacity 250ms; white-space: nowrap; max-width: 100%; overflow: hidden; text-overflow: ellipsis; }
+.v5x .cv .status::before { content: ""; display: inline-block; width: 6px; height: 6px; margin-right: 7px; border-radius: 50%; background: var(--brand); vertical-align: middle; }
+.v5x .cv .status.fade { opacity: 0; }
+.v5x .cv .hand { position: relative; z-index: 2; overflow: hidden; border: 1px solid var(--line); border-radius: 10px; background: #fff; box-shadow: 0 10px 30px rgba(23,31,42,.06); }
+.v5x .cv .hand-head { display: flex; justify-content: space-between; align-items: center; gap: 10px; padding: 10px 12px; border-bottom: 1px solid var(--line); background: #fbfcfc; }
+.v5x .cv .hand-count { font-family: var(--mono); font-size: 10px; color: var(--muted); }
+.v5x .cv .hand-count b { color: var(--ink); font-size: 12px; }
+.v5x .cv .hand-rows { margin: 0; padding: 0; list-style: none; }
+.v5x .cv .hand-rows li { position: relative; display: grid; grid-template-columns: 18px minmax(0, 1fr) auto; grid-template-rows: auto auto; column-gap: 8px; align-items: baseline; padding: 6px 10px 7px; border-bottom: 1px solid #eef2f5; opacity: .42; transition: opacity 400ms var(--v5-ease), background 400ms var(--v5-ease); }
+.v5x .cv .hand-rows li:last-child { border-bottom: 0; }
+.v5x .cv .hand-rows li.on, .v5x .cv .hand-rows li.ok { opacity: 1; }
+.v5x .cv .hand-rows li.on { background: #fff8f4; }
+.v5x .cv .hand-rows li i { grid-row: 1 / 3; align-self: start; padding-top: 2px; font-style: normal; font-family: var(--mono); font-size: 9px; color: #9aa4b1; }
+.v5x .cv .hand-rows li.ok i { color: var(--green); }
+.v5x .cv .hand-rows li .rk { display: block; font-size: 11.5px; font-weight: 780; line-height: 1.2; }
+.v5x .cv .hand-rows li .rk small { font-size: 9px; font-weight: 650; color: var(--muted); }
+.v5x .cv .hand-rows li code { grid-column: 2; font-family: var(--mono); font-size: 9.5px; color: #8b95a4; }
+.v5x .cv .hand-rows li .rs { grid-column: 3; grid-row: 1 / 3; align-self: center; min-width: 50px; text-align: right; font-family: var(--mono); font-size: 9.5px; font-weight: 700; color: #b8c2cb; }
+.v5x .cv .hand-rows li.on .rs { color: var(--brand); }
+.v5x .cv .hand-rows li.ok .rs { color: var(--green); }
+.v5x .cv .hand-rows li .bar { position: absolute; left: 0; right: 0; bottom: -1px; height: 2px; background: var(--brand); transform: scaleX(0); transform-origin: left; }
+.v5x .cv .hand-rows li.on .bar { transition: transform 900ms cubic-bezier(.4,0,.2,1); transform: scaleX(1); }
+.v5x .cv .hand-rows li.ok .bar { background: var(--green); transform: scaleX(1); transition: background 300ms; }
+.v5x .cv .hand-rows li.sign.ok { background: #f6fcf8; }
+.v5x .cv .hand-rows li.sign.ok .rs { font-size: 11px; }
+
+/* ── Capability tab visuals (Spec Check, Verification) ── */
+.v5x .demo { overflow: hidden; border: 1px solid color-mix(in srgb, var(--tone, var(--blue)) 24%, #dfe5ea); border-radius: 9px; background: #f8f9fa; }
+.v5x .demo-head { display: flex; justify-content: space-between; align-items: center; gap: 12px; padding: 10px 12px; border-bottom: 1px solid #dfe5ea; background: #fff; color: #6d7886; font-family: var(--mono); font-size: 9.5px; text-transform: uppercase; letter-spacing: .04em; }
+.v5x .demo-head b { color: var(--tone, var(--blue)); font-weight: 700; }
+.v5x .demo-body { padding: 12px; }
+.v5x .prompt { display: flex; gap: 8px; align-items: flex-start; margin-bottom: 10px; padding: 8px 10px; border: 1px solid #f3d2c1; border-radius: 7px; background: #fff8f4; font-family: var(--mono); font-size: 10.5px; line-height: 1.45; color: #3f2a1e; }
+.v5x .prompt i { flex: 0 0 auto; display: grid; place-items: center; width: 16px; height: 16px; border: 1px solid var(--blue); border-radius: 50%; color: var(--blue); font-style: normal; font-size: 8px; font-weight: 800; }
+.v5x .cat-grid { display: grid; grid-template-columns: 1fr 1fr; margin: 10px 0; border: 1px solid #e6ebef; border-radius: 7px; background: #fff; }
+.v5x .cat { display: flex; align-items: center; gap: 7px; padding: 6px 9px; border-bottom: 1px solid #eef2f5; font-size: 10.5px; color: #3f4a57; }
+.v5x .cat:nth-child(odd) { border-right: 1px solid #eef2f5; }
+.v5x .cat:nth-last-child(-n+2) { border-bottom: 0; }
+.v5x .cat::before { content: "✓"; color: var(--green); font-size: 10px; font-weight: 800; }
+.v5x .cat.hit { background: #fdf3f1; color: var(--red); font-weight: 700; }
+.v5x .cat.hit::before { content: "!"; color: var(--red); }
+.v5x .v5finding { padding: 10px 11px; border: 1px solid #efcfca; border-radius: 8px; background: #fff; }
+.v5x .v5finding code { display: inline-flex; align-items: center; gap: 8px; font-family: var(--mono); font-size: 11px; font-weight: 700; color: var(--ink); }
+.v5x .v5finding code::before { content: "FINDING"; padding: 1px 5px; border-radius: 3px; background: var(--red); color: #fff; font-size: 8.5px; letter-spacing: .06em; }
+.v5x .v5finding p { margin: 4px 0 8px; color: #4d5866; font-size: 11.5px; line-height: 1.45; }
+.v5x .v5finding .ev { display: grid; gap: 4px; margin-bottom: 8px; }
+.v5x .v5finding .ev span { display: flex; align-items: center; gap: 6px; font-family: var(--mono); font-size: 9.5px; color: #3f4a57; }
+.v5x .v5finding .ev span::before { content: "↳"; color: var(--quiet); }
+.v5x .v5finding footer { display: flex; justify-content: space-between; align-items: center; gap: 8px; flex-wrap: wrap; }
+.v5x .vs { display: grid; }
+.v5x .vs-step { display: grid; grid-template-columns: 30px 1fr; gap: 10px; padding: 11px 4px; border-bottom: 1px solid #eef2f5; }
+.v5x .vs-step:last-child { border-bottom: 0; }
+.v5x .vs-step .n { font-family: var(--mono); font-size: 11px; font-weight: 800; color: var(--quiet); }
+.v5x .vs-step.isdone .n { color: var(--green); }
+.v5x .vs-step.gate { background: linear-gradient(90deg, #fdf7ec, transparent); }
+.v5x .vs-step.gate .n { color: var(--amber); }
+.v5x .vs-step h5 { display: flex; justify-content: space-between; align-items: center; gap: 8px; margin: 1px 0 6px; font-size: 12.5px; font-weight: 800; }
+.v5x .vs-step p { margin: 0 0 6px; color: #4d5866; font-size: 11px; line-height: 1.45; }
+.v5x .big { font-family: var(--mono); font-size: 18px; font-weight: 800; color: var(--ink); }
+.v5x .big small { font-size: 10.5px; font-weight: 500; color: var(--muted); }
+.v5x .fakebtn { display: inline-flex; align-items: center; gap: 6px; padding: 5px 10px; border: 1px solid #d9c49b; border-radius: 6px; background: #fff; font-size: 11px; font-weight: 750; color: #3f2a1e; }
+.v5x .metrics { display: grid; grid-template-columns: repeat(5, 1fr); gap: 4px; margin-bottom: 8px; }
+.v5x .metrics span { padding: 5px 0; border: 1px solid #d8ebe0; border-radius: 5px; background: #f4fbf7; text-align: center; font-family: var(--mono); font-size: 9px; color: var(--green); }
+.v5x .metrics span::before { content: "✓ "; font-weight: 800; }
+.v5x .csr-bar { display: flex; align-items: center; gap: 8px; font-family: var(--mono); font-size: 10.5px; }
+.v5x .csr-bar .t { flex: 1; height: 6px; border-radius: 3px; background: linear-gradient(90deg, #c87a12, #298a50); }
+
+/* ── Loop ring ── */
+.v5x .v5loop { margin-top: 6px; padding: 22px; border: 1px solid var(--line); border-radius: 12px; background: #fff; box-shadow: 0 24px 60px rgba(21,30,42,.08); }
+.v5x .v5loop > h3 { margin: 0 0 4px; font-size: 20px; font-weight: 820; }
+.v5x .v5loop > p { margin: 0 0 18px; color: var(--muted); font-size: 13.5px; }
+.v5x .lgrid { display: grid; grid-template-columns: .82fr 1.36fr .82fr; gap: 16px; }
+.v5x .lcol { border: 1px solid var(--line); border-radius: 10px; background: #fff; min-width: 0; }
+.v5x .lcol-head { display: flex; justify-content: space-between; align-items: center; gap: 8px; padding: 12px 14px; border-bottom: 1px solid var(--line); }
+.v5x .lcol-body { padding: 14px; }
+.v5x .kv { display: grid; grid-template-columns: 60px 1fr auto; gap: 6px 10px; margin: 0; font-family: var(--mono); font-size: 11px; }
+.v5x .kv dt { color: var(--quiet); }
+.v5x .kv dd { margin: 0; }
+.v5x .kv .kvbar { display: inline-block; width: 70px; height: 7px; border-radius: 2px; background: repeating-linear-gradient(90deg, #cfd6dd 0 3px, #e9edf1 3px 5px); vertical-align: middle; }
+.v5x .kv .chg { font-weight: 700; }
+.v5x .kv .chg s { color: var(--red); font-weight: 400; margin-right: 4px; }
+.v5x .syn { display: flex; justify-content: space-between; padding: 7px 4px; margin: 0 -4px; border-radius: 4px; border-bottom: 1px dashed #e6ebef; font-family: var(--mono); font-size: 11px; transition: background 350ms var(--v5-ease); }
+.v5x .syn.flash { background: #f1f9f4; }
+.v5x .stchip { font-family: var(--mono); font-size: 9.5px; font-weight: 700; }
+.v5x .stchip.stale { color: var(--amber); }
+.v5x .stchip.fresh { color: var(--green); }
+.v5x .cov { margin-top: 16px; }
+.v5x .cov-track { position: relative; height: 8px; border-radius: 4px; background: #eef2f5; overflow: hidden; }
+.v5x .cov-fill { position: absolute; inset: 0 auto 0 0; width: 72%; border-radius: 4px; background: linear-gradient(90deg, #c87a12, #298a50); transition: width 900ms var(--v5-ease); }
+.v5x .cov-row { display: flex; justify-content: space-between; margin-top: 8px; font-family: var(--mono); font-size: 10.5px; color: var(--muted); }
+.v5x .cov-row b { color: var(--ink); }
+.v5x .its { display: flex; gap: 6px; margin-top: 12px; }
+.v5x .its span { flex: 1; padding: 6px 8px; border: 1px solid var(--line); border-radius: 6px; background: #fbfcfc; font-family: var(--mono); font-size: 9.5px; color: var(--muted); transition: all 400ms var(--v5-ease); }
+.v5x .its span b { display: block; font-size: 14px; color: var(--ink); }
+.v5x .its span.live { border-color: #cfe6d8; background: #f1f9f4; color: var(--green); }
+.v5x .scene { display: grid; gap: 12px; }
+.v5x .steps { display: flex; justify-content: space-between; align-items: flex-start; margin: 0 0 4px; padding: 0 2px; list-style: none; position: relative; }
+.v5x .steps::before { content: ""; position: absolute; left: 12px; right: 12px; top: 11px; border-top: 1.5px dashed #d2dae1; }
+.v5x .steps li { position: relative; z-index: 1; display: grid; justify-items: center; gap: 5px; width: 64px; cursor: pointer; outline: none; }
+.v5x .steps li i { display: grid; place-items: center; width: 22px; height: 22px; border-radius: 50%; border: 1.5px solid #c5cfd7; background: #fff; color: #8b95a4; font-style: normal; font-family: var(--mono); font-size: 9px; font-weight: 800; transition: all 300ms var(--v5-ease); }
+.v5x .steps li span { font-size: 10.5px; font-weight: 720; color: #6b7480; text-align: center; line-height: 1.15; transition: color 300ms; }
+.v5x .steps li.isdone i { border-color: var(--green); background: var(--green); color: #fff; }
+.v5x .steps li.cur i { border-color: var(--blue); background: var(--blue); color: #fff; box-shadow: 0 0 0 5px rgba(73,108,255,.14); }
+.v5x .steps li.gate.cur i { border-color: var(--amber); background: var(--amber); box-shadow: 0 0 0 5px rgba(200,122,18,.16); }
+.v5x .steps li.cur span { color: var(--ink); }
+.v5x .steps li:hover i, .v5x .steps li:focus-visible i { border-color: var(--ink); }
+.v5x .steps li:focus-visible span { text-decoration: underline; }
+.v5x .bits-wrap { position: relative; border: 1px solid #e6ebef; border-radius: 10px; background: #fbfcfc; padding: 6px 8px 2px; }
+.v5x .scene-tag { position: absolute; top: 8px; right: 12px; font-size: 8.5px; }
+.v5x .bits.swap { opacity: 0; }
+.v5x .bits { transition: opacity 220ms var(--v5-ease); }
+.v5x .kv-src { margin-top: 12px; padding-top: 10px; border-top: 1px dashed #e6ebef; font-family: var(--mono); font-size: 10px; line-height: 1.5; color: var(--muted); }
+.v5x .kv-src b { color: var(--ink); font-weight: 700; }
+.v5x .bits { display: block; width: 100%; height: auto; overflow: visible; shape-rendering: geometricPrecision; }
+.v5x .bits .cell { fill: #fff; stroke: #c5cfd7; stroke-width: 1.2; transition: fill 400ms var(--v5-ease), stroke 400ms var(--v5-ease); }
+.v5x .bits .cell.spill { fill: #fdf3f1; stroke: var(--red); stroke-dasharray: 3 3; }
+.v5x .bits .cell.grow { fill: #fdf7ec; stroke: var(--amber); }
+.v5x .bits .cell.fixed { fill: #f1f9f4; stroke: var(--green); stroke-dasharray: none; }
+.v5x .bits .bit { font-family: var(--mono); font-size: 13px; font-weight: 800; fill: var(--ink); text-anchor: middle; dominant-baseline: central; }
+.v5x .bits .bit.spill { fill: var(--red); }
+.v5x .bits .idx { font-family: var(--mono); font-size: 8px; fill: #9aa4b1; text-anchor: middle; }
+.v5x .bits .frame { fill: none; stroke: var(--ink); stroke-width: 1.6; transition: width 700ms var(--v5-ease), x 700ms var(--v5-ease), stroke 400ms; }
+.v5x .bits .frame.pend { stroke: var(--amber); stroke-dasharray: 5 4; }
+.v5x .bits .frame.ok { stroke: var(--green); }
+.v5x .bits .st { fill: #fff; stroke: #c5cfd7; stroke-width: 1.2; }
+.v5x .bits .st.bad { fill: #fdf3f1; stroke: var(--red); }
+.v5x .bits .st.ok { fill: #f1f9f4; stroke: var(--green); }
+.v5x .bits .stn { font-family: var(--mono); font-size: 10px; font-weight: 800; fill: var(--ink); text-anchor: middle; dominant-baseline: central; }
+.v5x .bits .edge { fill: none; stroke: #8b95a4; stroke-width: 1.4; marker-end: url(#v5arr); }
+.v5x .bits .edge.miss { stroke: var(--red); stroke-dasharray: 4 4; }
+.v5x .bits .edge.pend { stroke: var(--amber); stroke-dasharray: 5 4; }
+.v5x .bits .edge.ok { stroke: var(--green); }
+.v5x .bits .wave { fill: none; stroke: var(--ink); stroke-width: 1.6; }
+.v5x .bits .wave.dim { stroke: #9aa4b1; }
+.v5x .bits .wave.bad { stroke: var(--red); }
+.v5x .bits .wave.pend { stroke: var(--amber); stroke-dasharray: 5 4; }
+.v5x .bits .wave.ok { stroke: var(--green); }
+.v5x .bits .band { fill: rgba(198,75,61,.12); }
+.v5x .bits .band.ok { fill: rgba(41,138,80,.10); }
+.v5x .bits .sig { font-family: var(--mono); font-size: 9.5px; font-weight: 700; fill: #6b7480; text-anchor: end; dominant-baseline: central; }
+.v5x .bits .brk { fill: none; stroke: #8b95a4; stroke-width: 1; transition: all 700ms var(--v5-ease); }
+.v5x .bits .tag { font-family: var(--mono); font-size: 9.5px; font-weight: 700; letter-spacing: .04em; }
+.v5x .bits .tag.w { text-anchor: middle; transition: fill 300ms; }
+.v5x .bits .warn { font-family: var(--mono); font-size: 9px; font-weight: 800; fill: var(--red); text-anchor: middle; transition: opacity 300ms; }
+.v5x .bits .stamp { font-family: var(--mono); font-size: 9px; font-weight: 800; letter-spacing: .1em; text-anchor: middle; fill: var(--green); transition: opacity 300ms; }
+.v5x .bits .hide { opacity: 0; }
+.v5x .ring-panel { display: grid; grid-template-columns: 1fr auto; align-items: center; gap: 10px 14px; min-height: 76px; margin-top: 4px; padding: 13px 16px; border: 1px solid var(--line); border-radius: 10px; background: #fbfcfc; transition: background 300ms, border-color 300ms; }
+.v5x .ring-panel.gate { border-color: #ecd3a6; background: #fdf8ee; }
+.v5x .ring-panel .rp-k { grid-column: 1 / -1; font-family: var(--mono); font-size: 9.5px; font-weight: 700; letter-spacing: .1em; text-transform: uppercase; color: var(--quiet); }
+.v5x .ring-panel.gate .rp-k { color: var(--amber); }
+.v5x .ring-panel .rp-body { font-size: 12.5px; line-height: 1.45; color: #3f4a57; }
+.v5x .ring-panel .rp-body code { padding: 1px 5px; border-radius: 4px; background: #eef1f4; font-family: var(--mono); font-size: 11.5px; color: var(--ink); }
+.v5x .ring-panel.gate .rp-body code { background: #f6e8cc; }
+.v5x .btn-approve { padding: 8px 14px; border: 1px solid #b9521f; border-radius: 7px; background: #c9591f; color: #fff; font: inherit; font-size: 12.5px; font-weight: 780; cursor: pointer; }
+.v5x .btn-approve[disabled] { border-color: #cfe6d8; background: #f1f9f4; color: var(--green); cursor: default; }
+.v5x .btn-approve[hidden] { display: none; }
+.v5x .loop-foot { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; margin-top: 16px; color: var(--muted); font-size: 12.5px; font-weight: 650; }
+.v5x .loop-foot .note { margin-left: auto; }
+.v5x .auto-note { font-family: var(--mono); font-size: 10.5px; color: var(--quiet); }
+
+/* ── Comparison under "What Makes IDS-AI Different?" ── */
+.v5x .cmp3 { position: relative; display: grid; grid-template-columns: 96px minmax(0, .95fr) minmax(0, 1.2fr); margin-top: 28px; padding-top: 14px; }
+.v5x .cmp3 .cc { padding: 12px 13px; border-bottom: 1px solid #e3e8ed; font-size: 13px; line-height: 1.42; }
+.v5x .cmp3 .k { padding-left: 0; padding-top: 14px; font-family: var(--mono); font-size: 9.5px; letter-spacing: .06em; text-transform: uppercase; color: var(--quiet); }
+.v5x .cmp3 .g { color: #6b7480; }
+.v5x .cmp3 .i { background: #171b20; color: #f1f3f5; font-weight: 650; border-bottom-color: rgba(255,255,255,.08); }
+.v5x .cmp3 .h { padding-block: 10px 12px; border-bottom: 1.5px solid #cfd7de; font-size: 12px; font-weight: 800; }
+.v5x .cmp3 .h.g { color: #8b95a4; font-weight: 700; }
+.v5x .cmp3 .h.i { display: flex; align-items: center; gap: 9px; margin-top: -14px; padding-top: 18px; border-radius: 10px 10px 0 0; font-size: 15px; font-weight: 880; color: #fff; border-bottom-color: rgba(255,255,255,.14); }
+.v5x .cmp3 .h.i svg { width: 20px; height: 21px; color: var(--brand); }
+.v5x .cmp3 .i.last { border-radius: 0 0 10px 10px; border-bottom: 0; }
+.v5x .cmp3 .k.last, .v5x .cmp3 .g.last { border-bottom: 0; }
+.v5x .cmp3 .i b { color: #ffb183; font-weight: 750; }
+
+/* ── Why Agnisys · isometric chip ── */
+.v5x .chipcard3 { position: relative; height: 100%; padding: 18px 20px 20px; background-color: #fff; background-image: radial-gradient(#dde3e9 1px, transparent 1px); background-size: 16px 16px; }
+.v5x .chipcard-top { display: flex; justify-content: space-between; align-items: center; gap: 10px; flex-wrap: wrap; position: relative; z-index: 5; }
+.v5x .phase-track { display: inline-flex; gap: 14px; padding: 7px 12px; border: 1px solid var(--line); border-radius: 6px; background: #fff; font-family: var(--mono); font-size: 9px; letter-spacing: .06em; color: #8b95a4; text-transform: uppercase; }
+.v5x .phase-track span { cursor: default; transition: color 250ms; }
+.v5x .phase-track span.ison { color: var(--ink); font-weight: 800; }
+.v5x .chip-body { display: grid; grid-template-columns: minmax(0, 1.15fr) minmax(0, 1fr); gap: 14px; align-items: center; }
+.v5x .iso-wrap { position: relative; }
+.v5x .iso-wrap svg { display: block; width: 100%; height: auto; overflow: visible; shape-rendering: geometricPrecision; text-rendering: geometricPrecision; }
+.v5x .iso { --v5gap: 64; transition: --v5gap 800ms var(--v5-ease); }
+.v5x .iso.open { --v5gap: 86; }
+.v5x .iso .ly { transform: translate3d(0, calc(var(--i) * var(--v5gap) * -1px), 0); transition: opacity 400ms var(--v5-ease); }
+.v5x .iso .ly .lift { transform: translate3d(0, 0, 0); transition: transform 500ms var(--v5-ease); will-change: transform; }
+.v5x .iso .ly.hl .lift { transform: translate3d(0, -10px, 0); }
+.v5x .iso.focus .ly:not(.hl) { opacity: .32; }
+.v5x .iso .via { transform-box: fill-box; transform-origin: 50% 100%; transform: scaleY(calc(var(--v5gap) / 64)); }
+.v5x .iso .spark { animation: v5-spark 2.4s cubic-bezier(.45,0,.55,1) infinite; }
+.v5x .iso .spark.d2 { animation-delay: .8s; } .v5x .iso .spark.d3 { animation-delay: 1.6s; }
+@keyframes v5-spark { 0% { transform: translate3d(0, 0, 0); opacity: 0; } 15% { opacity: 1; } 85% { opacity: 1; } 100% { transform: translate3d(0, calc(var(--v5gap) * -1px), 0); opacity: 0; } }
+.v5x .stack-legend { display: grid; margin: 0; padding: 0; list-style: none; }
+.v5x .stack-legend li { display: grid; grid-template-columns: 30px 1fr; gap: 12px; padding: 12px 8px; border-bottom: 1px solid #e6ebef; border-radius: 6px; cursor: default; transition: background 250ms var(--v5-ease); }
+.v5x .stack-legend li:last-child { border-bottom: 0; }
+.v5x .stack-legend li:hover, .v5x .stack-legend li.hl { background: rgba(244,246,248,.95); }
+.v5x .stack-legend .sw { width: 30px; height: 22px; margin-top: 2px; }
+.v5x .stack-legend .t { display: flex; align-items: baseline; gap: 8px; }
+.v5x .stack-legend .t i { font-style: normal; font-family: var(--mono); font-size: 10px; font-weight: 700; color: var(--tone); }
+.v5x .stack-legend b { font-size: 13.5px; font-weight: 820; }
+.v5x .stack-legend small { display: block; margin-top: 3px; color: var(--muted); font-size: 11.5px; line-height: 1.42; }
+
+@media (max-width: 1100px) {
+  .v5x .lgrid { grid-template-columns: 1fr; }
+}
+@media (max-width: 900px) {
+  .v5x .chip-body { grid-template-columns: 1fr; }
+}
+@media (max-width: 640px) {
+  .v5x .cv { grid-template-columns: 1fr; justify-items: center; gap: 18px; padding-bottom: 52px; }
+  .v5x .cv .stack-links { display: none; }
+  .v5x .cv .ream { width: 170px; }
+  .v5x .cv .core { margin: 6px 0; }
+  .v5x .cv .inp { justify-self: center; }
+  .v5x .cv .status { grid-column: 1; }
+  .v5x .cv .tiles { width: 100%; }
+  .v5x .cmp3 { grid-template-columns: minmax(0, 1fr) minmax(0, 1.15fr); }
+  .v5x .cmp3 .k { grid-column: 1 / -1; padding-bottom: 2px; border-bottom: 0; }
+  .v5x .cmp3 .k.h { display: none; }
+  .v5x .steps li { width: 52px; } .v5x .steps li span { font-size: 9.5px; }
+  .v5x .cv .hand { width: 100%; }
+  .v5x .loop-foot .note { margin-left: 0; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .v5x .cv .stack-links path, .v5x .iso .spark { animation: none; }
+  .v5x .iso, .v5x .iso .ly .lift, .v5x .cov-fill, .v5x .bits .frame { transition: none; }
+  .v5x .cv .orbit-dot { animation: none; }
+}
+
+/* V5 layout nudges outside .v5x (kept tiny and page-specific) */
+#different .difference-layout { align-items: end; }
+#different .silicon-field-wrap { align-self: end; padding-bottom: 2px; }
+#different .difference-copy .cmp3 { margin-top: 30px; }
+#different .silicon-field-wrap h3 { margin-bottom: 14px; }
+@media (max-width: 1100px) { #different .difference-layout { align-items: start; } }
+#different .silicon-field { grid-template-rows: repeat(4, minmax(100px, auto)); }
+.hero h1 .tm { font-size: .38em; font-weight: 700; vertical-align: top; position: relative; top: .35em; margin-left: .06em; letter-spacing: 0; }
+
     </style>
   </head>
   <body data-state="idle">
@@ -5274,7 +5600,7 @@
         <a href="#why">Why Agnisys</a>
         <a href="ids-noc.html">NoC</a>
       </nav>
-      <a class="btn btn-primary" href="#cta">Request a Demo</a>
+      <a class="btn btn-primary" href="/request-a-call-about-the-agnisys-products-and-solutions/">Request a Demo</a>
     </header>
 
     <main class="page" id="top">
@@ -5282,67 +5608,42 @@
         <div class="shell hero-grid">
           <div class="hero-copy reveal">
             <p class="hero-product-name">IDS-AI Suite</p>
-            <h1>Specification to Signoff with Agentic AI</h1>
+            <h1>Specification to Signoff<sup class="tm">&trade;</sup> with Agentic AI</h1>
             <p class="lede">Agnisys IDS-AI Suite is the industry's first agentic AI framework that understands semiconductor design intent and drives the entire development flow—from golden specification creation to RTL sign-off. Built on top of Agnisys' automation platform — perfected over the last two decades, it combines certainty and accuracy of Agnisys tools with reasoning and productivity of AI.</p>
             <div class="punchline"><span></span>Design Smarter. Verify Faster. Reach Sign-Off with Confidence.</div>
             <div class="hero-actions">
-              <a class="btn btn-primary" href="#cta">Request a Demo</a>
-              <a class="btn btn-secondary" href="#cta">Talk to an Expert</a>
-              <a class="btn btn-text" href="#artifacts">Download Datasheet</a>
+              <a class="btn btn-primary" href="/request-a-call-about-the-agnisys-products-and-solutions/">Request a Demo</a>
+              <a class="btn btn-secondary" href="/contact/">Talk to an Expert</a>
+              <a class="btn btn-text" href="/wp-content/uploads/2026/07/ids-ai_datasheet.pdf" target="_blank" rel="noopener">Download Datasheet</a>
             </div>
           </div>
 
           <div class="hero-visual reveal" aria-label="Inputs flow into IDS-AI, pass through a self-correction loop, and produce design RTL, verification UVM tests, validation environments and tests, SoC integration, documentation, and sign-off handoffs.">
-            <div class="flow-stage">
-              <svg class="flow-lines" viewBox="0 0 590 468" aria-hidden="true">
-                <path d="M120 226 C222 226 225 226 294 226" />
-                <path d="M294 178 C363 40 380 34 470 34" />
-                <path class="alt" d="M294 194 C368 104 383 103 470 103" />
-                <path d="M294 214 C378 166 385 172 470 172" />
-                <path class="alt" d="M294 234 C378 234 385 241 470 241" />
-                <path d="M294 254 C374 304 383 310 470 310" />
-                <path class="alt" d="M294 274 C365 372 383 379 470 379" />
-              </svg>
-
-              <article class="flow-card input">
-                <p class="flow-label">Inputs</p>
-                <div class="input-list">
-                  <div class="input-item"><svg class="input-icon" aria-hidden="true"><use href="#icon-file-markdown" /></svg><span>Markdown</span></div>
-                  <div class="input-item"><svg class="input-icon" aria-hidden="true"><use href="#icon-file-text" /></svg><span>Text</span></div>
-                  <div class="input-item"><svg class="input-icon" aria-hidden="true"><use href="#icon-file-code" /></svg><span>HTML</span></div>
-                  <div class="input-item"><svg class="input-icon" aria-hidden="true"><use href="#icon-file-pdf" /></svg><span>PDF</span></div>
-                  <div class="input-item"><svg class="input-icon" aria-hidden="true"><use href="#icon-file-word" /></svg><span>Word</span></div>
+            <!-- V5 hero visual: spec ream → IDS-AI (check · correct · regenerate) → generated handoff (JS: v5 "hero") -->
+            <div class="v5x" data-v5="hero">
+              <div class="cv" id="v5Hero">
+                <svg class="stack-links" data-links aria-hidden="true"></svg>
+                <div class="inp" data-anchor="in"><div class="ream"><svg viewBox="0 0 190 222" id="v5Ream" role="img" aria-label="Specification inputs: Markdown, Text, HTML, PDF, Word, SystemRDL, IP-XACT, PSS, Excel and the IDS GUI"></svg></div><div class="cap lbl">Inputs<span data-fmt>Markdown</span></div></div>
+                <div class="core">
+                  <div class="orbwrap" data-anchor="orb">
+                    <svg class="orbit" viewBox="0 0 160 160" aria-hidden="true"><circle class="orbit-ring" cx="80" cy="80" r="70"/><circle class="orbit-dot" cx="80" cy="10" r="3.5"/></svg>
+                    <div class="orb"><svg viewBox="0 0 552 566" aria-hidden="true"><use href="#agnisys-glyph" /></svg><strong>IDS-AI</strong><small>Agentic AI Layer</small></div>
+                    <span class="ot ot1">Check</span><span class="ot ot2">Correct</span><span class="ot ot3">Regenerate</span>
+                  </div>
                 </div>
-              </article>
-
-              <div class="agent-core" aria-hidden="true">
-                <div class="agent-core-label">
-                  <svg><use href="#tile-glyph" /></svg>
-                  <strong>IDS-AI</strong>
-                  <span>Agentic AI Layer</span>
+                <div class="hand" data-anchor="out" aria-label="Generated handoff: SoC/IP RTL, Verification (UVM Tests), Validation (Environment &amp; Tests), Integration (SoC Assembly), Documentation, Sign-Off">
+                  <div class="hand-head"><span class="lbl">Generated handoff</span><span class="hand-count"><b data-n>0</b> / 6 synced</span></div>
+                  <ol class="hand-rows">
+                    <li data-row><i>01</i><span class="rk">SoC/IP RTL</span><code>ip_registers.sv</code><span class="rs" data-file="ip_registers.sv"></span></li>
+                    <li data-row><i>02</i><span class="rk">Verification <small>(UVM Tests)</small></span><code>csr_tests.sv</code><span class="rs" data-file="csr_tests.sv"></span></li>
+                    <li data-row><i>03</i><span class="rk">Validation <small>(Environment &amp; Tests)</small></span><code>csr_env/</code><span class="rs" data-file="csr_env/"></span></li>
+                    <li data-row><i>04</i><span class="rk">Integration <small>(SoC Assembly)</small></span><code>soc_top.sv</code><span class="rs" data-file="soc_top.sv"></span></li>
+                    <li data-row><i>05</i><span class="rk">Documentation</span><code>registers.html</code><span class="rs" data-file="registers.html"></span></li>
+                    <li data-row class="sign"><i>06</i><span class="rk">Sign-Off</span><code>coverage.rpt</code><span class="rs" data-file="coverage.rpt"></span></li>
+                  </ol>
                 </div>
+                <div class="status mono" data-status>reading spec…</div>
               </div>
-              <div class="self-correction-label">Self-correction loop</div>
-
-              <article class="flow-card output out-1">
-                <svg class="output-icon" aria-hidden="true"><use href="#icon-cpu" /></svg><h3>Design <small>(RTL)</small></h3>
-              </article>
-              <article class="flow-card output out-2">
-                <svg class="output-icon" aria-hidden="true"><use href="#icon-check-square" /></svg><h3>Verification <small>(UVM Tests)</small></h3>
-              </article>
-              <article class="flow-card output out-3">
-                <svg class="output-icon" aria-hidden="true"><use href="#icon-settings" /></svg><h3>Validation <small>(Environment &amp; Tests)</small></h3>
-              </article>
-              <article class="flow-card output out-4">
-                <svg class="output-icon" aria-hidden="true"><use href="#icon-puzzle" /></svg><h3>Integration <small>(SoC Assembly)</small></h3>
-              </article>
-              <article class="flow-card output out-5">
-                <svg class="output-icon" aria-hidden="true"><use href="#icon-file-text" /></svg><h3>Documentation</h3>
-              </article>
-              <article class="flow-card output out-6">
-                <svg class="output-icon" aria-hidden="true"><use href="#icon-badge-check" /></svg><h3>Sign-Off</h3>
-              </article>
-              <div class="coverage-pill"><span></span>Enable First-Silicon Success</div>
             </div>
           </div>
         </div>
@@ -5602,12 +5903,18 @@
             <p>The IDS-AI Suite brings all Agnisys tools under one framework, including:</p>
             <div class="platform-context-map" id="platformContextMap" data-active="0" aria-label="IDS-AI coordinates the golden specification across the Agnisys tool suite">
               <svg viewBox="0 0 620 320" preserveAspectRatio="none" aria-hidden="true">
-                <path class="context-route route-0" d="M118 144 H208" />
-                <path class="context-route route-1" d="M300 136 C354 136 360 38 430 38" />
-                <path class="context-route route-3" d="M300 140 C356 140 366 98 430 98" />
-                <path class="context-route route-3" d="M300 146 C356 146 366 158 430 158" />
-                <path class="context-route route-2" d="M300 151 C356 151 366 218 430 218" />
-                <path class="context-route route-4" d="M300 156 C352 156 366 278 430 278" />
+                <path class="context-route route-0" d="M118 178 H208" />
+                <path class="context-route route-1" d="M300 178 C354 178 360 20 430 20" />
+                <path class="context-route route-3" d="M300 178 C356 178 366 80 430 80" />
+                <path class="context-route route-3" d="M300 178 C356 178 366 140 430 140" />
+                <path class="context-route route-2" d="M300 178 C356 178 366 200 430 200" />
+                <path class="context-route route-4" d="M300 178 C352 178 366 260 430 260" />
+                <path class="context-pulse pulse-0" pathLength="1" d="M118 178 H208" />
+                <path class="context-pulse pulse-1" pathLength="1" d="M300 178 C354 178 360 20 430 20" />
+                <path class="context-pulse pulse-2" pathLength="1" d="M300 178 C356 178 366 80 430 80" />
+                <path class="context-pulse pulse-3" pathLength="1" d="M300 178 C356 178 366 140 430 140" />
+                <path class="context-pulse pulse-4" pathLength="1" d="M300 178 C356 178 366 200 430 200" />
+                <path class="context-pulse pulse-5" pathLength="1" d="M300 178 C352 178 366 260 430 260" />
               </svg>
               <div class="context-source">
                 <strong>Golden specification</strong>
@@ -5728,7 +6035,7 @@
             </ul>
           </div>
 
-          <div class="loop-shell glass reveal">
+          <div class="loop-shell glass reveal" hidden style="display:none" aria-hidden="true">
             <div class="loop-top">
               <div>
                 <h3 style="font-size:24px;margin-bottom:8px">Create -> Generate -> Check -> Self-correct -> CSR Sign-Off</h3>
@@ -5817,6 +6124,47 @@
               The visible product story is the loop itself: a detected specification conflict resolves into
               regenerated outputs and closed CSR coverage without exposing the underlying UI.
             </p>
+          </div>
+          <!-- V5 loop panel. The original .loop-shell above is kept hidden because the v3 script
+               still uses it to drive the #surface console animation. Do not delete it. -->
+          <div class="v5x reveal" data-v5="loop">
+            <div class="v5loop">
+              <h3>Create -&gt; Generate -&gt; Check -&gt; Self-correct -&gt; CSR Sign-Off</h3>
+              <p>The sequence loops continuously: detect the conflict, correct the source, regenerate affected collateral, and close coverage.</p>
+              <div class="lgrid">
+                <div class="lcol">
+                  <div class="lcol-head"><span class="lbl">Golden specification</span><span class="pill prun" data-l="specPill">checking</span></div>
+                  <div class="lcol-body"><dl class="kv" id="v5Kv"></dl><div class="kv-src" id="v5KvSrc"></div></div>
+                </div>
+                <div class="lcol">
+                  <div class="lcol-head"><span class="lbl">IDS-AI execution trace</span><span class="pill prun" data-l="loopPill">pass 1 · register</span></div>
+                  <div class="lcol-body scene">
+                    <ol class="steps" id="v5Steps" aria-label="Loop steps">
+                      <li data-i="0" tabindex="0" role="button"><i>01</i><span>Check</span></li>
+                      <li data-i="1" tabindex="0" role="button"><i>02</i><span>Propose fix</span></li>
+                      <li data-i="2" tabindex="0" role="button" class="gate"><i>03</i><span>Review plan</span></li>
+                      <li data-i="3" tabindex="0" role="button"><i>04</i><span>Regenerate</span></li>
+                      <li data-i="4" tabindex="0" role="button"><i>05</i><span>Verify</span></li>
+                    </ol>
+                    <div class="bits-wrap"><div class="scene-tag lbl" id="v5SceneTag">Register field</div><svg class="bits" id="v5Bits" viewBox="0 0 440 168" role="img" aria-label="Finding illustrated: register field, state machine or reset timing"></svg></div>
+                    <div class="ring-panel" id="v5RingPanel"><span class="rp-k">Finding</span><div class="rp-body"></div><button type="button" class="btn-approve" id="v5Approve" hidden>Approve plan</button></div>
+                  </div>
+                </div>
+                <div class="lcol">
+                  <div class="lcol-head"><span class="lbl">Generated artifacts</span><span class="pill prun" data-l="artPill">in sync</span></div>
+                  <div class="lcol-body">
+                    <div class="syn" data-art><span>RTL (IP)</span><b class="stchip fresh" data-l="a">SYNCED</b></div>
+                    <div class="syn" data-art><span>UVM env · sequences</span><b class="stchip fresh" data-l="a">SYNCED</b></div>
+                    <div class="syn" data-art><span>SVA · assertions</span><b class="stchip fresh" data-l="a">SYNCED</b></div>
+                    <div class="syn" data-art><span>Headers</span><b class="stchip fresh" data-l="a">SYNCED</b></div>
+                    <div class="syn" data-art><span>Docs</span><b class="stchip fresh" data-l="a">SYNCED</b></div>
+                    <div class="cov"><div class="cov-track"><div class="cov-fill" data-l="covFill"></div></div><div class="cov-row"><span data-l="covLbl">CSR coverage</span><b data-l="covTxt">72%</b></div></div>
+                    <div class="its"><span data-l="pass1">before<b>72%</b></span><span data-l="pass2">after<b>—</b></span></div>
+                  </div>
+                </div>
+              </div>
+              <div class="loop-foot"><button class="btn btn-secondary" type="button" id="v5Replay">Replay</button><button class="btn btn-secondary" type="button" id="v5Pause">Pause</button><span class="auto-note" id="v5AutoNote">Loops while this section is in view.</span><span class="note">Loop correction is subject to human review and approval.</span></div>
+            </div>
           </div>
         </div>
       </section>
@@ -5923,17 +6271,6 @@
 
       <section id="capabilities" data-state="executing" data-rail-target="act">
         <div class="shell">
-          <div class="section-head reveal">
-            <h2>Verification &amp; Sign-Off Automation</h2>
-            <p class="lede">Reduce verification effort and accelerate sign-off through AI-powered automation that generates complete verification environments and ensures comprehensive CSR verification coverage.</p>
-            <ul class="approved-list">
-              <li>Automatically generate verification testbenches and tests.</li>
-              <li>Generate validation environments and tests.</li>
-              <li>Achieve CSR sign-off with 100% RTL verification coverage.</li>
-              <li>Extend verification automation to full-chip verification, including user logic and application-specific functionality.</li>
-            </ul>
-          </div>
-
           <div class="surface reveal">
             <div class="surface-tabs" role="tablist" aria-label="IDS-AI capabilities">
               <button class="surface-tab" role="tab" aria-selected="true" data-cap="0" style="--tone: var(--brand)">
@@ -6034,6 +6371,18 @@
             <h2>What Makes IDS-AI Different?</h2>
             <p class="lede">Unlike generic AI assistants, IDS-AI, the agentic AI framework coordinates multiple engineering tasks instead of answering isolated questions — delivering real engineering automation, not just a chat assistant bolted onto existing tools.</p>
             <p class="lede">IDS-AI understands semiconductor design intent. It leverages the core Agnisys tools to generate correct-by-construction collaterals for Design, Integration, Verification &amp; Validation and combines it with the power of agentic AI to catch and fix issues upfront in the ASIC development flow and remove the drudgery of design/verification engineers to produce signoff quality outputs.</p>
+                      <!-- V5 comparison (visual). Text comes from the Sep 2026 IDS-AI deck, slide 35. -->
+            <div class="v5x" data-v5="comparison">
+              <div class="cmp3" role="table" aria-label="Generic AI assistant compared with IDS-AI">
+                <span class="cc k h" role="columnheader"></span><span class="cc g h" role="columnheader">Generic AI assistant</span><span class="cc i h" role="columnheader"><svg viewBox="0 0 552 566" aria-hidden="true"><use href="#agnisys-glyph" /></svg>IDS-AI</span>
+                <span class="cc k">Scope</span><span class="cc g">Answers isolated questions</span><span class="cc i">Coordinates <b>multi-step</b> engineering tasks</span>
+                <span class="cc k">Output</span><span class="cc g">Suggestions and snippets</span><span class="cc i"><b>Correct-by-construction</b> RTL, UVM and docs</span>
+                <span class="cc k">Design intent</span><span class="cc g">General knowledge only</span><span class="cc i">Understands <b>CSR, SoC hierarchy</b> and connectivity</span>
+                <span class="cc k">Consistency</span><span class="cc g">You keep things in sync</span><span class="cc i">Every output synced to <b>the golden spec</b></span>
+                <span class="cc k">Findings</span><span class="cc g">A model's opinion</span><span class="cc i">Every result <b>cites its proof</b> and can be re-run</span>
+                <span class="cc k last">Foundation</span><span class="cc g last">Bolted onto existing tools</span><span class="cc i last"><b>Two decades</b> of Agnisys automation</span>
+              </div>
+            </div>
           </div>
 
           <div id="built-for" class="silicon-field-wrap reveal">
@@ -6073,86 +6422,21 @@
             </div>
           </div>
           <div class="why-structural glass reveal" id="animation-options">
-            <section class="why-motion-stage" aria-label="Agnisys chip structural processing animation">
-              <span class="why-stage-label">Structured context in motion</span>
-              <div class="why-phase-track" aria-label="Motion phases">
-                <span>01 Ingest</span>
-                <span>02 Resolve</span>
-                <span>03 Synchronize</span>
-              </div>
-
-              <svg class="why-route-map" viewBox="0 0 1200 680" preserveAspectRatio="none" aria-hidden="true">
-                <path class="why-route-base" d="M252 155 H390 V280 H500" />
-                <path class="why-route-base" d="M500 360 H410 V455 H252" />
-                <path class="why-route-base" d="M700 280 H820 V145 H948" />
-                <path class="why-route-base" d="M700 360 H820 V455 H948" />
-                <path class="why-route-base secondary" d="M470 215 H430 V120 H335" />
-                <path class="why-route-base secondary" d="M730 215 H770 V90 H860" />
-                <path class="why-route-base secondary" d="M470 425 H430 V560 H350" />
-                <path class="why-route-base secondary" d="M730 425 H770 V590 H880" />
-
-                <path class="why-route-signal input-a" d="M252 155 H390 V280 H500" />
-                <path class="why-route-signal input-b" d="M500 360 H410 V455 H252" />
-                <path class="why-route-signal output-a" d="M700 280 H820 V145 H948" />
-                <path class="why-route-signal output-c" d="M700 360 H820 V455 H948" />
-                <path class="why-return-path" d="M1060 560 V625 H600 V430" />
-
-                <g color="#e06f38">
-                  <circle class="why-signal-dot" r="5" fill="currentColor">
-                    <animateMotion dur="9s" repeatCount="indefinite" path="M252 155 H390 V280 H500" />
-                  </circle>
-                </g>
-                <g color="#496cff">
-                  <circle class="why-signal-dot" r="5" fill="currentColor">
-                    <animateMotion dur="9s" begin="3.2s" repeatCount="indefinite" path="M500 360 H410 V455 H252" />
-                  </circle>
-                </g>
-                <g color="#298a50">
-                  <circle class="why-signal-dot" r="5" fill="currentColor">
-                    <animateMotion dur="9s" begin="4.2s" repeatCount="indefinite" path="M700 360 H820 V455 H948" />
-                  </circle>
-                </g>
-              </svg>
-
-              <article class="why-chip-node spec">
-                <div class="why-node-top"><span class="why-node-code">Source / checked</span><i class="why-node-state-dot"></i></div>
-                <b>Golden specification</b>
-                <p>Structured intent, CSR definitions, versioned source of truth.</p>
-              </article>
-
-              <article class="why-chip-node verification">
-                <div class="why-node-top"><span class="why-node-code">IDS-Verify / checking</span><i class="why-node-state-dot"></i></div>
-                <b>Verification assets</b>
-                <p>Generated tests and coverage trace back to declared behavior.</p>
-              </article>
-
-              <div class="why-chip-wrap">
-                <div class="why-chip-pins" aria-hidden="true"></div>
-                <div class="why-chip">
-                  <div class="why-die">
-                    <i class="why-logic-block one"></i>
-                    <i class="why-logic-block two"></i>
-                    <i class="why-logic-block three"></i>
-                    <i class="why-logic-block four"></i>
-                    <svg aria-hidden="true"><use href="#agnisys-glyph" /></svg>
-                    <span class="why-die-label">Agnisys logic core</span>
-                  </div>
+            <!-- V5 Why Agnisys visual: exploded isometric chip (JS: v5 script, section "chip") -->
+            <div class="v5x" data-v5="chip" style="height:100%">
+              <div class="chipcard3">
+                <div class="chipcard-top"><span class="lbl">Structured foundation</span><span class="phase-track" id="v5Phase"><span data-layer="1">01 Environment</span><span data-layer="2">02 Engines</span><span data-layer="3">03 Tools</span><span data-layer="4">04 Agents</span></span></div>
+                <div class="chip-body">
+                  <div class="iso-wrap"><svg class="iso" id="v5Chip" viewBox="0 0 360 470" role="img" aria-label="Exploded chip: your environment, Agnisys engines, MCP tool layer, IDS-AI agents"></svg></div>
+                  <ol class="stack-legend" id="v5Legend">
+                    <li data-layer="4" style="--tone: var(--brand)"><svg class="sw" data-sw="3" viewBox="0 0 30 22"></svg><div><div class="t"><i>04</i><b>IDS-AI agents</b></div><small>Model-agnostic agents that plan and run multi-step work across every tool.</small></div></li>
+                    <li data-layer="3" style="--tone: var(--blue)"><svg class="sw" data-sw="2" viewBox="0 0 30 22"></svg><div><div class="t"><i>03</i><b>MCP tool layer</b></div><small>One connector per tool. Commercial and open-source simulators, formal and register tools. No single-vendor lock-in.</small></div></li>
+                    <li data-layer="2" style="--tone: var(--green)"><svg class="sw" data-sw="1" viewBox="0 0 30 22"></svg><div><div class="t"><i>02</i><b>Agnisys engines</b></div><small>IDS-Batch, IDS-Verify, IDS-Integrate, IDS-CF. Two decades of correct-by-construction automation.</small></div></li>
+                    <li data-layer="1" style="--tone: var(--teal)"><svg class="sw" data-sw="0" viewBox="0 0 30 22"></svg><div><div class="t"><i>01</i><b>Your environment</b></div><small>On-premises or air-gapped. Specs, RTL and results stay on your network.</small></div></li>
+                  </ol>
                 </div>
-                <span class="why-chip-status"><i></i> Structural motion in progress</span>
               </div>
-
-              <article class="why-chip-node generators">
-                <div class="why-node-top"><span class="why-node-code">IDS-Batch / writing</span><i class="why-node-state-dot"></i></div>
-                <b>Correct generators</b>
-                <p>RTL, UVM, headers, IP-XACT, docs, and integration outputs.</p>
-              </article>
-
-              <article class="why-chip-node integration">
-                <div class="why-node-top"><span class="why-node-code">IDS-Integrate / synchronized</span><i class="why-node-state-dot"></i></div>
-                <b>Integration flows</b>
-                <p>SoC connectivity and handoff collateral stay synchronized.</p>
-              </article>
-            </section>
+            </div>
           </div>
         </div>
       </section>
@@ -6163,9 +6447,9 @@
           <h2>Ready to Transform Specification-Driven Chip Development?</h2>
           <p class="lede">See how the Agnisys IDS-AI Suite takes you from Golden Specification to CSR Sign-Off — faster, with higher quality and greater confidence.</p>
           <div class="hero-actions">
-            <a class="btn btn-primary" href="#">Request a Demo</a>
-            <a class="btn btn-secondary" href="#">Talk to an Expert</a>
-            <a class="btn btn-text" href="#">Download Datasheet</a>
+            <a class="btn btn-primary" href="/request-a-call-about-the-agnisys-products-and-solutions/">Request a Demo</a>
+            <a class="btn btn-secondary" href="/contact/">Talk to an Expert</a>
+            <a class="btn btn-text" href="/wp-content/uploads/2026/07/ids-ai_datasheet.pdf" target="_blank" rel="noopener">Download Datasheet</a>
           </div>
         </div>
       </section>
@@ -6772,20 +7056,26 @@
 
       function capabilityVisual(index) {
         if (index === 0) return `
-          <div class="cap-demo spec-demo" aria-label="Specification analysis agent run">
-            <div class="cap-demo-head"><span>Agent run / specification check</span><b>polling</b></div>
-            <div class="spec-demo-body">
-              <div class="spec-run-progress"><span></span></div>
-              <div class="spec-run-step"><i></i><b>spec__task_submit</b><em>done</em></div>
-              <div class="spec-run-step"><i></i><b>spec__check_queue</b><em>running</em></div>
-              <div class="spec-run-step"><i></i><b>completeness analysis</b><em>queued</em></div>
-              <div class="spec-run-step"><i></i><b>integrity report</b><em>queued</em></div>
-              <div class="spec-report">
-                <span><b>Specification report</b>Completeness and consistency findings.</span>
-                <span><b>Markdown summary</b>Traceable results for engineering review.</span>
+          <div class="v5x" data-v5="spec-check"><div class="demo" style="--tone: var(--brand)">
+            <div class="demo-head"><span>Spec check / opentitan · uart</span><b>complete</b></div>
+            <div class="demo-body">
+              <div class="prompt"><i>U</i><span>read uart spec and doc files, then run spec check</span></div>
+              <div class="chips"><span class="pill pok">static rules</span><span class="pill pok">AI semantic</span><span class="pill pok">adversarial review</span></div>
+              <div class="cat-grid">
+                <span class="cat">Contradictions</span><span class="cat">Missing behaviour</span>
+                <span class="cat">Register &amp; field</span><span class="cat hit">Spec ↔ register drift</span>
+                <span class="cat">Terminology &amp; refs</span><span class="cat">Timing &amp; reset</span>
+                <span class="cat">Structure</span><span class="cat">Import health</span>
+              </div>
+              <div class="v5finding">
+                <code>STATUS.BREAK · INTR_STATE.BREAK</code>
+                <p>Documented, but absent from the register model.</p>
+                <div class="ev"><span>HJSON register source → rx_break_err</span><span>generated docs</span><span>RTL</span></div>
+                <footer><span class="pill pok">confirmed · 3 sources</span><span class="lbl" style="font-size:8.5px">lowRISC OpenTitan · unmodified</span></footer>
               </div>
             </div>
-          </div>`;
+          </div></div>
+        `;
         if (index === 1) return `
           <div class="cap-demo design-demo" aria-label="Connectivity generation transitions into its generated graph">
             <div class="cap-demo-head"><span>Integration plan / live</span><b>graph generated</b></div>
@@ -6810,30 +7100,17 @@
             </div>
           </div>`;
         if (index === 2) return `
-          <div class="cap-demo">
-            <div class="verification-lab" id="verificationLab" aria-label="Regression results and CSR coverage closure">
-              <div class="verification-lab-head"><strong>Regression / csr_signoff</strong><span id="verificationRunState">Iteration 1 running</span></div>
-              <div class="verification-metrics">
-                <div class="verification-metric"><span>Total tests</span><b>42</b></div>
-                <div class="verification-metric"><span>Passed</span><b id="verificationPassed">31</b></div>
-                <div class="verification-metric"><span>Failed</span><b id="verificationFailed">3</b></div>
-                <div class="verification-metric"><span>CSR coverage</span><b id="verificationCoverage">78%</b></div>
-              </div>
-              <div class="verification-body">
-                <div class="verification-results">
-                  <div class="verification-progress-head"><strong>Coverage closure</strong><span id="verificationClosure">78 / 100</span></div>
-                  <div class="verification-track"><div class="verification-fill" id="verificationFill"></div></div>
-                  <div class="verification-table">
-                    <div class="verification-row header"><span>Test</span><span>Seed</span><span>Result</span></div>
-                    <div class="verification-row" data-verification-row><span>csr_reset_values</span><span>18402</span><span class="result">queued</span></div>
-                    <div class="verification-row" data-verification-row><span>csr_access_policy</span><span>28711</span><span class="result">queued</span></div>
-                    <div class="verification-row" data-verification-row><span>csr_address_decode</span><span>39104</span><span class="result">queued</span></div>
-                    <div class="verification-row" data-verification-row><span>full_chip_smoke</span><span>52980</span><span class="result">queued</span></div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>`;
+          <div class="v5x" data-v5="verification"><div class="demo" style="--tone: var(--green)">
+            <div class="demo-head"><span>Signoff / plan → approve → run</span><b>CSR scope</b></div>
+            <div class="demo-body"><div class="vs">
+              <div class="vs-step isdone"><span class="n">01</span><div><h5>Plan <span class="pill pok">enumerated</span></h5><div class="big">275 <small>points · 10 rule families</small></div><div class="chips" style="margin-top:6px"><span class="pill">Access-Policy 155</span><span class="pill">Assertion 120</span></div><p style="margin-top:6px">275 from the enumerator · 0 added by the critic · 0 added by a human</p></div></div>
+              <div class="vs-step gate"><span class="n">02</span><div><h5>Approve <span class="pill pwarn">human gate</span></h5><p>The engineer reviews, edits or adds tests before anything runs.</p><span class="fakebtn">Sign off on this plan</span> <span class="pill pok" style="margin-left:4px">approved</span></div></div>
+              <div class="vs-step isdone"><span class="n">03</span><div><h5>Generate</h5><div class="chips"><span class="pill">UVM env</span><span class="pill">sequences</span><span class="pill">SVA</span><span class="pill">regmem</span><span class="pill">wrappers</span></div></div></div>
+              <div class="vs-step isdone"><span class="n">04</span><div><h5>Simulate <span class="pill prun">Makefile</span></h5><p style="margin:0">Runs on any standard industry simulator.</p></div></div>
+              <div class="vs-step isdone"><span class="n">05</span><div><h5>Coverage</h5><div class="metrics"><span>branch</span><span>expr</span><span>FSM</span><span>stmt</span><span>toggle</span></div><div class="csr-bar"><span>CSR</span><span class="t"></span><b>100%</b></div></div></div>
+            </div></div>
+          </div></div>
+        `;
         return `
           <div class="cap-demo output-demo" aria-label="Generated output explorer and register view">
             <div class="cap-demo-head"><span>Output / synchronized</span><b>11 files</b></div>
@@ -7201,6 +7478,234 @@
           corridorRows.forEach((row) => corridorObserver.observe(row));
         }
       }
+    
+    // ═════════════════════════════════════════════════════════════════
+    // V5 VISUALS (Sep 2026). Self-contained: touches only elements inside
+    // [data-v5] blocks. Uses transform/opacity for motion (60 fps).
+    // ═════════════════════════════════════════════════════════════════
+    (() => {
+      const reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+      const $ = (s, r) => (r || document).querySelector(s);
+      const $$ = (s, r) => Array.from((r || document).querySelectorAll(s));
+      const K = 0.8660254;
+      const ISO = "matrix(0.8660254 0.5 -0.8660254 0.5 0 0)";
+      const MONO = 'font-family="ui-monospace,SFMono-Regular,Menlo,monospace"';
+      let slabId = 0;
+      // Rounded isometric slab: soft shadow, stacked extrusion, top face with edge highlight.
+      const slab = (h, t, L, R, rx, top, stroke, hi, inner) => {
+        const id = "v5s" + (slabId++), w = 2 * h;
+        let s = `<defs><linearGradient id="${id}g" gradientUnits="userSpaceOnUse" x1="${-h}" y1="${h}" x2="${h}" y2="${-h}"><stop offset="0" stop-color="${L}"/><stop offset=".5" stop-color="${L}"/><stop offset=".5" stop-color="${R}"/><stop offset="1" stop-color="${R}"/></linearGradient><radialGradient id="${id}s"><stop offset="0" stop-color="rgba(20,30,40,.22)"/><stop offset="1" stop-color="rgba(20,30,40,0)"/></radialGradient><clipPath id="${id}c"><rect x="${-h}" y="${-h}" width="${w}" height="${w}" rx="${rx}"/></clipPath></defs>`;
+        s += `<g transform="translate(0 ${t + 10})"><g transform="${ISO}"><rect x="${-h - 14}" y="${-h - 14}" width="${w + 28}" height="${w + 28}" rx="${rx + 14}" fill="url(#${id}s)"/></g></g>`;
+        for (let k = t; k >= 1; k -= 1) s += `<g transform="translate(0 ${k})"><g transform="${ISO}"><rect x="${-h}" y="${-h}" width="${w}" height="${w}" rx="${rx}" fill="url(#${id}g)" stroke="url(#${id}g)" stroke-width="1"/></g></g>`;
+        s += `<g transform="${ISO}"><rect x="${-h}" y="${-h}" width="${w}" height="${w}" rx="${rx}" fill="${top}" stroke="${stroke}" stroke-width="1"/><g clip-path="url(#${id}c)">${inner}</g><rect x="${-h + .5}" y="${-h + .5}" width="${w - 1}" height="${w - 1}" rx="${rx - .5}" fill="none" stroke="${hi}" stroke-width="1"/></g>`;
+        return s;
+      };
+      // Run a callback only while an element is on screen.
+      const whileVisible = (el, start, stop) => {
+        if (!el || !("IntersectionObserver" in window)) { start(); return; }
+        new IntersectionObserver((es) => es.forEach((e) => (e.isIntersecting ? start() : stop())), { threshold: 0.15 }).observe(el);
+      };
+
+      /* ── hero: spec ream → IDS-AI → generated handoff ── */
+      (function hero() {
+        const root = $("#v5Hero"), svg = $("#v5Ream"); if (!root || !svg) return;
+        const FORMATS = [["MD","Markdown",0],["RDL","SystemRDL",1],["PDF","PDF",0],["XML","IP-XACT",1],["DOC","Word",0],["XLS","Excel · CSV",1],["HTML","HTML",0],["PSS","PSS · YAML",1],["TXT","Text",0],["GUI","IDS GUI",1]];
+        const h = 46, t = 7, G = 9, n = 6;
+        const inner = ([tag, name, c]) => { const col = c ? "#159b91" : "#496cff"; return `<rect x="${-h + 8}" y="${-h + 10}" width="${2 * h - 40}" height="3" rx="1.5" fill="#e3e8ed"/><rect x="${-h + 8}" y="${-h + 18}" width="${2 * h - 26}" height="3" rx="1.5" fill="#e3e8ed"/><rect x="${-h + 8}" y="${-h + 26}" width="${2 * h - 34}" height="3" rx="1.5" fill="#e3e8ed"/><rect x="${h - 30}" y="${-h + 5}" width="24" height="11" rx="3" fill="${col}"/><text x="${h - 18}" y="${-h + 13}" text-anchor="middle" ${MONO} font-size="6.5" font-weight="800" fill="#fff">${tag}</text><text x="${-h + 8}" y="${h - 10}" ${MONO} font-size="9" font-weight="800" fill="${col}">${name.toUpperCase()}</text><text x="${-h + 8}" y="${h - 20}" ${MONO} font-size="6" font-weight="700" letter-spacing=".4" fill="#8b95a4">${c ? "CSR SPEC" : "FUNCTIONAL SPEC"}</text>`; };
+        const sides = (c) => c ? ["#a9dcd3", "#8ccabf"] : ["#c3cdff", "#a8b6ff"];
+        let out = `<g transform="translate(95 158)">`;
+        for (let i = 0; i < n; i++) { const f = FORMATS[i], [L, R] = sides(f[2]); out += `<g class="pl">${slab(h, t, L, R, 4, "#fff", "#d3dbe2", "rgba(255,255,255,.9)", `<g class="inner">${inner(f)}</g>`)}</g>`; }
+        svg.innerHTML = out + "</g>";
+        const g = svg.firstElementChild; let order = $$(".pl", g);
+        order.forEach((p, i) => { p.style.transform = `translate3d(0, ${-i * G}px, 0)`; });
+        const draw = () => {
+          const links = $("[data-links]", root); if (!links || getComputedStyle(links).display === "none") return;
+          const r = root.getBoundingClientRect(), box = (el) => { const b = el.getBoundingClientRect(); return { l: b.left - r.left, r: b.right - r.left, cy: b.top - r.top + b.height / 2 }; };
+          const inn = box($(".ream", root)), orb = box($(".orb", root)), outb = box($(".hand", root));
+          const m = (inn.r + orb.l) / 2;
+          links.setAttribute("viewBox", `0 0 ${r.width} ${r.height}`);
+          links.innerHTML = `<path d="M${inn.r} ${inn.cy} C${m} ${inn.cy} ${m} ${orb.cy} ${orb.l - 6} ${orb.cy}" stroke="#f0a47c"/><path d="M${orb.r + 6} ${orb.cy} H${outb.l - 2}" stroke="#9aaeff"/>`;
+        };
+        window.addEventListener("resize", draw); window.addEventListener("load", draw); setTimeout(draw, 60);
+        const rows = $$("[data-row]", root), count = $("[data-n]", root), status = $("[data-status]", root), fmt = $("[data-fmt]", root), orbEl = $(".orb", root), ots = $$(".ot", root);
+        rows.forEach((r) => r.insertAdjacentHTML("beforeend", '<span class="bar"></span>'));
+        const say = (s) => { status.classList.add("fade"); setTimeout(() => { status.textContent = s; status.classList.remove("fade"); }, 220); };
+        const phase = (k) => ots.forEach((o, i) => o.classList.toggle("ison", i === k));
+        let next = n, k = 0, timer = null, tick = 0;
+        const TALK = ["reading spec…", "checking against golden spec", "0 conflicts · generating", "1 conflict · corrected · regenerating", "coverage 100% · handoff synced"];
+        const step = () => {
+          // 1) sheet lifts off
+          const top = order.pop();
+          top.style.transition = "transform 720ms cubic-bezier(.4,0,.6,1), opacity 600ms ease-in 120ms";
+          top.style.transform = `translate3d(72px, ${-(n - 1) * G - 40}px, 0) rotate(-3deg)`; top.style.opacity = 0;
+          order.unshift(top);
+          order.forEach((p, i) => { if (p !== top) p.style.transform = `translate3d(0, ${-i * G}px, 0)`; });
+          const f = FORMATS[(next - n) % FORMATS.length]; fmt.textContent = f[1];
+          phase(0); say(k % 6 === 3 ? TALK[3] : TALK[1]);
+          // 2) orb reads it, one handoff row writes
+          setTimeout(() => {
+            if (orbEl.animate) orbEl.animate([{ transform: "scale(1)" }, { transform: "scale(1.06)" }, { transform: "scale(1)" }], { duration: 520, easing: "cubic-bezier(.2,.8,.2,1)" });
+            phase(k % 6 === 3 ? 1 : 2);
+            const idx = k % 6;
+            if (idx === 0) { rows.forEach((r) => { r.classList.remove("on", "ok"); $(".rs", r).textContent = ""; }); count.textContent = "0"; }
+            const row = rows[idx]; row.classList.add("on"); $(".rs", row).textContent = "writing";
+            setTimeout(() => { row.classList.remove("on"); row.classList.add("ok"); $(".rs", row).textContent = row.classList.contains("sign") ? "100%" : "synced"; count.textContent = String(idx + 1); if (idx === 5) say(TALK[4]); else if (idx !== 3) say(TALK[2]); }, 950);
+            k++;
+          }, 620);
+          // 3) recycle the sheet at the bottom with the next format
+          setTimeout(() => {
+            const nf = FORMATS[next++ % FORMATS.length], [L, R] = sides(nf[2]);
+            const inn = $(".inner", top); if (inn) inn.innerHTML = inner(nf);
+            $$("linearGradient stop", top).forEach((s, i) => s.setAttribute("stop-color", i < 2 ? L : R));
+            top.style.transition = "none"; top.style.transform = "translate3d(0, 12px, 0)"; g.insertBefore(top, g.firstChild); void top.getBoundingClientRect();
+            top.style.transition = ""; top.style.transform = "translate3d(0, 0, 0)"; top.style.opacity = 1;
+          }, 760);
+        };
+        if (reduced) { rows.forEach((r) => { r.classList.add("ok"); $(".rs", r).textContent = r.classList.contains("sign") ? "100%" : "synced"; }); count.textContent = "6"; status.textContent = TALK[4]; phase(0); return; }
+        whileVisible(root, () => { if (!timer) timer = setInterval(step, 2100); }, () => { clearInterval(timer); timer = null; });
+      })();
+
+      /* ── Why Agnisys: isometric chip ── */
+      (function chip() {
+        const svg = $("#v5Chip"); if (!svg) return;
+        const LAYERS = [
+          { top: "#e2f3ef", stroke: "#a6d6ce", L: "#94cdc3", R: "#76b9ae", t: 14, hi: "rgba(255,255,255,.85)" },
+          { top: "#1b222b", stroke: "#2a333e", L: "#171d25", R: "#0e1319", t: 9, hi: "rgba(255,255,255,.12)" },
+          { top: "#eef2ff", stroke: "#b6c3ff", L: "#b3c1ff", R: "#95a8ff", t: 5, hi: "rgba(255,255,255,.85)" },
+          { top: "url(#v5gAI)", stroke: "#cf6a34", L: "#c25a27", R: "#a84a1d", t: 12, hi: "rgba(255,255,255,.45)" }
+        ];
+        const label = (a, b, c1, c2) => `<text x="-66" y="68" ${MONO} font-size="9.5" font-weight="800" letter-spacing=".6" fill="${c1}">${a}</text><text x="-66" y="57" ${MONO} font-size="7" font-weight="700" letter-spacing=".4" fill="${c2}">${b}</text>`;
+        const face = [
+          () => { let s = `<rect x="-73" y="-73" width="146" height="146" rx="6" fill="none" stroke="#bfe3dc"/>`; for (let p = -64; p <= 64; p += 8) s += `<rect x="${p - 1.7}" y="-81" width="3.4" height="4.6" rx="1" fill="#d4b05a"/><rect x="${p - 1.7}" y="76.4" width="3.4" height="4.6" rx="1" fill="#d4b05a"/><rect x="-81" y="${p - 1.7}" width="4.6" height="3.4" rx="1" fill="#d4b05a"/><rect x="76.4" y="${p - 1.7}" width="4.6" height="3.4" rx="1" fill="#d4b05a"/>`; return s + label("YOUR ENVIRONMENT", "ON-PREM · AIR-GAPPED", "#0e6b62", "#4a968c"); },
+          () => { let s = ""; for (let p = -80; p <= 80; p += 10) s += `<line x1="${p}" y1="-85" x2="${p}" y2="85" stroke="rgba(255,255,255,.035)"/>`; ["BATCH", "VERIFY", "INTEGRATE", "CF"].forEach((nm, i) => { const v0 = -72 + i * 35; s += `<rect x="40" y="${v0}" width="34" height="30" rx="4" fill="rgba(78,194,122,.12)" stroke="rgba(78,194,122,.55)"/><text x="57" y="${v0 + 15}" ${MONO} font-size="6.4" font-weight="800" fill="#a8e6c0" text-anchor="middle" dominant-baseline="central" transform="rotate(-90 57 ${v0 + 15})">${nm}</text>`; }); s += `<rect x="-70" y="-72" width="96" height="100" rx="4" fill="rgba(78,194,122,.05)" stroke="rgba(78,194,122,.25)"/>`; return s + label("AGNISYS ENGINES", "CORRECT BY CONSTRUCTION", "#9fe0b8", "#5fa37b"); },
+          () => { let s = ""; for (let p = -68; p <= 68; p += 17) s += `<line x1="${p}" y1="-80" x2="${p}" y2="44" stroke="#9fb0ff" stroke-width="1.2" stroke-linecap="round"/>`; for (let p = -72; p <= 40; p += 28) s += `<line x1="-80" y1="${p}" x2="80" y2="${p}" stroke="#c6d0ff" stroke-width="1" stroke-linecap="round"/>`; for (let a = -68; a <= 68; a += 34) for (let b = -72; b <= 40; b += 56) s += `<circle cx="${a}" cy="${b}" r="2.6" fill="#496cff"/>`; return s + label("MCP TOOL LAYER", "ONE CONNECTOR PER TOOL", "#3552e0", "#6f86f0"); },
+          () => `<rect x="-73" y="-73" width="146" height="146" rx="6" fill="none" stroke="rgba(255,255,255,.26)"/><use href="#agnisys-glyph" x="-30" y="-44" width="60" height="62" style="color:#fff"/>` + label("IDS-AI AGENTS", "MODEL-AGNOSTIC", "#fff", "rgba(255,255,255,.8)")
+        ];
+        const VIAS = [[-60, 60], [60, -60], [60, 60]].map(([u, v]) => [(u - v) * K, (u + v) / 2]);
+        let out = `<defs><linearGradient id="v5gAI" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#ffac7a"/><stop offset=".5" stop-color="#e8733c"/><stop offset="1" stop-color="#c85a26"/></linearGradient></defs><g transform="translate(180 364)">`;
+        LAYERS.forEach((L, i) => {
+          out += `<g class="ly" data-layer="${i + 1}" style="--i:${i}"><g class="lift">${slab(85, L.t, L.L, L.R, 8, L.top, L.stroke, L.hi, face[i]())}</g>`;
+          if (i < 3) VIAS.forEach(([x, y], j) => { out += `<rect class="via" x="${x - .6}" y="${y - 64}" width="1.2" height="64" rx=".6" fill="#8c96a3" opacity=".55"/>`; if (!reduced) out += `<circle class="spark d${j + 1}" cx="${x}" cy="${y}" r="2.6" fill="#e06f38"/>`; });
+          out += `</g>`;
+        });
+        svg.innerHTML = out + "</g>";
+        $$("#v5Legend .sw").forEach((sw) => { const L = LAYERS[+sw.dataset.sw], fill = L.top.startsWith("url") ? "#e8733c" : L.top; sw.innerHTML = `<g transform="translate(15 8)"><polygon points="-13,0 0,-7.5 13,0 0,7.5" fill="${fill}" stroke="${L.stroke}"/><polygon points="-13,0 0,7.5 0,12 -13,4.5" fill="${L.L}"/><polygon points="0,7.5 13,0 13,4.5 0,12" fill="${L.R}"/></g>`; });
+        const layers = $$(".ly", svg), rows = $$("#v5Legend li"), phases = $$("#v5Phase span"), wrap = svg.closest(".iso-wrap");
+        const hl = (n, focus) => { layers.forEach((l) => l.classList.toggle("hl", l.dataset.layer === n)); rows.forEach((r) => r.classList.toggle("hl", r.dataset.layer === n)); phases.forEach((p) => p.classList.toggle("ison", p.dataset.layer === n)); svg.classList.toggle("focus", !!focus && !!n); };
+        let hovering = false, timer = null, kk = 0;
+        const leave = () => { hovering = false; svg.classList.remove("open"); hl(""); };
+        wrap.addEventListener("mouseenter", () => { hovering = true; svg.classList.add("open"); });
+        wrap.addEventListener("mouseleave", leave);
+        [...rows, ...phases].forEach((el) => { el.addEventListener("mouseenter", () => { hovering = true; svg.classList.add("open"); hl(el.dataset.layer, true); }); el.addEventListener("mouseleave", leave); });
+        if (!reduced) whileVisible(svg, () => { if (!timer) timer = setInterval(() => { if (hovering) return; kk = kk % 4 + 1; hl(String(kk), false); }, 2200); }, () => { clearInterval(timer); timer = null; });
+      })();
+
+      /* ── Loop: three findings, one story shape (check → propose → review → regenerate → verify) ── */
+      (function loop() {
+        const svg = $("#v5Bits"); if (!svg) return;
+        const shell = svg.closest("[data-v5]");
+        const steps = $$("#v5Steps li"), pnl = $("#v5RingPanel"), btn = $("#v5Approve"), note = $("#v5AutoNote"), pauseBtn = $("#v5Pause");
+        const L = (k) => $(`[data-l="${k}"]`, shell), LL = (k) => $$(`[data-l="${k}"]`, shell), arts = $$("[data-art]", shell);
+        const kvEl = $("#v5Kv"), kvSrc = $("#v5KvSrc"), tag = $("#v5SceneTag");
+        const T = (x, y, cls, txt, extra = "") => `<text class="${cls}" x="${x}" y="${y}" ${extra}>${txt}</text>`;
+        const bar = (n) => `<span class="kvbar" style="width:${n}px"></span>`;
+        const mk = (id, col) => `<marker id="${id}" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 0 L8 4 L0 8 z" fill="${col}"/></marker>`;
+        const marker = `<defs>${mk("v5arr", "#8b95a4")}${mk("v5arrR", "#c64b3d")}${mk("v5arrA", "#c87a12")}${mk("v5arrG", "#298a50")}</defs>`;
+        const SC = [
+          { name: "register", tag: "Register field", cov: "CSR coverage", before: 72,
+            kv: (s) => [["block", bar(70), ""], ["reg", bar(86), ""], ["field", bar(62), ""], ["width", s === 0 ? "8" : "<s>8</s>9", "w"], ["reset", "0x1FF", "r"], ["sw", "rw", ""], ["hw", "ro", ""]],
+            src: "spec §4.2 · <b>CTRL.THRESH</b><br>reset 0x1FF · width 8",
+            panel: [["Finding", "Reset value <code>0x1FF</code> needs 9 bits. The field is declared 8 bits wide, so bit 8 has nowhere to live."], ["Proposed change", "Widen the field in the golden spec: <code>width 8 → 9</code>. Nothing regenerates yet."], ["Verification plan · waiting for you", "1 fix · regenerates RTL, UVM/RAL, headers and docs · reruns CSR tests."], ["Regenerating", "RTL, UVM/RAL, SVA, headers and docs rebuilt from the corrected spec."], ["Coverage", "CSR coverage <code>72% → 100%</code>. The loop checks again on the next change."]],
+            draw: (s) => {
+              const CW = 38, X0 = 62, Y = 58, wide = s >= 1; let h = "";
+              h += T(X0, 26, "tag", "reset", 'fill="#6b7480"') + T(X0 + 40, 26, "tag", "0x1FF", 'fill="#111318"') + T(X0 + 92, 26, "tag", "= 1 1111 1111", 'fill="#9aa4b1"');
+              for (let b = 8; b >= 0; b--) { const x = X0 + (8 - b) * CW, sp = b === 8; h += `<rect class="cell${sp ? (s === 0 ? " spill" : s < 3 ? " grow" : " fixed") : ""}" x="${x}" y="${Y}" width="${CW}" height="${CW}" rx="4"/>` + T(x + CW / 2, Y + CW / 2, "bit" + (sp && s === 0 ? " spill" : ""), "1") + T(x + CW / 2, Y + CW + 13, "idx", b); }
+              h += `<rect class="frame${s === 1 || s === 2 ? " pend" : s >= 3 ? " ok" : ""}" x="${wide ? X0 - 3 : X0 + CW - 3}" y="${Y - 6}" width="${(wide ? 9 : 8) * CW + 6}" height="${CW + 12}" rx="6"/>`;
+              h += T(X0 + CW + 4 * CW, Y + CW + 34, "tag w", wide ? (s >= 3 ? "declared width · 9 bits" : "declared width · 8 → 9 bits (proposed)") : "declared width · 8 bits", `fill="${s === 1 || s === 2 ? "#c87a12" : s >= 3 ? "#298a50" : "#111318"}"`);
+              if (s === 0) h += T(X0 + CW / 2, Y - 12, "warn", "bit 8 overflows"); if (s >= 3) h += T(X0 + CW / 2, Y - 12, "stamp", "FITS");
+              return h;
+            } },
+          { name: "state machine", tag: "FSM · DMA channel", cov: "FSM coverage", before: 61,
+            kv: (s) => [["fsm", "dma_ch", ""], ["states", "4", ""], ["arcs", s === 0 ? "5" : "<s>5</s>6", "w"], ["DONE →", s === 0 ? "none" : "IDLE", "r"], ["reset", "IDLE", ""], ["enc", "one-hot", ""]],
+            src: "spec §6.1 · <b>DMA channel FSM</b><br>4 states · 5 documented arcs",
+            panel: [["Finding", "State <code>DONE</code> has no exit arc. Once a transfer completes the channel can never be re-armed."], ["Proposed change", "Add <code>DONE → IDLE</code> on <code>clear</code> in the golden spec. Nothing regenerates yet."], ["Verification plan · waiting for you", "1 arc · regenerates RTL and FSM assertions · adds a reachability test for every state."], ["Regenerating", "RTL, UVM sequences, SVA and docs rebuilt from the corrected state table."], ["Coverage", "FSM coverage <code>61% → 100%</code>: every state and arc hit. The loop checks again on the next change."]],
+            draw: (s) => {
+              const P = { IDLE: [70, 84], ARM: [185, 40], RUN: [300, 84], DONE: [185, 128] }, W = 62, H = 26; let h = marker;
+              const edge = (a, b, cls, bend = 0) => { const [x1, y1] = P[a], [x2, y2] = P[b]; const mx = (x1 + x2) / 2 + bend, my = (y1 + y2) / 2 + bend; return `<path class="edge ${cls}" d="M${x1} ${y1} Q${mx} ${my} ${x2} ${y2}"/>`; };
+              h += edge("IDLE", "ARM", "") + edge("ARM", "RUN", "") + edge("RUN", "DONE", "") + edge("RUN", "ARM", "", 14);
+              const miss = s === 0 ? "miss" : s < 3 ? "pend" : "ok";
+              h += `<path class="edge ${miss}" style="marker-end:url(#${miss === "miss" ? "v5arrR" : miss === "pend" ? "v5arrA" : "v5arrG"})" d="M${P.DONE[0] - 30} ${P.DONE[1]} Q${P.IDLE[0]} ${P.DONE[1] + 28} ${P.IDLE[0]} ${P.IDLE[1] + 14}"/>`;
+              Object.entries(P).forEach(([n, [x, y]]) => { const cls = n === "DONE" ? (s === 0 ? "bad" : s >= 3 ? "ok" : "") : ""; h += `<rect class="st ${cls}" x="${x - W / 2}" y="${y - H / 2}" width="${W}" height="${H}" rx="6"/>` + T(x, y, "stn", n); });
+              h += T(370, 30, "tag", "arm", 'fill="#9aa4b1"') + T(370, 46, "tag", "start · done", 'fill="#9aa4b1"') + T(370, 62, "tag", "clear", `fill="${s === 0 ? "#c64b3d" : s < 3 ? "#c87a12" : "#298a50"}"`);
+              if (s === 0) h += T(115, 155, "warn", "DONE has no exit · trap state"); else if (s < 3) h += T(115, 155, "tag", "DONE → IDLE on clear (proposed)", 'fill="#c87a12"'); else h += T(115, 155, "stamp", "ALL STATES REACHABLE");
+              return h;
+            } },
+          { name: "reset timing", tag: "Reset · handshake", cov: "Assertion coverage", before: 84,
+            kv: (s) => [["intf", "axis_out", ""], ["clk", "clk_core", ""], ["rst", "rst_n · async", ""], ["ready", s === 0 ? "free" : "<s>free</s>gated", "w"], ["valid", "gated", ""], ["in reset", s === 0 ? "ready=1" : "ready=0", "r"]],
+            src: "spec §3.4 · <b>axis_out handshake</b><br>\"outputs idle during reset\"",
+            panel: [["Finding", "<code>ready</code> is asserted while <code>rst_n</code> is low. The spec says outputs are idle during reset, so the RTL and the spec disagree."], ["Proposed change", "Gate <code>ready</code> with <code>rst_n</code> in the golden spec. Nothing regenerates yet."], ["Verification plan · waiting for you", "1 fix · regenerates RTL and the reset assertions · adds a reset-sequence test."], ["Regenerating", "RTL, SVA (<code>ready |-> rst_n</code>), UVM reset sequence and docs rebuilt."], ["Coverage", "Assertion coverage <code>84% → 100%</code>. The loop checks again on the next change."]],
+            draw: (s) => {
+              const X = 88, W = 320, rows = [["clk", 30], ["rst_n", 72], ["ready", 114]], hi = 14; let h = "";
+              rows.forEach(([n, y]) => { h += T(X - 10, y, "sig", n); });
+              let clk = `M${X} ${30 + hi}`; for (let i = 0; i < 10; i++) { const x = X + i * 32; clk += ` H${x} V${30 - hi} H${x + 16} V${30 + hi}`; } clk += ` H${X + W}`;
+              h += `<path class="wave dim" d="${clk}"/>`;
+              const rstUp = X + 128;
+              h += `<path class="wave" d="M${X} ${72 + hi} H${rstUp} V${72 - hi} H${X + W}"/>`;
+              const bad = s === 0, pend = s === 1 || s === 2;
+              if (bad) h += `<rect class="band" x="${X}" y="${114 - hi - 6}" width="${rstUp - X}" height="${hi * 2 + 12}" rx="4"/>`;
+              if (s >= 3) h += `<rect class="band ok" x="${X}" y="${114 - hi - 6}" width="${rstUp - X}" height="${hi * 2 + 12}" rx="4"/>`;
+              const readyBad = `M${X} ${114 - hi} H${X + W}`;
+              const readyOk = `M${X} ${114 + hi} H${rstUp + 16} V${114 - hi} H${X + W}`;
+              if (bad) h += `<path class="wave bad" d="${readyBad}"/>`;
+              else if (pend) h += `<path class="wave dim" d="${readyBad}" opacity=".35"/><path class="wave pend" d="${readyOk}"/>`;
+              else h += `<path class="wave ok" d="${readyOk}"/>`;
+              h += `<line x1="${rstUp}" y1="16" x2="${rstUp}" y2="132" stroke="#c5cfd7" stroke-dasharray="3 3"/>` + T(rstUp + 6, 60, "tag", "reset released", 'fill="#9aa4b1"');
+              if (bad) h += T(X + 62, 152, "warn", "ready high under reset"); else if (pend) h += T(X + 62, 152, "tag", "ready gated by rst_n (proposed)", 'fill="#c87a12"'); else h += T(X + 62, 152, "stamp", "IDLE UNDER RESET");
+              return h;
+            } }
+        ];
+        const idleNote = note.textContent;
+        let sc = 0, step = 0, timer = null, resumeT = null, paused = false, approved = false, visible = false;
+        function render(swap) {
+          const S = SC[sc], colour = (k, s) => k === "w" ? (s === 0 ? "var(--red)" : s < 3 ? "var(--amber)" : "var(--green)") : k === "r" ? (s === 0 ? "var(--red)" : s < 3 ? "var(--ink)" : "var(--green)") : "";
+          steps.forEach((n, i) => { n.classList.toggle("isdone", i < step); n.classList.toggle("cur", i === step); });
+          const paint = () => { svg.innerHTML = S.draw(step); tag.textContent = S.tag; };
+          if (swap) { svg.classList.add("swap"); setTimeout(() => { paint(); svg.classList.remove("swap"); }, 200); } else paint();
+          kvEl.innerHTML = S.kv(step).map(([k, v, m]) => `<dt>${k}</dt><dd${m ? ` class="chg" style="color:${colour(m, step)}"` : ""}>${v}</dd><dd style="color:${colour(m, step)}">${m ? (step === 0 ? "!" : step < 3 ? "?" : "✓") : ""}</dd>`).join("");
+          kvSrc.innerHTML = S.src;
+          $(".rp-k", pnl).textContent = step === 2 && approved ? "Verification plan · approved" : S.panel[step][0];
+          $(".rp-body", pnl).innerHTML = S.panel[step][1];
+          pnl.classList.toggle("gate", step === 2);
+          btn.hidden = step !== 2; btn.disabled = approved; btn.textContent = approved ? "Approved" : "Approve plan";
+          L("specPill").textContent = ["checking", "fix proposed", "in review", "resolved", "resolved"][step];
+          const stale = step === 1 || step === 2;
+          LL("a").forEach((a) => { a.textContent = stale ? "STALE" : "SYNCED"; a.classList.toggle("stale", stale); a.classList.toggle("fresh", !stale); });
+          L("artPill").textContent = stale ? "stale" : (step >= 3 ? "regenerated" : "in sync");
+          if (step === 3 && !reduced) arts.forEach((a, i) => setTimeout(() => { a.classList.add("flash"); setTimeout(() => a.classList.remove("flash"), 700); }, i * 220));
+          const done = step === 4;
+          L("covLbl").textContent = S.cov;
+          L("covFill").style.width = (done ? 100 : S.before) + "%"; L("covTxt").textContent = (done ? 100 : S.before) + "%";
+          L("pass1").innerHTML = `before<b>${S.before}%</b>`;
+          const p2 = L("pass2"); p2.innerHTML = `after<b>${done ? "100%" : "—"}</b>`; p2.classList.toggle("live", done);
+          L("loopPill").textContent = `pass ${sc + 1} · ${S.name}`;
+        }
+        const DUR = [3000, 2600, 0, 2800, 3400];
+        const schedule = () => { clearTimeout(timer); if (paused || reduced || !visible) return; timer = step === 2 ? setTimeout(approve, 2800) : setTimeout(() => { if (step === 4) { sc = (sc + 1) % SC.length; go(0, true); } else go(step + 1); }, DUR[step]); };
+        function go(i, swap) { step = i; approved = step > 2; render(swap); schedule(); }
+        function approve() { if (step !== 2) return; approved = true; render(); clearTimeout(timer); if (!paused) timer = setTimeout(() => go(3), 900); }
+        const setPaused = (p, msg) => { paused = p; pauseBtn.textContent = p ? "Play" : "Pause"; note.textContent = msg || (p ? "Paused" : idleNote); if (!p) schedule(); else clearTimeout(timer); };
+        const hold = () => { clearTimeout(resumeT); setPaused(true, "Paused · resumes in a few seconds"); resumeT = setTimeout(() => setPaused(false), 9000); };
+        steps.forEach((n) => { const f = () => { hold(); go(+n.dataset.i); }; n.addEventListener("click", f); n.addEventListener("keydown", (e) => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); f(); } }); });
+        btn.addEventListener("click", () => { approved = true; render(); if (!paused) { clearTimeout(timer); timer = setTimeout(() => go(3), 900); } });
+        $("#v5Replay").addEventListener("click", () => { clearTimeout(resumeT); setPaused(false); sc = 0; go(0, true); });
+        pauseBtn.addEventListener("click", () => { clearTimeout(resumeT); setPaused(!paused); });
+        if (reduced) { paused = true; go(2); return; }
+        render();
+        whileVisible(shell, () => { visible = true; schedule(); }, () => { visible = false; clearTimeout(timer); });
+      })();
+
+      /* ── hero sign-off cycler without motion (reduced motion keeps first item) ── */
+    })();
     </script>
   </body>
 </html>
