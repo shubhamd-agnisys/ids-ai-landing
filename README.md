@@ -35,3 +35,9 @@ The v2 direction is:
 - Agnisys substrate explained late
 
 Before production, confirm the approval/apply behavior of IDS-AI and the third-party AI engine positioning. Those claims are intentionally conservative here.
+
+## Hosted pages
+
+- `index.html` — IDS-AI
+- `ids-noc.html` — IDS-NoC
+- `ids-cf.html` — IDS-CF Collaboration Framework (preview build; unapproved copy hidden behind the toggle)
