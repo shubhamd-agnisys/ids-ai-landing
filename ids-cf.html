@@ -233,6 +233,7 @@
 .cf-page .cf-layers .cf-bullets { margin-top: 6px; }
 /* ---------- 07 mcp (10-30): two columns + one closing line ---------- */
 .cf-page .cf-mcp { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: clamp(32px, 4vw, 56px); max-width: var(--cf-w-visual); margin: 0 auto; }
+.cf-page .cf-mcp--after-fig { margin-top: var(--cf-s-intro); }
 .cf-page .cf-mcp > li { display: grid; gap: 10px; align-content: start; padding-top: 20px; border-top: 1px solid var(--cf-line); min-width: 0; }
 .cf-page .cf-mcp > li > h3 { font-size: clamp(22px, 2vw, 26px); }
 .cf-page .cf-mcp__line { font-size: 16px; color: var(--cf-ink); }
@@ -563,6 +564,54 @@
 .cf-page .cf-band-dark .cf-fig--f7.cf-fig__sym, .cf-page .cf-band-dark .cf-fig--f7 .cf-fig__sym { color: var(--cf-band-ink); }
 .cf-page .cf-fig--f7 .cf-f7-o { stroke: var(--cf-orange-line); }
 .cf-page .cf-fig--f7 .cf-f7-dot { fill: var(--cf-orange-line); stroke: none; }
+/* F8 "Flags to words" (10-30, owner: direction D + ids-mcp-docs) — paper section cf-mcp; reads on the band too. Tokens only (G-V1).
+   Depth = the dark terminal, filled panels, one soft drop shadow (feDropShadow, flood --cf-band). No outlined badges: a lit
+   binary is an orange wash + 1.5 px orange stroke, a finished row is one small green check and a 2 px green underline.
+   Text 12 / 13 / 14 px Inter. Resting frame = the suite beat complete; M11 animates opacity, transform, stroke-dashoffset. */
+.cf-page .cf-fig--f8 { display: block; width: 100%; max-width: var(--cf-w-visual); margin-left: auto; margin-right: auto; aspect-ratio: 1120 / 440; }
+.cf-page .cf-fig--f8 .cf-fig__svg { display: block; width: 100%; height: 100%; overflow: visible; shape-rendering: geometricPrecision; text-rendering: optimizeLegibility; font: 500 13px/1 var(--cf-font); }
+.cf-page .cf-fig--f8 .cf-f8-shadow { flood-color: var(--cf-band); flood-opacity: 0.14; }
+.cf-page.cf-band-dark .cf-fig--f8 .cf-f8-shadow { flood-opacity: 0.5; }
+/* wires */
+.cf-page .cf-fig--f8 .cf-f8-w { fill: none; stroke: var(--cf-line); stroke-width: 1.25; stroke-linecap: round; stroke-linejoin: round; }
+.cf-page .cf-fig--f8 .cf-f8-live { fill: none; stroke: var(--cf-orange-line); stroke-width: 1.5; stroke-linecap: round; stroke-linejoin: round; stroke-dasharray: 1; stroke-dashoffset: 1; }
+.cf-page .cf-fig--f8 .cf-f8-live[data-w="1"], .cf-page .cf-fig--f8 .cf-f8-live[data-w="3"] { stroke-dashoffset: 0; } /* resting: the suite path is lit */
+/* terminal */
+.cf-page .cf-fig--f8 .cf-f8-dark { fill: var(--cf-band); filter: url(#cf-f8-sh); }
+.cf-page.cf-band-dark .cf-fig--f8 .cf-f8-dark { fill: var(--cf-panel); stroke: var(--cf-band-line); stroke-width: 1; vector-effect: non-scaling-stroke; }
+.cf-page .cf-fig--f8 .cf-f8-drule { stroke: var(--cf-band-line); stroke-width: 1; vector-effect: non-scaling-stroke; }
+.cf-page .cf-fig--f8 .cf-f8-dot { fill: var(--cf-band-line); }
+.cf-page .cf-fig--f8 .cf-f8-dh { font-size: 12px; font-weight: 600; fill: var(--cf-band-muted); }
+.cf-page .cf-fig--f8 .cf-f8-chev { font-size: 16px; font-weight: 700; fill: var(--cf-band-muted); }
+.cf-page .cf-fig--f8 .cf-f8-fr { fill: var(--cf-band-muted); opacity: .55; transform-box: fill-box; transform-origin: center; }
+.cf-page .cf-fig--f8 .cf-f8-fr--k { fill: var(--cf-band-ink); opacity: .8; }
+.cf-page .cf-fig--f8 .cf-f8-fr--d { opacity: .5; }
+/* sentence */
+.cf-page .cf-fig--f8 .cf-f8-sent { transform-box: fill-box; transform-origin: center; }
+.cf-page .cf-fig--f8 .cf-f8-sbox { fill: var(--cf-panel); stroke: var(--cf-orange-line); stroke-width: 1.5; vector-effect: non-scaling-stroke; filter: url(#cf-f8-sh); }
+.cf-page .cf-fig--f8 .cf-f8-sp { fill: var(--cf-orange-line); }
+.cf-page .cf-fig--f8 .cf-f8-st { font-size: 14px; font-weight: 600; fill: var(--cf-ink); }
+/* binaries */
+.cf-page .cf-fig--f8 .cf-f8-bbox { fill: var(--cf-panel); stroke: var(--cf-quiet); stroke-width: 1; vector-effect: non-scaling-stroke; filter: url(#cf-f8-sh); }
+.cf-page .cf-fig--f8 .cf-f8-blit { fill: var(--cf-orange-wash); stroke: var(--cf-orange-line); stroke-width: 1.5; vector-effect: non-scaling-stroke; }
+.cf-page .cf-fig--f8 .cf-f8-bt { font-size: 14px; font-weight: 700; fill: var(--cf-ink); }
+.cf-page .cf-fig--f8 .cf-f8-bk { font-size: 12px; fill: var(--cf-quiet); }
+/* stacks */
+.cf-page .cf-fig--f8 .cf-f8-box { fill: var(--cf-panel); stroke: var(--cf-line); stroke-width: 1; vector-effect: non-scaling-stroke; }
+.cf-page .cf-fig--f8 .cf-f8-rule { stroke: var(--cf-line); stroke-width: 1; vector-effect: non-scaling-stroke; }
+.cf-page .cf-fig--f8 .cf-f8-h { font-size: 12px; letter-spacing: .06em; text-transform: uppercase; fill: var(--cf-quiet); }
+.cf-page .cf-fig--f8 .cf-f8-t { font-size: 13px; font-weight: 600; fill: var(--cf-muted); }
+.cf-page .cf-fig--f8 .cf-f8-wash { fill: var(--cf-orange-wash); opacity: 0; }
+.cf-page .cf-fig--f8 .cf-f8-ok { fill: none; stroke: var(--cf-green); stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; opacity: 0; }
+.cf-page .cf-fig--f8 .cf-f8-ul { fill: var(--cf-green); transform-box: fill-box; transform-origin: left center; transform: scaleX(0); }
+.cf-page .cf-fig--f8 .cf-f8-tool .cf-f8-ok { opacity: 1; }            /* resting: suite beat complete */
+.cf-page .cf-fig--f8 .cf-f8-tool .cf-f8-ul { transform: none; }
+.cf-page .cf-fig--f8 .cf-f8-sweep { fill: var(--cf-orange-wash); }
+/* mobile: the figure stays one SVG; below 767 px it is shown at 760 px wide and scrolls sideways inside the band (owed: a stacked mobile SVG, as F2 has) */
+@media (max-width: 767px) {
+  .cf-page .cf-fig--f8 { overflow-x: auto; aspect-ratio: auto; }
+  .cf-page .cf-fig--f8 .cf-fig__svg { width: 760px; max-width: none; height: 299px; }
+}
 </style>
 <script id="cf-js" data-no-optimize="1" data-no-defer="1" data-cfasync="false">
 /* cf-hero-field.js — M10 v2 "Register Field" hero background for the IDS-CF page.
@@ -940,8 +989,8 @@
 /* F2 / M5 Converge v2 (round 6b). One loop ≈ 7.2 s, decisive and smooth: --cf-move / --cf-ease only, no spring.
    0 blend out of the resting picture (360) → 1 the spec forms sweep into the golden block, it settles, the four
    attributes rise (1.9 s) → 2 orange lines draw on out of the golden spec into the SoC ports and the outputs, the
-   register strips light as the lines land (1.4 s) → 3 hold while a pulse travels each line twice (1.5 s) → 4 the forms
-   blend back and the grey lines draw on (0.8 s) → 5 hold (1.2 s). Last frame = first frame.
+   register strips light as the lines land (1.4 s); the forms blend back into their places at the same time (owner 10-30:
+   the left column must not sit empty) → 3 hold while a pulse travels each line twice (1.5 s) → 4 hold (1.6 s). Last frame = first frame.
    Resting markup (final(), reduced motion) = the complete picture. Transform / opacity / stroke-dashoffset only (G-M1).
    Both SVGs (desktop, mobile) are driven; the hidden one costs no paint. */
 (function () {
@@ -980,6 +1029,9 @@
       x.gold.forEach(function (g) { U.A(g, [{ transform: "scale(1)" }, { transform: "scale(1.012)", offset: 0.35 }, { transform: "scale(1)" }], { duration: 900, easing: U.EASE }); });
       x.attrs.forEach(function (a, i) { a.style.opacity = ""; U.A(a, [{ opacity: 0, transform: "translateY(8px)" }, { opacity: 1, transform: "none" }], { duration: 480, delay: 120 + i * 100, easing: U.EASE }); });
       await U.sleep(900, sig);
+      // 2a the forms are back in their places at once (owner 10-30: the left column must never sit empty) and the grey lines draw on
+      x.tiles.forEach(function (t, i) { t.style.transform = ""; t.style.opacity = ""; U.A(t, [{ opacity: 0, transform: "scale(0.97)" }, { opacity: 1, transform: "none" }], { duration: 560, delay: i * 30, easing: U.EASE }); });
+      x.ins.forEach(function (p, i) { p.style.opacity = ""; U.A(p, [{ strokeDashoffset: 1.03 }, { strokeDashoffset: 0 }], { duration: 600, delay: 120 + i * 50, easing: U.MOVE }); });
       // 2 drive: ports light, the orange lines draw on (900 each, 160 stagger, --cf-move); each register strip lights as its line lands; the outputs rise
       x.dots.forEach(function (d, i) { d.style.opacity = ""; U.A(d, [{ opacity: 0 }, { opacity: 1 }], { duration: 240, delay: i * 90, easing: U.SINE }); });
       x.drive.forEach(function (p, i) { p.style.opacity = ""; U.A(p, [{ strokeDashoffset: 1.03 }, { strokeDashoffset: 0 }], { duration: 900, delay: i * 160, easing: U.MOVE }); });
@@ -989,12 +1041,8 @@
       // 3 hold: power flows — a bright pulse travels each line from the golden spec outwards, twice
       x.pulse.forEach(function (p) { p.style.opacity = 1; U.A(p, [{ strokeDashoffset: 0.06 }, { strokeDashoffset: -0.94 }], { duration: 1100, easing: U.MOVE, iterations: 2 }).then(function () { p.style.opacity = ""; }); });
       await U.sleep(1500, sig);
-      // 4 return (≥ 300 ms, no jump): the forms blend back into their places, the grey lines draw on
-      x.tiles.forEach(function (t, i) { t.style.transform = ""; t.style.opacity = ""; U.A(t, [{ opacity: 0, transform: "scale(0.97)" }, { opacity: 1, transform: "none" }], { duration: 560, delay: i * 30, easing: U.EASE }); });
-      x.ins.forEach(function (p, i) { p.style.opacity = ""; U.A(p, [{ strokeDashoffset: 1.03 }, { strokeDashoffset: 0 }], { duration: 600, delay: 120 + i * 50, easing: U.MOVE }); });
-      await U.sleep(800, sig);
-      // 5 hold the resting frame (= the first frame)
-      await U.sleep(1200, sig);
+      // 4 hold the resting frame (= the first frame)
+      await U.sleep(1600, sig);
     }
   };
   CF.define("M5", def);
@@ -1285,6 +1333,111 @@
       set(x.anim, "opacity", "0");
     }
   });
+})();
+/* F8 / M11 "Flags to words" (10-30). One loop ≈ 11 s, decisive and smooth: U.EASE for arrivals, U.MOVE for the draws, no spring.
+   0 blend out of the resting frame (the suite beat complete) → 1 the flag fragments type in → 2 they collapse into the
+   first sentence → 3 ids-mcp-suite lights, the wires draw on, the five toolchain rows finish one by one → hold →
+   4 cross to the second beat: fragments type in again, collapse into the lookup sentence, ids-mcp-docs lights, the wires
+   draw on, a wash sweeps the guides and one row is found → hold → 5 blend back to the resting frame → hold.
+   Transform / opacity / stroke-dashoffset only (G-M1). Words are static DOM from content keys. */
+(function () {
+  var CF = window.CFPage, U = CF.util;
+  var $$ = function (s, r) { return Array.prototype.slice.call(r.querySelectorAll(s)); };
+  function op(el, v) { el.style.opacity = v; }
+  function fly(fr, g) { // delta from the fragment centre to the sentence centre (both in svg units; transform-box fill-box on the fragment)
+    var c = fr.getAttribute("data-c").split(" "), s = g.getAttribute("data-c").split(" ");
+    return "translate(" + (s[0] - c[0]) + "px," + (s[1] - c[1]) + "px) scale(0.2)";
+  }
+  async function typeIn(x, sig) { // fragments appear left to right like a line being typed
+    x.frags.forEach(function (f, i) { op(f, 0); U.A(f, [{ opacity: 0, transform: "translateX(-6px)" }, { opacity: f._o, transform: "none" }], { duration: 220, delay: i * 40, easing: U.EASE }).then(function () { f.style.opacity = ""; f.style.transform = ""; }); });
+    await U.sleep(x.frags.length * 40 + 700, sig);
+  }
+  async function collapse(x, sent, sig) { // the fragments fold into the sentence, which rises under them
+    x.frags.forEach(function (f, i) { U.A(f, [{ transform: "none", opacity: f._o }, { transform: fly(f, x.fragsG), opacity: 0 }], { duration: 620, delay: i * 14, easing: U.MOVE }).then(function () { op(f, 0); }); });
+    U.A(sent, [{ opacity: 0, transform: "translateY(10px)" }, { opacity: 1, transform: "none" }], { duration: 520, delay: 200, easing: U.EASE }).then(function () { op(sent, 1); });
+    await U.sleep(900, sig);
+  }
+  async function rows(list, sig) { // orange wash → green check + underline, one row after the other
+    for (var i = 0; i < list.length; i++) {
+      var r = list[i], w = r.querySelector(".cf-f8-wash"), ok = r.querySelector(".cf-f8-ok"), ul = r.querySelector(".cf-f8-ul");
+      U.A(w, [{ opacity: 0 }, { opacity: 1 }], { duration: 160, easing: U.SINE });
+      U.A(ul, [{ transform: "scaleX(0)" }, { transform: "scaleX(1)" }], { duration: 420, easing: U.MOVE }).then(function () { ul.style.transform = "scaleX(1)"; });
+      await U.sleep(180, sig);
+      U.A(w, [{ opacity: 1 }, { opacity: 0 }], { duration: 300, easing: U.SINE });
+      U.A(ok, [{ opacity: 0, transform: "translateX(-4px)" }, { opacity: 1, transform: "none" }], { duration: 320, easing: U.EASE }).then(function () { op(ok, 1); });
+    }
+  }
+  function draw(p, ms) { return U.A(p, [{ strokeDashoffset: 1 }, { strokeDashoffset: 0 }], { duration: ms, easing: U.MOVE }).then(function () { p.style.strokeDashoffset = "0"; }); }
+  function undraw(p) { return U.A(p, [{ strokeDashoffset: 0 }, { strokeDashoffset: 1 }], { duration: 300, easing: U.MOVE }).then(function () { p.style.strokeDashoffset = "1"; }); }
+  function clearRows(list) {
+    list.forEach(function (r) { op(r.querySelector(".cf-f8-ok"), 0); r.querySelector(".cf-f8-ul").style.transform = "scaleX(0)"; op(r.querySelector(".cf-f8-wash"), 0); });
+  }
+  var def = {
+    build: function (st) {
+      var w = {}; $$(".cf-f8-live", st).forEach(function (p) { w[p.getAttribute("data-w")] = p; });
+      var lit = {}; $$(".cf-f8-bin", st).forEach(function (b) { lit[b.getAttribute("data-b")] = b.querySelector(".cf-f8-blit"); });
+      var sent = {}; $$(".cf-f8-sent", st).forEach(function (s) { sent[s.getAttribute("data-s")] = s; });
+      st._x = { frags: $$(".cf-f8-fr", st), fragsG: st.querySelector(".cf-f8-frags"), w: w, lit: lit, sent: sent,
+        tool: $$(".cf-f8-tool .cf-f8-row", st), guides: $$(".cf-f8-guides .cf-f8-row", st), sweep: st.querySelector(".cf-f8-sweep") };
+      st._x.frags.forEach(function (f) { f._o = f.classList.contains("cf-f8-fr--k") ? 0.8 : f.classList.contains("cf-f8-fr--d") ? 0.5 : 0.55; });
+      st._x.all = [].concat(st._x.frags, [w[1], w[2], w[3], w[4], lit[1], lit[2], sent[1], sent[2], st._x.sweep], $$(".cf-f8-ok, .cf-f8-ul, .cf-f8-wash", st));
+    },
+    final: function (st) {
+      U.cancelAll(st);
+      st._x.all.forEach(function (el) { el.style.cssText = ""; });
+      op(st._x.sent[2], 0); op(st._x.lit[2], 0); op(st._x.sweep, 0);
+    },
+    run: async function (st, sig) {
+      var x = st._x;
+      def.final(st);
+      /* 0 blend out of the resting frame: the lit suite path and its finished rows (360, sine) */
+      [x.sent[1], x.lit[1]].concat($$(".cf-f8-tool .cf-f8-ok, .cf-f8-tool .cf-f8-ul", st)).forEach(function (el) { U.A(el, [{ opacity: 1 }, { opacity: 0 }], { duration: 360, easing: U.SINE }).then(function () { op(el, 0); }); });
+      undraw(x.w[1]); undraw(x.w[3]);
+      x.frags.forEach(function (f) { op(f, 0); });
+      await U.sleep(420, sig);
+      x.tool.forEach(function (r) { r.querySelector(".cf-f8-ul").style.transform = "scaleX(0)"; op(r.querySelector(".cf-f8-ul"), ""); });
+      /* beat 1: build */
+      await typeIn(x, sig);
+      await collapse(x, x.sent[1], sig);
+      U.A(x.lit[1], [{ opacity: 0 }, { opacity: 1 }], { duration: 300, easing: U.SINE }).then(function () { op(x.lit[1], 1); });
+      await draw(x.w[1], 360);
+      await draw(x.w[3], 520);
+      await rows(x.tool, sig);
+      await U.sleep(1800, sig);
+      /* cross to beat 2: learn */
+      [x.sent[1], x.lit[1]].concat($$(".cf-f8-tool .cf-f8-ok, .cf-f8-tool .cf-f8-ul", st)).forEach(function (el) { U.A(el, [{ opacity: 1 }, { opacity: 0 }], { duration: 320, easing: U.SINE }).then(function () { op(el, 0); }); });
+      await Promise.all([undraw(x.w[1]), undraw(x.w[3])]);
+      x.tool.forEach(function (r) { r.querySelector(".cf-f8-ul").style.transform = "scaleX(0)"; op(r.querySelector(".cf-f8-ul"), ""); });
+      await typeIn(x, sig);
+      await collapse(x, x.sent[2], sig);
+      U.A(x.lit[2], [{ opacity: 0 }, { opacity: 1 }], { duration: 300, easing: U.SINE }).then(function () { op(x.lit[2], 1); });
+      await draw(x.w[2], 520);
+      await draw(x.w[4], 420);
+      /* the wash sweeps down the guides (translateY over the four rows), the last row is found */
+      await U.A(x.sweep, [{ opacity: 0, transform: "translateY(0)" }, { opacity: 1, transform: "translateY(0)", offset: 0.12 }, { opacity: 1, transform: "translateY(102px)" }], { duration: 760, easing: U.MOVE });
+      op(x.sweep, 0);
+      var found = x.guides[3];
+      U.A(found.querySelector(".cf-f8-wash"), [{ opacity: 0 }, { opacity: 1 }], { duration: 240, easing: U.SINE }).then(function () { op(found.querySelector(".cf-f8-wash"), 1); });
+      await U.A(found.querySelector(".cf-f8-ok"), [{ opacity: 0, transform: "translateX(-4px)" }, { opacity: 1, transform: "none" }], { duration: 320, easing: U.EASE });
+      op(found.querySelector(".cf-f8-ok"), 1);
+      await U.sleep(1800, sig);
+      /* 5 blend back to the resting frame (≥ 300 ms, no jump): sentence 1, the suite path, the finished rows, the fragments */
+      [x.sent[2], x.lit[2], found.querySelector(".cf-f8-wash"), found.querySelector(".cf-f8-ok")].forEach(function (el) { U.A(el, [{ opacity: 1 }, { opacity: 0 }], { duration: 320, easing: U.SINE }).then(function () { op(el, 0); }); });
+      await Promise.all([undraw(x.w[2]), undraw(x.w[4])]);
+      x.frags.forEach(function (f, i) { U.A(f, [{ opacity: 0, transform: "scale(0.97)" }, { opacity: f._o, transform: "none" }], { duration: 480, delay: i * 12, easing: U.EASE }).then(function () { f.style.cssText = ""; }); });
+      U.A(x.sent[1], [{ opacity: 0 }, { opacity: 1 }], { duration: 480, easing: U.EASE }).then(function () { op(x.sent[1], ""); });
+      U.A(x.lit[1], [{ opacity: 0 }, { opacity: 1 }], { duration: 480, easing: U.EASE }).then(function () { op(x.lit[1], ""); });
+      draw(x.w[1], 360); draw(x.w[3], 480);
+      x.tool.forEach(function (r, i) {
+        var ok = r.querySelector(".cf-f8-ok"), ul = r.querySelector(".cf-f8-ul");
+        U.A(ok, [{ opacity: 0 }, { opacity: 1 }], { duration: 360, delay: 200 + i * 60, easing: U.EASE }).then(function () { op(ok, ""); });
+        U.A(ul, [{ transform: "scaleX(0)" }, { transform: "scaleX(1)" }], { duration: 360, delay: 200 + i * 60, easing: U.MOVE }).then(function () { ul.style.cssText = ""; });
+      });
+      await U.sleep(900, sig);
+      await U.sleep(1400, sig);
+    }
+  };
+  CF.define("M11", def);
 })();
 </script>
 <style>.cf-page [data-cf-status="LOREM"] { font-style: italic; color: var(--cf-quiet); } .cf-page [data-cf-status="LOREM"]::before { content: "LOREM"; display: inline-block; margin-right: 8px; padding: 1px 5px; border-radius: 3px; outline: 1px dashed var(--cf-blue); color: var(--cf-blue); font: 500 10px/1.3 ui-monospace, Menlo, monospace; font-style: normal; letter-spacing: .06em; vertical-align: middle; } .cf-page[data-cf-show] [data-cf-status] { background: var(--cf-orange-wash); border-radius: 2px; } .cf-page[data-cf-show] [data-cf-status]::after { content: attr(data-cf-status); margin-left: 5px; font: 500 10px/1 var(--cf-font); letter-spacing: .06em; color: var(--cf-orange-text); vertical-align: super; }</style>
@@ -1787,14 +1940,166 @@
 </div>
 </section>
 <section id="cf-mcp" class="cf-page cf-mcp">
-<!-- 10-30 document "IDS-MCP · CONNECT YOUR AI ASSISTANT": intro + two columns (binary name · one line · "choose this" line · bullets) + one closing line. Text only. -->
+<!-- 10-30 document "IDS-MCP · CONNECT YOUR AI ASSISTANT": intro + F8 "Flags to words" (M11) + two columns (binary name · one line · "choose this" line · bullets) + one closing line. -->
 <div class="cf-wrap">
   <div class="cf-intro cf-rv">
     <p class="cf-label">IDS-MCP™  ·  CONNECT YOUR AI ASSISTANT</p>
     <h2>Ask your AI assistant. Run the IDS toolchain.</h2>
     <p>IDS-MCP is a pair of self-contained server binaries that link your AI programming assistant directly to the IDesignSpec toolchain. Supported assistants include Claude Desktop, Claude Code, Cursor, Cline, Open WebUI and custom agent platforms.</p>
   </div>
-  <ul class="cf-mcp">
+  <!-- F8 "Flags to words" / M11 (10-30, owner picked direction D of explore/mcp-f8.html, "add one more block for ids-mcp-docs").
+     A dark command line full of flag fragments collapses into one plain sentence; the sentence lights ids-mcp-suite and the
+     toolchain outputs, then a lookup sentence lights ids-mcp-docs and the offline guides. Resting markup = the suite beat complete.
+     Single SVG 1120 × 440, tokens only, radii 6/8/12, strokes 1/1.5, pathLength="1" wires (draw = dashoffset 1 → 0). -->
+<div class="cf-fig cf-fig--f8" data-cf-motion="M11" role="img" aria-label="A command line full of flags collapses into one plain sentence, which lights one of two server blocks and the toolchain outputs or the offline guides behind it.">
+  <svg class="cf-fig__svg" viewBox="0 0 1120 440" preserveAspectRatio="xMidYMid meet" aria-hidden="true" focusable="false">
+    <defs><filter id="cf-f8-sh" x="-10%" y="-20%" width="120%" height="150%"><feDropShadow class="cf-f8-shadow" dx="0" dy="10" stdDeviation="10"/></filter></defs>
+    <!-- wires: grey at rest, orange live copies on top -->
+    <g class="cf-f8-wires">
+      <path class="cf-f8-w" d="M420 220 H480"/>
+      <path class="cf-f8-w" d="M420 220 H444 Q452 220 452 228 V326 Q452 334 460 334 H480"/>
+      <path class="cf-f8-w" d="M650 210 H700 Q708 210 708 202 V109 Q708 101 716 101 H740"/>
+      <path class="cf-f8-w" d="M650 334 H700 Q708 334 708 330 V326 Q708 322 716 322 H740"/>
+      <path class="cf-f8-live" data-w="1" pathLength="1" d="M420 220 H480"/>
+      <path class="cf-f8-live" data-w="2" pathLength="1" d="M420 220 H444 Q452 220 452 228 V326 Q452 334 460 334 H480"/>
+      <path class="cf-f8-live" data-w="3" pathLength="1" d="M650 210 H700 Q708 210 708 202 V109 Q708 101 716 101 H740"/>
+      <path class="cf-f8-live" data-w="4" pathLength="1" d="M650 334 H700 Q708 334 708 330 V326 Q708 322 716 322 H740"/>
+    </g>
+    <!-- the terminal: before -->
+    <g class="cf-f8-term">
+      <rect class="cf-f8-dark" x="0" y="0" width="640" height="150" rx="12"/>
+      <line class="cf-f8-drule" x1="0" y1="36" x2="640" y2="36"/>
+      <circle class="cf-f8-dot" cx="18" cy="18" r="4"/><circle class="cf-f8-dot" cx="30" cy="18" r="4"/><circle class="cf-f8-dot" cx="42" cy="18" r="4"/>
+      <text class="cf-f8-dh" x="58" y="22"><tspan data-cf-status="DRAFT">Command line</tspan></text>
+      <text class="cf-f8-chev" x="22" y="68">›</text>
+      <g class="cf-f8-frags" data-c="240 220">
+      <rect class="cf-f8-fr cf-f8-fr--k" x="56" y="58" width="14" height="12" rx="6" data-c="63 64"/>
+      <rect class="cf-f8-fr" x="78" y="58" width="58" height="12" rx="6" data-c="107 64"/>
+      <rect class="cf-f8-fr cf-f8-fr--d" x="144" y="63" width="10" height="2" rx="1" data-c="149 64"/>
+      <rect class="cf-f8-fr" x="162" y="58" width="40" height="12" rx="6" data-c="182 64"/>
+      <rect class="cf-f8-fr cf-f8-fr--d" x="210" y="63" width="10" height="2" rx="1" data-c="215 64"/>
+      <rect class="cf-f8-fr" x="228" y="58" width="26" height="12" rx="6" data-c="241 64"/>
+      <rect class="cf-f8-fr cf-f8-fr--d" x="262" y="63" width="10" height="2" rx="1" data-c="267 64"/>
+      <rect class="cf-f8-fr" x="280" y="58" width="72" height="12" rx="6" data-c="316 64"/>
+      <rect class="cf-f8-fr cf-f8-fr--d" x="360" y="63" width="10" height="2" rx="1" data-c="365 64"/>
+      <rect class="cf-f8-fr" x="378" y="58" width="34" height="12" rx="6" data-c="395 64"/>
+      <rect class="cf-f8-fr cf-f8-fr--k" x="420" y="58" width="48" height="12" rx="6" data-c="444 64"/>
+      <rect class="cf-f8-fr cf-f8-fr--d" x="476" y="63" width="10" height="2" rx="1" data-c="481 64"/>
+      <rect class="cf-f8-fr" x="494" y="58" width="30" height="12" rx="6" data-c="509 64"/>
+      <rect class="cf-f8-fr cf-f8-fr--d" x="532" y="63" width="10" height="2" rx="1" data-c="537 64"/>
+      <rect class="cf-f8-fr" x="550" y="58" width="64" height="12" rx="6" data-c="582 64"/>
+      <rect class="cf-f8-fr cf-f8-fr--d" x="56" y="87" width="10" height="2" rx="1" data-c="61 88"/>
+      <rect class="cf-f8-fr" x="74" y="82" width="22" height="12" rx="6" data-c="85 88"/>
+      <rect class="cf-f8-fr" x="104" y="82" width="36" height="12" rx="6" data-c="122 88"/>
+      <rect class="cf-f8-fr cf-f8-fr--d" x="148" y="87" width="10" height="2" rx="1" data-c="153 88"/>
+      <rect class="cf-f8-fr" x="166" y="82" width="52" height="12" rx="6" data-c="192 88"/>
+      <rect class="cf-f8-fr cf-f8-fr--d" x="226" y="87" width="10" height="2" rx="1" data-c="231 88"/>
+      <rect class="cf-f8-fr" x="244" y="82" width="28" height="12" rx="6" data-c="258 88"/>
+      <rect class="cf-f8-fr cf-f8-fr--k" x="280" y="82" width="44" height="12" rx="6" data-c="302 88"/>
+      <rect class="cf-f8-fr cf-f8-fr--d" x="332" y="87" width="10" height="2" rx="1" data-c="337 88"/>
+      <rect class="cf-f8-fr" x="350" y="82" width="38" height="12" rx="6" data-c="369 88"/>
+      </g>
+    </g>
+    <!-- the two sentences (same place; one visible at a time) -->
+    <g class="cf-f8-sent" data-s="1">
+      <rect class="cf-f8-sbox" x="60" y="196" width="360" height="48" rx="10"/>
+      <path class="cf-f8-sp" d="M84 226c.3-1.6 1.4-2.7 3-3-1.6-.3-2.7-1.4-3-3-.3 1.6-1.4 2.7-3 3 1.6.3 2.7 1.4 3 3z"/>
+      <text class="cf-f8-st" x="100" y="225"><tspan data-cf-status="DRAFT">Generate the UVM RAL for this block</tspan></text>
+    </g>
+    <g class="cf-f8-sent" data-s="2" style="opacity:0">
+      <rect class="cf-f8-sbox" x="60" y="196" width="360" height="48" rx="10"/>
+      <path class="cf-f8-sp" d="M84 226c.3-1.6 1.4-2.7 3-3-1.6-.3-2.7-1.4-3-3-.3 1.6-1.4 2.7-3 3 1.6.3 2.7 1.4 3 3z"/>
+      <text class="cf-f8-st" x="100" y="225"><tspan data-cf-status="DRAFT">Which flag sets the bus width?</tspan></text>
+    </g>
+    <!-- the two binaries -->
+    <g class="cf-f8-bin" data-b="1">
+      <rect class="cf-f8-bbox" x="480" y="176" width="170" height="68" rx="8"/>
+      <rect class="cf-f8-blit" x="480" y="176" width="170" height="68" rx="8"/>
+      <text class="cf-f8-bt" x="498" y="207">ids-mcp-suite</text>
+      <text class="cf-f8-bk" x="498" y="226"><tspan data-cf-status="DRAFT">Build</tspan></text>
+    </g>
+    <g class="cf-f8-bin" data-b="2">
+      <rect class="cf-f8-bbox" x="480" y="300" width="170" height="68" rx="8"/>
+      <rect class="cf-f8-blit" x="480" y="300" width="170" height="68" rx="8" style="opacity:0"/>
+      <text class="cf-f8-bt" x="498" y="331">ids-mcp-docs</text>
+      <text class="cf-f8-bk" x="498" y="350"><tspan data-cf-status="DRAFT">Learn and look up</tspan></text>
+    </g>
+    <!-- the stacks -->
+    <g class="cf-f8-stack cf-f8-tool">
+      <rect class="cf-f8-box" x="740" y="0" width="380" height="202" rx="8"/>
+      <line class="cf-f8-rule" x1="740" y1="32" x2="1120" y2="32"/>
+      <text class="cf-f8-h" x="752" y="21"><tspan data-cf-status="DRAFT">IDS toolchain</tspan></text>
+      <g class="cf-f8-row" data-i="0">
+        <rect class="cf-f8-wash" x="741" y="33" width="378" height="32" rx="0"/>
+        <path class="cf-f8-ok" d="M754 49 l3.5 3.5 7-7"/>
+        <text class="cf-f8-t" x="776" y="53"><tspan data-cf-status="DRAFT">RTL</tspan></text>
+        <rect class="cf-f8-ul" x="741" y="64" width="378" height="2"/>
+      </g>
+      <line class="cf-f8-rule" x1="740" y1="66" x2="1120" y2="66"/>
+      <g class="cf-f8-row" data-i="1">
+        <rect class="cf-f8-wash" x="741" y="67" width="378" height="32" rx="0"/>
+        <path class="cf-f8-ok" d="M754 83 l3.5 3.5 7-7"/>
+        <text class="cf-f8-t" x="776" y="87"><tspan data-cf-status="DRAFT">UVM RAL</tspan></text>
+        <rect class="cf-f8-ul" x="741" y="98" width="378" height="2"/>
+      </g>
+      <line class="cf-f8-rule" x1="740" y1="100" x2="1120" y2="100"/>
+      <g class="cf-f8-row" data-i="2">
+        <rect class="cf-f8-wash" x="741" y="101" width="378" height="32" rx="0"/>
+        <path class="cf-f8-ok" d="M754 117 l3.5 3.5 7-7"/>
+        <text class="cf-f8-t" x="776" y="121"><tspan data-cf-status="DRAFT">Headers</tspan></text>
+        <rect class="cf-f8-ul" x="741" y="132" width="378" height="2"/>
+      </g>
+      <line class="cf-f8-rule" x1="740" y1="134" x2="1120" y2="134"/>
+      <g class="cf-f8-row" data-i="3">
+        <rect class="cf-f8-wash" x="741" y="135" width="378" height="32" rx="0"/>
+        <path class="cf-f8-ok" d="M754 151 l3.5 3.5 7-7"/>
+        <text class="cf-f8-t" x="776" y="155"><tspan data-cf-status="DRAFT">Docs</tspan></text>
+        <rect class="cf-f8-ul" x="741" y="166" width="378" height="2"/>
+      </g>
+      <line class="cf-f8-rule" x1="740" y1="168" x2="1120" y2="168"/>
+      <g class="cf-f8-row" data-i="4">
+        <rect class="cf-f8-wash" x="741" y="169" width="378" height="32" rx="6"/>
+        <path class="cf-f8-ok" d="M754 185 l3.5 3.5 7-7"/>
+        <text class="cf-f8-t" x="776" y="189"><tspan data-cf-status="DRAFT">IP-XACT</tspan></text>
+        <rect class="cf-f8-ul" x="741" y="200" width="378" height="2"/>
+      </g>
+    </g>
+    <g class="cf-f8-stack cf-f8-guides">
+      <rect class="cf-f8-box" x="740" y="238" width="380" height="168" rx="8"/>
+      <line class="cf-f8-rule" x1="740" y1="270" x2="1120" y2="270"/>
+      <text class="cf-f8-h" x="752" y="259"><tspan data-cf-status="DRAFT">Embedded guides · offline</tspan></text>
+      <g class="cf-f8-row" data-i="0">
+        <rect class="cf-f8-wash" x="741" y="271" width="378" height="32" rx="0"/>
+        <path class="cf-f8-ok" d="M754 287 l3.5 3.5 7-7"/>
+        <text class="cf-f8-t" x="776" y="291"><tspan data-cf-status="DRAFT">IDS-Batch</tspan></text>
+        <rect class="cf-f8-ul" x="741" y="302" width="378" height="2"/>
+      </g>
+      <line class="cf-f8-rule" x1="740" y1="304" x2="1120" y2="304"/>
+      <g class="cf-f8-row" data-i="1">
+        <rect class="cf-f8-wash" x="741" y="305" width="378" height="32" rx="0"/>
+        <path class="cf-f8-ok" d="M754 321 l3.5 3.5 7-7"/>
+        <text class="cf-f8-t" x="776" y="325"><tspan data-cf-status="DRAFT">IDS-Verify</tspan></text>
+        <rect class="cf-f8-ul" x="741" y="336" width="378" height="2"/>
+      </g>
+      <line class="cf-f8-rule" x1="740" y1="338" x2="1120" y2="338"/>
+      <g class="cf-f8-row" data-i="2">
+        <rect class="cf-f8-wash" x="741" y="339" width="378" height="32" rx="0"/>
+        <path class="cf-f8-ok" d="M754 355 l3.5 3.5 7-7"/>
+        <text class="cf-f8-t" x="776" y="359"><tspan data-cf-status="DRAFT">IDS-Validate</tspan></text>
+        <rect class="cf-f8-ul" x="741" y="370" width="378" height="2"/>
+      </g>
+      <line class="cf-f8-rule" x1="740" y1="372" x2="1120" y2="372"/>
+      <g class="cf-f8-row" data-i="3">
+        <rect class="cf-f8-wash" x="741" y="373" width="378" height="32" rx="6"/>
+        <path class="cf-f8-ok" d="M754 389 l3.5 3.5 7-7"/>
+        <text class="cf-f8-t" x="776" y="393"><tspan data-cf-status="DRAFT">IDS-Integrate</tspan></text>
+        <rect class="cf-f8-ul" x="741" y="404" width="378" height="2"/>
+      </g>
+    </g>
+    <rect class="cf-f8-sweep" x="741" y="271" width="378" height="32" style="opacity:0"/>
+  </svg>
+</div>
+  <ul class="cf-mcp cf-mcp--after-fig">
     <li>
       <h3>ids-mcp-suite</h3>
       <p class="cf-mcp__line">Generation, verification and integration</p>
