@@ -220,6 +220,32 @@
 .cf-page .cf-flow-grid > li > p { font-size: 15px; color: var(--cf-muted); }
 .cf-page .cf-flow-grid .cf-fig, .cf-page .cf-flow-grid .cf-fig__sym { width: 48px; height: 48px; margin: 0 0 6px; }
 .cf-page .cf-flow-grid .cf-fig__sym { display: block; }
+/* ---------- bullets (03 layers, 07 mcp): plain list, short orange dash marker; no pills, no circles ---------- */
+.cf-page .cf-bullets { display: grid; gap: 8px; }
+.cf-page .cf-bullets li { position: relative; padding-left: 18px; font-size: 15px; line-height: 1.5; color: var(--cf-muted); }
+.cf-page .cf-bullets li::before { content: ""; position: absolute; left: 0; top: 10px; width: 8px; height: 2px; background: var(--cf-orange-line); }
+.cf-page .cf-bullets__note { color: var(--cf-quiet); font-size: 14px; }
+/* ---------- 03 layers (10-30): three columns under one top rule ---------- */
+.cf-page .cf-layers { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: var(--cf-s-grid); max-width: var(--cf-w-visual); margin: 0 auto; }
+.cf-page .cf-layers > li { display: grid; gap: 10px; align-content: start; padding-top: 20px; border-top: 1px solid var(--cf-line); min-width: 0; }
+.cf-page .cf-layers > li > h3 { font-size: clamp(24px, 2.2vw, 30px); }
+.cf-page .cf-layers__line { font-size: 16px; color: var(--cf-ink); }
+.cf-page .cf-layers .cf-bullets { margin-top: 6px; }
+/* ---------- 04 author: reserved image slots (10-30; the document's screenshots are not shipped, G-D5) ---------- */
+.cf-page .cf-slots { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--cf-s-grid); max-width: var(--cf-w-visual); margin: var(--cf-s-intro) auto 0; }
+.cf-page .cf-slot { aspect-ratio: 16 / 10; display: grid; place-items: center; border: 1px solid var(--cf-line); border-radius: var(--cf-radius-win); background: var(--cf-panel); }
+.cf-page .cf-slot span { font: 500 12px/1.3 var(--cf-font); letter-spacing: .06em; text-transform: uppercase; color: var(--cf-quiet); }
+.cf-page .cf-slots .cf-fig-cap { margin-top: 12px; }
+/* ---------- 07 mcp (10-30): two columns + one closing line ---------- */
+.cf-page .cf-mcp { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: clamp(32px, 4vw, 56px); max-width: var(--cf-w-visual); margin: 0 auto; }
+.cf-page .cf-mcp > li { display: grid; gap: 10px; align-content: start; padding-top: 20px; border-top: 1px solid var(--cf-line); min-width: 0; }
+.cf-page .cf-mcp > li > h3 { font-size: clamp(22px, 2vw, 26px); }
+.cf-page .cf-mcp__line { font-size: 16px; color: var(--cf-ink); }
+.cf-page .cf-mcp .cf-label { margin-top: 10px; }
+.cf-page .cf-mcp__closing { max-width: var(--cf-w-intro); margin: var(--cf-s-intro) auto 0; text-align: center; font-size: 19px; font-weight: 600; }
+/* ---------- 06 agents + 08 features: definition-list variants ---------- */
+.cf-page .cf-bl.cf-bl--3 { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 32px var(--cf-s-grid); max-width: var(--cf-w-visual); margin: 0 auto; }
+.cf-page .cf-bl.cf-bl--after-fig { max-width: var(--cf-w-visual); margin: var(--cf-s-intro) auto 0; }
 /* ---------- 08 benefits + "See it live" strip ---------- */
 .cf-page .cf-bl { display: grid; grid-template-columns: 1fr 1fr; gap: 28px 56px; margin-top: 8px; }
 .cf-page .cf-bl dt { font-size: 19px; font-weight: 760; }
@@ -247,10 +273,11 @@
 }
 @media (max-width: 860px) {
   .cf-page .cf-row2 { grid-template-columns: minmax(0, 1fr); }
+  .cf-page .cf-bl.cf-bl--3 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
 }
 @media (max-width: 767px) {
   .cf-page { --cf-s-overlap: 80px; --cf-header-h: 64px; }
-  .cf-page .cf-bl { grid-template-columns: minmax(0, 1fr); }
+  .cf-page .cf-bl, .cf-page .cf-bl.cf-bl--3, .cf-page .cf-layers, .cf-page .cf-mcp, .cf-page .cf-slots { grid-template-columns: minmax(0, 1fr); }
   .cf-page .cf-hero__window { padding-inline: 12px; }
   .cf-page .cf-gen-cv { grid-template-columns: minmax(0, 1fr); justify-items: center; }
   .cf-page .cf-gen-inp { width: 126px; }
@@ -1271,18 +1298,20 @@
 <style>.cf-page-shell { height: 106px; } @media (max-width: 767px) { .cf-page-shell { height: 64px; } }</style>
 <header class="cf-page-shell" style="position:sticky;top:0;z-index:50;background:#fff;border-bottom:1px solid #e5e7eb;display:flex;align-items:center;padding:0 40px;gap:40px"><span style="display:block;width:150px;height:34px;border-radius:4px;background:#FF571B"></span><span style="flex:1"><i style="display:inline-block;height:10px;width:72px;border-radius:5px;background:#d4d6da;margin-right:18px"></i><i style="display:inline-block;height:10px;width:66px;border-radius:5px;background:#d4d6da;margin-right:18px"></i><i style="display:inline-block;height:10px;width:60px;border-radius:5px;background:#d4d6da;margin-right:18px"></i><i style="display:inline-block;height:10px;width:54px;border-radius:5px;background:#d4d6da;margin-right:18px"></i><i style="display:inline-block;height:10px;width:48px;border-radius:5px;background:#d4d6da;margin-right:18px"></i></span><span style="display:block;width:150px;height:40px;border-radius:4px;background:#FF571B"></span></header>
 <section id="cf-hero" class="cf-page cf-hero cf-hero--dark">
-<!-- 08-hero-and-spacing.md §2 + 09-reveal-less §2.3 F1: dark hero ground (not a band) + the outline window in the same container, overlapping by --cf-s-overlap -->
+<!-- 08-hero-and-spacing.md §2 + 09-reveal-less §2.3 F1: dark hero ground (not a band) + the outline window in the same container, overlapping by --cf-s-overlap.
+     Copy = IDS-CF-Website-Content-Updated.docx (10-30): title → eyebrow, tagline → h1, descriptor → sub, three facts. -->
 <p class="cf-banner"><span><cf-s data-cf-status="DRAFT">IDS-NG is now IDS-CF™.</cf-s></span> <a class="cf-banner__link" href="https://www.agnisys.com/request-a-call-about-the-agnisys-products-and-solutions/"><cf-s data-cf-status="DRAFT">Book a demo</cf-s></a></p>
 <div class="cf-hero__ground" data-cf-hero-field data-cf-field-labels="[2:1]|[7:4]|[0]|[15:8]">
   <div class="cf-wrap cf-hero__wrap">
     <div class="cf-hero__in cf-rv">
-      <p class="cf-eyebrow">IDS-CF™ · Collaboration Framework</p>
-      <h1 id="cf-hero-h1">One Specification. Every Team. Every Deliverable.</h1>
-      <p class="cf-hero__sub">AI-Powered Collaboration Framework for Specification-Driven SoC Development</p>
-      <a class="cf-btn cf-btn--round" href="https://www.agnisys.com/request-a-call-about-the-agnisys-products-and-solutions/">Request a Demo</a>
+      <p class="cf-eyebrow">IDS-CF™</p>
+      <h1 id="cf-hero-h1">One Specification. All Teams. Every Deliverable.</h1>
+      <p class="cf-hero__sub">Golden Specification–Driven Collaboration Platform for IP and SoC Development</p>
+      <a class="cf-btn cf-btn--round" href="https://www.agnisys.com/request-a-call-about-the-agnisys-products-and-solutions/"><cf-s data-cf-status="DRAFT">Request a Demo</cf-s></a>
       <ul class="cf-hero__facts">
-        <li><b>PLATFORMS INDEPENDENT</b><span>Windows · Linux · macOS</span></li>
-        <li><b><cf-s data-cf-status="DRAFT">BUILT-IN CODE EDITOR</cf-s></b><span><cf-s data-cf-status="DRAFT">syntax highlighting, auto-completion, real-time validation</cf-s></span></li>
+        <li><b>1 GOLDEN SPEC</b><span>Single source of Truth</span></li>
+        <li><b>6 AI AGENTS</b><span>Expert, Customizable, Retentive Agents</span></li>
+        <li><b>1 PLATFORM</b><span>Windows · Linux · MacOS</span></li>
       </ul>
     </div>
   </div>
@@ -1339,11 +1368,11 @@
     </div>
     <div class="cf-f1-pane cf-f1-pane--out" role="tabpanel">
       <div class="cf-f1-card cf-f1-out">
-        <div class="cf-f1-orow cf-f1-row"><span class="cf-f1-ok2"><svg class="cf-ico cf-ico-mark-check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg></span><span>Design</span><i class="cf-f1-b cf-f1-b--s"></i></div>
+        <div class="cf-f1-orow cf-f1-row"><span class="cf-f1-ok2"><svg class="cf-ico cf-ico-mark-check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg></span><span>Design (RTL)</span><i class="cf-f1-b cf-f1-b--s"></i></div>
         <div class="cf-f1-orow cf-f1-row"><span class="cf-f1-ok2"><svg class="cf-ico cf-ico-mark-check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg></span><span>Verification</span><i class="cf-f1-b"></i></div>
-        <div class="cf-f1-orow cf-f1-row"><span class="cf-f1-ok2"><svg class="cf-ico cf-ico-mark-check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg></span><span>Software</span><i class="cf-f1-b cf-f1-b--s"></i></div>
+        <div class="cf-f1-orow cf-f1-row"><span class="cf-f1-ok2"><svg class="cf-ico cf-ico-mark-check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg></span><span>Software / firmware</span><i class="cf-f1-b cf-f1-b--s"></i></div>
         <div class="cf-f1-orow cf-f1-row"><span class="cf-f1-ok2"><svg class="cf-ico cf-ico-mark-check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg></span><span>Documentation</span><i class="cf-f1-b cf-f1-b--l"></i></div>
-        <div class="cf-f1-orow cf-f1-row"><span class="cf-f1-ok2"><svg class="cf-ico cf-ico-mark-check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg></span><span>Industry Standards</span><i class="cf-f1-b"></i></div>
+        <div class="cf-f1-orow cf-f1-row"><span class="cf-f1-ok2"><svg class="cf-ico cf-ico-mark-check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg></span><span>Standards and custom</span><i class="cf-f1-b"></i></div>
       </div>
     </div>
   </div>
@@ -1355,8 +1384,9 @@
   <div class="cf-intro cf-rv">
     <p class="cf-label">OVERVIEW</p>
     <h2>The synchronization problem, solved at the source</h2>
-    <p>Modern semiconductor development requires hardware, software, firmware, verification, validation, and system teams to collaborate on increasingly complex IP and SoC specifications. Maintaining these specifications across multiple documents, spreadsheets, and formats often results in <strong>inconsistencies, duplicated effort, communication gaps, and costly design iterations.</strong></p>
-    <p>IDS-CF™ (IDesignSpec Collaboration Framework) provides a unified, AI-powered platform that enables all engineering teams to collaborate using a <strong>single golden specification</strong> throughout the IP and SoC development lifecycle.</p>
+    <p>Design RTL, UVM testbenches, firmware headers and documentation are usually written by different teams from different copies of the spec: Word files, spreadsheets, PDFs. When the spec changes, the copies drift apart, and the mismatch surfaces late in verification or integration, when fixes are most expensive.</p>
+    <p>IDS-CF™ (IDesignSpec Collaboration Framework) puts all teams on a single Golden Specification. Author it once, validate it with AI, and generate RTL, verification collateral, software headers and documentation from it, so every output stays consistent with the spec.</p>
+    <p>On top of the platform, IDS-AI™ adds a multi-agent AI layer that checks, extracts, generates and debugs from the Golden Specification, and IDS-MCP™ lets your own AI assistant drive the IDS toolchain in plain language.</p>
   </div>
   <div class="cf-fig cf-fig--f2" data-cf-motion="M5" role="img" aria-label="Many specification forms, unstructured documents and structured register, sequence and connectivity formats, converge into one golden specification that drives the SoC blocks and the generated outputs.">
   <svg class="cf-fig__svg cf-f2-d" viewBox="0 0 1120 540" preserveAspectRatio="xMidYMid meet" aria-hidden="true" focusable="false" data-gold="538 270"><defs><filter id="cf-f2-sh-d" x="-10%" y="-10%" width="120%" height="140%"><feDropShadow class="cf-f2-fsh" dx="0" dy="3" stdDeviation="5"/></filter></defs><text class="cf-f2-h" x="1" y="84"><tspan data-cf-status="DRAFT">Unstructured</tspan></text><g class="cf-f2-fly" data-c="38 126"><rect class="cf-f2-box" x="0.5" y="96.5" width="75" height="59" rx="6"/><rect class="cf-f2-bar" x="10" y="108" width="32" height="3"/><rect class="cf-f2-bar" x="10" y="116" width="48" height="3"/><rect class="cf-f2-bar" x="10" y="124" width="24" height="3"/><text x="8" y="144"><tspan data-cf-status="DRAFT">Text</tspan></text></g><g class="cf-f2-fly" data-c="122 126"><rect class="cf-f2-box" x="84.5" y="96.5" width="75" height="59" rx="6"/><rect class="cf-f2-bar" x="94" y="108" width="32" height="3"/><rect class="cf-f2-bar" x="94" y="116" width="48" height="3"/><rect class="cf-f2-bar" x="94" y="124" width="24" height="3"/><text x="92" y="144"><tspan data-cf-status="DRAFT">Markdown</tspan></text></g><g class="cf-f2-fly" data-c="206 126"><rect class="cf-f2-box" x="168.5" y="96.5" width="75" height="59" rx="6"/><rect class="cf-f2-bar" x="178" y="108" width="32" height="3"/><rect class="cf-f2-bar" x="178" y="116" width="48" height="3"/><rect class="cf-f2-bar" x="178" y="124" width="24" height="3"/><text x="176" y="144"><tspan data-cf-status="DRAFT">PDF</tspan></text></g><g class="cf-f2-fly" data-c="290 126"><rect class="cf-f2-box" x="252.5" y="96.5" width="75" height="59" rx="6"/><rect class="cf-f2-bar" x="262" y="108" width="32" height="3"/><rect class="cf-f2-bar" x="262" y="116" width="48" height="3"/><rect class="cf-f2-bar" x="262" y="124" width="24" height="3"/><text x="260" y="144"><tspan data-cf-status="DRAFT">Word</tspan></text></g><g class="cf-f2-fly" data-c="38 198"><rect class="cf-f2-box" x="0.5" y="168.5" width="75" height="59" rx="6"/><rect class="cf-f2-bar" x="10" y="180" width="32" height="3"/><rect class="cf-f2-bar" x="10" y="188" width="48" height="3"/><rect class="cf-f2-bar" x="10" y="196" width="24" height="3"/><text x="8" y="216"><tspan data-cf-status="DRAFT">email</tspan></text></g><g class="cf-f2-fly" data-c="206 198"><rect class="cf-f2-box" x="84.5" y="168.5" width="243" height="59" rx="6"/><text x="96" y="191"><tspan data-cf-status="DRAFT">Requirement tools</tspan></text><rect class="cf-f2-bar" x="96" y="203" width="184" height="3"/><rect class="cf-f2-bar" x="96" y="210" width="154" height="3"/><rect class="cf-f2-bar" x="96" y="217" width="168" height="3"/></g><text class="cf-f2-h" x="1" y="264"><tspan data-cf-status="DRAFT">Structured</tspan></text><g class="cf-f2-fly" data-c="164 300"><rect class="cf-f2-box" x="0.5" y="276.5" width="327" height="47" rx="6"/><text x="12" y="296"><tspan data-cf-status="DRAFT">Registers</tspan></text><text class="cf-f2-sub" x="12" y="313"><tspan data-cf-status="DRAFT">SystemRDL · IP-XACT · CSV / Excel · Word</tspan></text></g><g class="cf-f2-fly" data-c="164 360"><rect class="cf-f2-box" x="0.5" y="336.5" width="327" height="47" rx="6"/><text x="12" y="356"><tspan data-cf-status="DRAFT">Sequences</tspan></text><text class="cf-f2-sub" x="12" y="373"><tspan data-cf-status="DRAFT">PSS · Excel</tspan></text></g><g class="cf-f2-fly" data-c="164 420"><rect class="cf-f2-box" x="0.5" y="396.5" width="327" height="47" rx="6"/><text x="12" y="416"><tspan data-cf-status="DRAFT">Connectivity</tspan></text><text class="cf-f2-sub" x="12" y="433"><tspan data-cf-status="DRAFT">Python · Tcl · CSV / Excel</tspan></text></g><g class="cf-f2-ins"><path class="cf-f2-in" pathLength="1" d="M328 126 C368 126 368 234 408 234"/><path class="cf-f2-in" pathLength="1" d="M328 198 C368 198 368 246 408 246"/><path class="cf-f2-in" pathLength="1" d="M328 300 C368 300 368 258 408 258"/><path class="cf-f2-in" pathLength="1" d="M328 360 C368 360 368 282 408 282"/><path class="cf-f2-in" pathLength="1" d="M328 420 C368 420 368 306 408 306"/></g><g class="cf-f2-gold"><rect class="cf-f2-gr" filter="url(#cf-f2-sh-d)" x="408.75" y="120.75" width="258.5" height="298.5" rx="8"/><rect class="cf-f2-hi" x="410" y="122" width="256" height="296" rx="7"/><text class="cf-f2-t" x="428" y="150"><tspan data-cf-status="DRAFT">Golden spec</tspan></text><rect class="cf-f2-tree" x="428" y="170" width="56" height="4"/><rect class="cf-f2-tree" x="440" y="184" width="88" height="4"/><rect class="cf-f2-tree" x="452" y="198" width="120" height="4"/><rect class="cf-f2-tree" x="452" y="212" width="96" height="4"/><rect class="cf-f2-tree" x="440" y="226" width="72" height="4"/><path class="cf-f2-div" d="M428 248.5 H648"/></g><g class="cf-f2-attr"><path class="cf-f2-tick" d="M428 271 l3 3 l7 -7"/><text x="446" y="276"><tspan data-cf-status="DRAFT">Executable</tspan></text></g><g class="cf-f2-attr"><path class="cf-f2-tick" d="M428 301 l3 3 l7 -7"/><text x="446" y="306"><tspan data-cf-status="DRAFT">Version-controlled</tspan></text></g><g class="cf-f2-attr"><path class="cf-f2-tick" d="M428 331 l3 3 l7 -7"/><text x="446" y="336"><tspan data-cf-status="DRAFT">Traceable</tspan></text></g><g class="cf-f2-attr"><path class="cf-f2-tick" d="M428 361 l3 3 l7 -7"/><text x="446" y="366"><tspan data-cf-status="DRAFT">Accessible</tspan></text></g><rect class="cf-f2-soc" x="748.5" y="56.5" width="367" height="287" rx="12"/><text class="cf-f2-h" x="765" y="78"><tspan data-cf-status="DRAFT">SoC</tspan></text><rect class="cf-f2-box" filter="url(#cf-f2-sh-d)" x="764.5" y="88.5" width="99" height="63" rx="6"/><rect class="cf-f2-hi" x="765.5" y="89.5" width="97" height="61" rx="5"/><text x="776" y="110"><tspan data-cf-status="DRAFT">CPU</tspan></text><rect class="cf-f2-cell" x="776" y="120" width="14" height="12"/><rect class="cf-f2-cell" x="792" y="120" width="14" height="12"/><rect class="cf-f2-cell" x="808" y="120" width="14" height="12"/><rect class="cf-f2-cell" x="824" y="120" width="14" height="12"/><rect class="cf-f2-cell" x="840" y="120" width="14" height="12"/><rect class="cf-f2-box" filter="url(#cf-f2-sh-d)" x="1004.5" y="88.5" width="99" height="63" rx="6"/><rect class="cf-f2-hi" x="1005.5" y="89.5" width="97" height="61" rx="5"/><text x="1016" y="110"><tspan data-cf-status="DRAFT">Memory</tspan></text><rect class="cf-f2-mem" x="1016" y="122" width="60" height="3"/><rect class="cf-f2-mem" x="1016" y="130" width="60" height="3"/><rect class="cf-f2-mem" x="1016" y="138" width="60" height="3"/><rect class="cf-f2-bus" x="764" y="180" width="336" height="24" rx="6"/><text class="cf-f2-bus-t" x="778" y="196"><tspan data-cf-status="DRAFT">Bus</tspan></text><path class="cf-f2-stub" d="M814 152 V180 M1054 152 V180 M814 204 V232 M934 204 V232 M1054 204 V232"/><rect class="cf-f2-box" filter="url(#cf-f2-sh-d)" x="764.5" y="232.5" width="99" height="71" rx="6"/><rect class="cf-f2-hi" x="765.5" y="233.5" width="97" height="69" rx="5"/><text x="776" y="254"><tspan data-cf-status="DRAFT">IP</tspan></text><rect class="cf-f2-cell" x="776" y="272" width="14" height="12"/><rect class="cf-f2-cell" x="792" y="272" width="14" height="12"/><rect class="cf-f2-cell" x="808" y="272" width="14" height="12"/><rect class="cf-f2-cell" x="824" y="272" width="14" height="12"/><rect class="cf-f2-cell" x="840" y="272" width="14" height="12"/><rect class="cf-f2-box" filter="url(#cf-f2-sh-d)" x="884.5" y="232.5" width="99" height="71" rx="6"/><rect class="cf-f2-hi" x="885.5" y="233.5" width="97" height="69" rx="5"/><text x="896" y="254"><tspan data-cf-status="DRAFT">IP</tspan></text><rect class="cf-f2-cell" x="896" y="272" width="14" height="12"/><rect class="cf-f2-cell" x="912" y="272" width="14" height="12"/><rect class="cf-f2-cell" x="928" y="272" width="14" height="12"/><rect class="cf-f2-cell" x="944" y="272" width="14" height="12"/><rect class="cf-f2-cell" x="960" y="272" width="14" height="12"/><rect class="cf-f2-box" filter="url(#cf-f2-sh-d)" x="1004.5" y="232.5" width="99" height="71" rx="6"/><rect class="cf-f2-hi" x="1005.5" y="233.5" width="97" height="69" rx="5"/><text x="1016" y="254"><tspan data-cf-status="DRAFT">IP</tspan></text><rect class="cf-f2-cell" x="1016" y="272" width="14" height="12"/><rect class="cf-f2-cell" x="1032" y="272" width="14" height="12"/><rect class="cf-f2-cell" x="1048" y="272" width="14" height="12"/><rect class="cf-f2-cell" x="1064" y="272" width="14" height="12"/><rect class="cf-f2-cell" x="1080" y="272" width="14" height="12"/><text class="cf-f2-h" x="749" y="388"><tspan data-cf-status="DRAFT">Generated outputs</tspan></text><g class="cf-f2-out"><rect class="cf-f2-box" filter="url(#cf-f2-sh-d)" x="748.5" y="400.5" width="175" height="35" rx="6"/><rect class="cf-f2-hi" x="749.5" y="401.5" width="173" height="33" rx="5"/><text x="762" y="423"><tspan data-cf-status="DRAFT">Design</tspan></text></g><g class="cf-f2-out"><rect class="cf-f2-box" filter="url(#cf-f2-sh-d)" x="940.5" y="400.5" width="175" height="35" rx="6"/><rect class="cf-f2-hi" x="941.5" y="401.5" width="173" height="33" rx="5"/><text x="954" y="423"><tspan data-cf-status="DRAFT">Verification</tspan></text></g><g class="cf-f2-out"><rect class="cf-f2-box" filter="url(#cf-f2-sh-d)" x="748.5" y="444.5" width="175" height="35" rx="6"/><rect class="cf-f2-hi" x="749.5" y="445.5" width="173" height="33" rx="5"/><text x="762" y="467"><tspan data-cf-status="DRAFT">Software</tspan></text></g><g class="cf-f2-out"><rect class="cf-f2-box" filter="url(#cf-f2-sh-d)" x="940.5" y="444.5" width="175" height="35" rx="6"/><rect class="cf-f2-hi" x="941.5" y="445.5" width="173" height="33" rx="5"/><text x="954" y="467"><tspan data-cf-status="DRAFT">Documentation</tspan></text></g><g class="cf-f2-drives"><path class="cf-f2-drive" pathLength="1" d="M668 184 L700 184 Q708 184 708 176 L708 134 Q708 126 716 126 L764 126"/><path class="cf-f2-pulse" pathLength="1" d="M668 184 L700 184 Q708 184 708 176 L708 134 Q708 126 716 126 L764 126"/><path class="cf-f2-drive" pathLength="1" d="M668 250 L716 250 Q724 250 724 258 L724 316 Q724 324 732 324 L1054 324 M814 324 V304 M934 324 V304 M1054 324 V304"/><path class="cf-f2-pulse" pathLength="1" d="M668 250 L716 250 Q724 250 724 258 L724 316 Q724 324 732 324 L1054 324 M814 324 V304 M934 324 V304 M1054 324 V304"/><path class="cf-f2-drive" pathLength="1" d="M668 316 L692 316 Q700 316 700 324 L700 410 Q700 418 708 418 L748 418"/><path class="cf-f2-pulse" pathLength="1" d="M668 316 L692 316 Q700 316 700 324 L700 410 Q700 418 708 418 L748 418"/><circle class="cf-f2-dot" cx="668" cy="184" r="3"/><circle class="cf-f2-dot" cx="668" cy="250" r="3"/><circle class="cf-f2-dot" cx="668" cy="316" r="3"/><circle class="cf-f2-dot" cx="748.5" cy="126" r="3"/><circle class="cf-f2-dot" cx="748.5" cy="324" r="3"/></g><g class="cf-f2-lit"><rect x="776" y="120" width="14" height="12"/><rect x="792" y="120" width="14" height="12"/><rect x="808" y="120" width="14" height="12"/><rect x="824" y="120" width="14" height="12"/><rect x="840" y="120" width="14" height="12"/></g><g class="cf-f2-lit"><rect x="776" y="272" width="14" height="12"/><rect x="792" y="272" width="14" height="12"/><rect x="808" y="272" width="14" height="12"/><rect x="824" y="272" width="14" height="12"/><rect x="840" y="272" width="14" height="12"/></g><g class="cf-f2-lit"><rect x="896" y="272" width="14" height="12"/><rect x="912" y="272" width="14" height="12"/><rect x="928" y="272" width="14" height="12"/><rect x="944" y="272" width="14" height="12"/><rect x="960" y="272" width="14" height="12"/></g><g class="cf-f2-lit"><rect x="1016" y="272" width="14" height="12"/><rect x="1032" y="272" width="14" height="12"/><rect x="1048" y="272" width="14" height="12"/><rect x="1064" y="272" width="14" height="12"/><rect x="1080" y="272" width="14" height="12"/></g></svg>
@@ -1364,14 +1394,55 @@
 </div>
 </div>
 </section>
+<section id="cf-layers" class="cf-page cf-layers cf-pt-0">
+<!-- 10-30 document "ONE PLATFORM, THREE LAYERS": intro + three columns (kicker · name · one line · three bullets). Text only, no figure. -->
+<div class="cf-wrap">
+  <div class="cf-intro cf-rv">
+    <p class="cf-label">ONE PLATFORM, THREE LAYERS</p>
+    <h2>Author it. Automate it. Ask for it.</h2>
+  </div>
+  <ul class="cf-layers">
+    <li>
+      <p class="cf-label">THE PLATFORM</p>
+      <h3>IDS-CF</h3>
+      <p class="cf-layers__line">Author, collaborate, generate</p>
+      <ul class="cf-bullets">
+        <li>Four interchangeable spec editors</li>
+        <li>Multi-team authoring and version history</li>
+        <li>One-click generation of RTL, UVM, software and docs</li>
+      </ul>
+    </li>
+    <li>
+      <p class="cf-label">THE AGENTS</p>
+      <h3>IDS-AI</h3>
+      <p class="cf-layers__line">Multi-agent AI on the Golden Spec</p>
+      <ul class="cf-bullets">
+        <li>Spec Check, Extract</li>
+        <li>Verification, SV Assertion, RTL Generator, Debug</li>
+        <li>Runs on the IDS-CF platform</li>
+      </ul>
+    </li>
+    <li>
+      <p class="cf-label">THE INTERFACE</p>
+      <h3>IDS-MCP</h3>
+      <p class="cf-layers__line">Your AI assistant, connected</p>
+      <ul class="cf-bullets">
+        <li>Works with Claude, Cursor, Cline and more</li>
+        <li>Generation, verification and integration by prompt</li>
+        <li>Offline documentation and flag search</li>
+      </ul>
+    </li>
+  </ul>
+</div>
+</section>
 <section id="cf-author" class="cf-page cf-author cf-band-dark">
-<!-- 09 §2.1 row 03: band · intro + F3 (one block, five shapes; M2 v2) + the five view tiles (headings are buttons that jump the figure, 6b)
-     + the Sequences and PSS block (6b, owner request: sequence.h2 / i1–i3 un-removed) + the kept authoring DECK line -->
+<!-- 10-30 document "INPUT SPECIFICATION EDITORS": band · intro + F3 (one block, five shapes; M2 v2) + the four view tiles (headings are buttons that jump the figure)
+     + two reserved image slots where the document places its screenshots (not shipped, G-D5); captions are the document's, file names left out (G-D1). -->
 <div class="cf-wrap">
   <div class="cf-intro cf-rv">
     <p class="cf-label">INPUT SPECIFICATION EDITORS</p>
     <h2>Author the spec the way your team already thinks</h2>
-    <p>Four interchangeable views onto the same underlying specification — switch freely without ever forking the source of truth.</p>
+    <p>Four interchangeable views edit the same underlying specification. Switch freely without ever forking the source of truth.</p>
   </div>
   <div class="cf-fig cf-fig--f3" data-cf-motion="M2" role="img" aria-label="One block changes shape five times, form, grid, tree, sequence steps and text, and the active view name is marked.">
   <svg class="cf-fig__svg" viewBox="0 0 1120 384" preserveAspectRatio="xMidYMid meet" aria-hidden="true" focusable="false">
@@ -1558,7 +1629,7 @@
       <text class="cf-f3-title" transform="translate(260,41)" style="opacity:0">Spreadsheet View</text>
       <text class="cf-f3-title" transform="translate(260,41)" style="opacity:0">Navigator View</text>
       <text class="cf-f3-title" transform="translate(260,41)" style="opacity:0"><tspan data-cf-status="DRAFT">Sequence View</tspan></text>
-      <text class="cf-f3-title" transform="translate(260,41)" style="opacity:0"><tspan data-cf-status="DRAFT">Text-Based Editor</tspan></text>
+      <text class="cf-f3-title" transform="translate(260,41)" style="opacity:0">Text-Based Editor</text>
     </g>
     <g class="cf-f3-ov">
       <text class="cf-f3-w" data-k="w" data-i="0" transform="translate(36,108)"><tspan data-cf-status="DRAFT">name</tspan></text>
@@ -1615,78 +1686,29 @@
     <button class="cf-f3-tab" type="button" role="tab" aria-selected="false">Spreadsheet View</button>
     <button class="cf-f3-tab" type="button" role="tab" aria-selected="false">Navigator View</button>
     <button class="cf-f3-tab" type="button" role="tab" aria-selected="false"><cf-s data-cf-status="DRAFT">Sequence View</cf-s></button>
-    <button class="cf-f3-tab" type="button" role="tab" aria-selected="false"><cf-s data-cf-status="DRAFT">Text-Based Editor</cf-s></button>
+    <button class="cf-f3-tab" type="button" role="tab" aria-selected="false">Text-Based Editor</button>
     <span class="cf-f3-ind" aria-hidden="true" style="opacity:0"></span>
   </div>
 </div>
 <p class="cf-fig-cap"><a class="cf-link" href="https://www.agnisys.com/request-a-call-about-the-agnisys-products-and-solutions/"><cf-s data-cf-status="DRAFT">See it live in a demo →</cf-s></a></p>
-  <ul class="cf-tiles cf-tiles-5 cf-f3-tiles"><!-- five view tiles in figure order (Sequence after Navigator, 6b); 5-up ≥ 1200 px, 3 + 2 below (f3.css) -->
-    <li><h3><button class="cf-f3-go" type="button" data-f3-go="0">Template View</button></h3><p>Structured, form-driven authoring for chips, blocks, registers, and fields.</p></li>
+  <ul class="cf-tiles cf-tiles-4 cf-f3-tiles"><!-- four view tiles in document order; Sequence stays a figure shape only (data-f3-go 3) -->
+    <li><h3><button class="cf-f3-go" type="button" data-f3-go="0">Template View</button></h3><p>Structured, form-driven authoring for chips, blocks, registers and fields.</p></li>
     <li><h3><button class="cf-f3-go" type="button" data-f3-go="1">Spreadsheet View</button></h3><p>Tabular editing of registers and fields, familiar to hardware and verification engineers.</p></li>
     <li><h3><button class="cf-f3-go" type="button" data-f3-go="2">Navigator View</button></h3><p>Hierarchical browsing of the full chip → block → register → field tree.</p></li>
-    <li><h3><button class="cf-f3-go" type="button" data-f3-go="3"><cf-s data-cf-status="DRAFT">Sequence View</cf-s></button></h3><p><cf-s data-cf-status="DRAFT">Rows of write, if, for, while and wait steps, each with its register and value.</cf-s></p></li>
-    <li><h3><button class="cf-f3-go" type="button" data-f3-go="4"><cf-s data-cf-status="DRAFT">Text-Based Editor</cf-s></button></h3><p><cf-s data-cf-status="DRAFT">Text editing with syntax highlighting and real-time validation.</cf-s></p></li>
+    <li><h3><button class="cf-f3-go" type="button" data-f3-go="4">Text-Based Editor</button></h3><p>VS Code like editing with syntax highlighting, auto-completion and real-time validation.</p></li>
   </ul>
-  <div class="cf-quiet-lines">
-    <p><cf-s data-cf-status="DECK">Eliminates syntax complexity through structured templates</cf-s></p>
-  </div>
+  <ul class="cf-slots">
+    <li><div class="cf-slot" role="img" aria-label="SoC specification workspace: hierarchy and navigator view"><span><cf-s data-cf-status="DRAFT">Image to follow</cf-s></span></div><p class="cf-fig-cap">SoC specification workspace: hierarchy and navigator view</p></li>
+    <li><div class="cf-slot" role="img" aria-label="Spreadsheet view: registers and fields"><span><cf-s data-cf-status="DRAFT">Image to follow</cf-s></span></div><p class="cf-fig-cap">Spreadsheet view: registers and fields</p></li>
+  </ul>
 </div>
 </section>
-<section id="cf-check" class="cf-page cf-check">
-<!-- 09 §2.1 row 04: feature row, text left · F4 collide and resolve (M3 v2 from lane E) right -->
-<div class="cf-wrap">
-  <div class="cf-row2">
-    <div class="cf-row2__text cf-rv">
-      <p class="cf-label"><cf-s data-cf-status="DRAFT">CHECK</cf-s></p>
-      <h2><cf-s data-cf-status="DRAFT">Catch spec errors before they reach RTL</cf-s></h2>
-      <p>Automatically validates specification completeness, consistency, correctness, and quality while identifying potential issues early in the development cycle.</p>
-      <p class="cf-short"><cf-s data-cf-status="DRAFT">Overlaps</cf-s> · <cf-s data-cf-status="DRAFT">Duplicate names</cf-s> · <cf-s data-cf-status="DRAFT">Invalid access</cf-s></p>
-    </div>
-    <div class="cf-row2__visual">
-      <div class="cf-fig cf-fig--f4" data-cf-motion="M3" role="img" aria-label="Two bit-range bars overlap on a 16-bit lane, one moves to free bits and the lane turns valid.">
-  <svg class="cf-fig__svg" viewBox="0 0 600 192" preserveAspectRatio="xMidYMid meet" aria-hidden="true" focusable="false">
-    <defs>
-      <pattern id="cf-f4-hatch" width="6" height="6" patternUnits="userSpaceOnUse" patternTransform="rotate(45)">
-        <line class="cf-f4-hatch-line" x1="3" y1="-1" x2="3" y2="7"/>
-      </pattern>
-    </defs>
-    <!-- bit numbers 15…0, one per 32 px cell (09 §2.3: digits are the allowed exception) -->
-    <g class="cf-f4-bits">
-      <text x="60" y="44">15</text><text x="92" y="44">14</text><text x="124" y="44">13</text><text x="156" y="44">12</text>
-      <text x="188" y="44">11</text><text x="220" y="44">10</text><text x="252" y="44">9</text><text x="284" y="44">8</text>
-      <text x="316" y="44">7</text><text x="348" y="44">6</text><text x="380" y="44">5</text><text x="412" y="44">4</text>
-      <text x="444" y="44">3</text><text x="476" y="44">2</text><text x="508" y="44">1</text><text x="540" y="44">0</text>
-    </g>
-    <!-- lane: 16 cells × 32 = 512, outline + cell ticks (1 px, half-pixel) -->
-    <g class="cf-f4-lane">
-      <rect x="44.5" y="60.5" width="511" height="63" rx="6"/>
-      <path d="M76.5 60.5v63M108.5 60.5v63M140.5 60.5v63M172.5 60.5v63M204.5 60.5v63M236.5 60.5v63M268.5 60.5v63M300.5 60.5v63M332.5 60.5v63M364.5 60.5v63M396.5 60.5v63M428.5 60.5v63M460.5 60.5v63M492.5 60.5v63M524.5 60.5v63"/>
-    </g>
-    <!-- stage: everything the loop animates. Authored = resolved state (readable without JS, G-M4) -->
-    <g class="cf-f4-stage">
-      <g class="cf-f4-a"><rect class="cf-f4-bar" x="108" y="68" width="256" height="48" rx="6"/></g>
-      <g class="cf-f4-b"><rect class="cf-f4-bar" x="268" y="68" width="192" height="48" rx="6"/></g>
-      <g class="cf-f4-overlap">
-        <rect class="cf-f4-knock" x="268" y="68" width="96" height="48"/>
-        <rect class="cf-f4-wash" x="268" y="68" width="96" height="48"/>
-        <rect class="cf-f4-hatch" x="268" y="68" width="96" height="48"/>
-        <rect class="cf-f4-edge" x="268.5" y="68.5" width="95" height="47"/>
-      </g>
-      <g class="cf-f4-ok-g"><rect class="cf-f4-ok" x="44.5" y="60.5" width="511" height="63" rx="6"/></g>
-      <text class="cf-f4-valid" x="556" y="160"><tspan data-cf-status="DRAFT">Valid</tspan></text>
-    </g>
-  </svg>
-</div>
-<p class="cf-fig-cap"><a class="cf-link" href="https://www.agnisys.com/request-a-call-about-the-agnisys-products-and-solutions/"><cf-s data-cf-status="DRAFT">See it live in a demo →</cf-s></a></p>
-    </div>
-  </div>
-</div>
-</section>
-<section id="cf-generate" class="cf-page cf-generate cf-pt-0">
+<section id="cf-generate" class="cf-page cf-generate">
 <div class="cf-wrap">
   <div class="cf-intro cf-rv">
     <p class="cf-label">AUTOMATICALLY GENERATED OUTPUTS</p>
-    <h2>From the single golden specification, IDS-CF automatically generates:</h2>
+    <h2>One golden specification, every deliverable</h2>
+    <p>IDS-CF produces the following from the single Golden Specification:</p>
   </div>
   <!-- F5: ported from ids-ai-landing/index.html .hero-visual / #v5Hero (G-V7). 09 §2.3: no names inside — slabs are bars, the orb is the glyph, the only text is the five families -->
   <div class="cf-figure">
@@ -1702,33 +1724,32 @@
         </div>
         <div class="cf-gen-hand">
           <ol class="cf-gen-rows">
-            <li class="cf-ok"><i><svg class="cf-ico cf-ico-check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg></i><span class="cf-gen-rk">Design</span><span class="cf-gen-rb">Verilog · VHDL · SV · SystemC</span></li>
-            <li class="cf-ok"><i><svg class="cf-ico cf-ico-check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg></i><span class="cf-gen-rk">Verification</span><span class="cf-gen-rb">UVM RAL · Sequences · Formal assertions · UVM testbench</span></li>
-            <li class="cf-ok"><i><svg class="cf-ico cf-ico-check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg></i><span class="cf-gen-rk">Software</span><span class="cf-gen-rb">C/C++ headers · Sequence API · Tests · Environment</span></li>
-            <li class="cf-ok"><i><svg class="cf-ico cf-ico-check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg></i><span class="cf-gen-rk">Documentation</span><span class="cf-gen-rb">HTML · PDF · PRM · Word · Markdown · JSON · 2DReg · MemDump</span></li>
-            <li class="cf-ok"><i><svg class="cf-ico cf-ico-check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg></i><span class="cf-gen-rk">Industry Standards</span><span class="cf-gen-rb">IP-XACT · SystemRDL · Velocity-based custom outputs · Perl · Python dump</span></li>
+            <li class="cf-ok"><i><svg class="cf-ico cf-ico-check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg></i><span class="cf-gen-rk">Design (RTL)</span><span class="cf-gen-rb">Verilog, VHDL, SystemVerilog and SystemC</span></li>
+            <li class="cf-ok"><i><svg class="cf-ico cf-ico-check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg></i><span class="cf-gen-rk">Verification</span><span class="cf-gen-rb">UVM RAL, Automatic and Custom sequences, Formal Assertions and UVM testbench</span></li>
+            <li class="cf-ok"><i><svg class="cf-ico cf-ico-check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg></i><span class="cf-gen-rk">Software / firmware</span><span class="cf-gen-rb">C/C++ headers, sequence API, C-tests and environment</span></li>
+            <li class="cf-ok"><i><svg class="cf-ico cf-ico-check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg></i><span class="cf-gen-rk">Documentation</span><span class="cf-gen-rb">Interactive HTML, PDF, Programmer’s Reference Manual (PRM), Word, Markdown, JSON, 2DReg and MemDump</span></li>
+            <li class="cf-ok"><i><svg class="cf-ico cf-ico-check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg></i><span class="cf-gen-rk">Standards and custom</span><span class="cf-gen-rb">IP-XACT, SystemRDL, Velocity-template custom outputs, and Perl and Python dumps</span></li>
           </ol>
         </div>
       </div>
     </div>
   </div>
   <ul class="cf-tiles cf-tiles-5">
-    <li><h3>Design</h3><p>Verilog · VHDL · SV · SystemC</p></li>
-    <li><h3>Verification</h3><p>UVM RAL · Sequences · Formal assertions · UVM testbench</p></li>
-    <li><h3>Software</h3><p>C/C++ headers · Sequence API · Tests · Environment</p></li>
-    <li><h3>Documentation</h3><p>HTML · PDF · PRM · Word · Markdown · JSON · 2DReg · MemDump</p></li>
-    <li><h3>Industry Standards</h3><p>IP-XACT · SystemRDL · Velocity-based custom outputs · Perl · Python dump</p></li>
+    <li><h3>Design (RTL)</h3><p>Verilog, VHDL, SystemVerilog and SystemC</p></li>
+    <li><h3>Verification</h3><p>UVM RAL, Automatic and Custom sequences, Formal Assertions and UVM testbench</p></li>
+    <li><h3>Software / firmware</h3><p>C/C++ headers, sequence API, C-tests and environment</p></li>
+    <li><h3>Documentation</h3><p>Interactive HTML, PDF, Programmer’s Reference Manual (PRM), Word, Markdown, JSON, 2DReg and MemDump</p></li>
+    <li><h3>Standards and custom</h3><p>IP-XACT, SystemRDL, Velocity-template custom outputs, and Perl and Python dumps</p></li>
   </ul>
 </div>
 </section>
 <section id="cf-agentic" class="cf-page cf-agentic cf-band-dark">
-<!-- 09 §2.1 row 06: band · intro + F6 prompt and answer lines (M7 v2 from lane F) -->
+<!-- 10-30 document "IDS-AI · AGENTIC AI ON IDS-CF": band · intro + F6 prompt and answer lines (M7 v2) + the six agents as a two-column list -->
 <div class="cf-wrap">
   <div class="cf-intro cf-rv">
-    <p class="cf-label"><cf-s data-cf-status="DRAFT">AI ASSISTANCE</cf-s></p>
-    <h2><cf-s data-cf-status="DRAFT">AI inside the editor</cf-s></h2>
-    <p><cf-s data-cf-status="DECK">AI-Enabled Assistance simplifies specification creation with intelligent guidance.</cf-s></p>
-    <p>AI-assisted validation identifies specification issues before implementation, improving design quality and reducing downstream defects.</p>
+    <p class="cf-label">IDS-AI™  ·  AGENTIC AI ON IDS-CF</p>
+    <h2>Golden Specification–driven chip sign-off with agentic AI</h2>
+    <p>IDS-AI is a multi-agent layer that runs on the IDS-CF platform. Every agent works from the same Golden Specification, so the output of one agent is the trusted input of the next.</p>
     <a class="cf-link" href="https://www.agnisys.com/products/ids-ai/"><cf-s data-cf-status="DRAFT">See IDS-AI</cf-s></a>
   </div>
   <div class="cf-fig cf-fig--f6" data-cf-motion="M7" role="img" aria-label="A prompt bar fills, three answer bars appear and a line links the last answer to one block of the specification.">
@@ -1764,23 +1785,72 @@
   </svg>
 </div>
 <p class="cf-fig-cap"><a class="cf-link" href="https://www.agnisys.com/request-a-call-about-the-agnisys-products-and-solutions/"><cf-s data-cf-status="DRAFT">See it live in a demo →</cf-s></a></p>
+  <dl class="cf-bl cf-bl--after-fig">
+    <div><dt>SpecCheck Agent</dt><dd>Checks the spec for correctness, completeness, consistency and AI-readiness before anything is generated, so errors are caught at the cheapest point to fix them.</dd></div>
+    <div><dt>Extract Agent</dt><dd>Converts unstructured PDF, text, HTML and Markdown into structured, machine-readable design information that becomes part of the Golden Specification.</dd></div>
+    <div><dt>RTL Generator Agent</dt><dd>Generates Verilog, SystemVerilog and VHDL, and handles SoC assembly and integration from connectivity information.</dd></div>
+    <div><dt>Verification Agent</dt><dd>Creates the entire verification environment (monitors, drivers and sequences) along with the sequences to drive coverage toward 100%. Custom sequences are captured through GUI templates.</dd></div>
+    <div><dt>SV Assertion Agent</dt><dd>Generates SystemVerilog Assertions and the formal verification environment for assertion-based testing.</dd></div>
+    <div><dt>Summary / Debug Agent</dt><dd>Summarizes design specifications, identifies errors and inconsistencies, and helps debug issues for faster SoC development.</dd></div>
+  </dl>
 </div>
 </section>
-<section id="cf-flow" class="cf-page cf-flow">
-<!-- 09 §2.1 row 07: intro + 3 × 2 grid · F7 symbols from lane C (six partials), DRAFT titles, one SOURCE line each (R6-PLAN body map) -->
+<section id="cf-mcp" class="cf-page cf-mcp">
+<!-- 10-30 document "IDS-MCP · CONNECT YOUR AI ASSISTANT": intro + two columns (binary name · one line · "choose this" line · bullets) + one closing line. Text only. -->
 <div class="cf-wrap">
   <div class="cf-intro cf-rv">
-    <p class="cf-label"><cf-s data-cf-status="DRAFT">FITS YOUR FLOW</cf-s></p>
-    <h2><cf-s data-cf-status="DRAFT">Fits the flow your teams already use</cf-s></h2>
+    <p class="cf-label">IDS-MCP™  ·  CONNECT YOUR AI ASSISTANT</p>
+    <h2>Ask your AI assistant. Run the IDS toolchain.</h2>
+    <p>IDS-MCP is a pair of self-contained server binaries that link your AI programming assistant directly to the IDesignSpec toolchain. Supported assistants include Claude Desktop, Claude Code, Cursor, Cline, Open WebUI and custom agent platforms.</p>
   </div>
-  <ul class="cf-flow-grid">
-    <li><svg class="cf-fig--f7 cf-fig__sym" data-sym="import" viewBox="0 0 48 48" aria-hidden="true" focusable="false"><path d="M30 6h8a4 4 0 0 1 4 4v28a4 4 0 0 1-4 4h-8"/><path d="M30 24H6"/><path class="cf-f7-o" d="m20 34 10-10-10-10"/></svg><h3><cf-s data-cf-status="DRAFT">Import</cf-s></h3><p>Imports and consolidates specifications from IDS-Word, IDS-Excel, YAML, IP-XACT, SystemRDL, and CustomCSV and other supported formats, enabling seamless migration and design reuse.</p></li>
-    <li><svg class="cf-fig--f7 cf-fig__sym" data-sym="git" viewBox="0 0 48 48" aria-hidden="true" focusable="false"><circle cx="12" cy="12" r="6"/><path d="M12 18v12"/><circle cx="12" cy="36" r="6"/><path d="M36 18a18 18 0 0 1-18 18"/><circle class="cf-f7-o" cx="36" cy="12" r="6"/></svg><h3><cf-s data-cf-status="DRAFT">Git and history</cf-s></h3><p>Organizes projects, tracks revisions, maintains generation history and provides complete engineering traceability.</p></li>
-    <li><svg class="cf-fig--f7 cf-fig__sym" data-sym="vscode" viewBox="0 0 48 48" aria-hidden="true" focusable="false"><path d="M16 6h-2a4 4 0 0 0-4 4v10a4 4 0 0 1-4 4 4 4 0 0 1 4 4v10c0 2.2 1.8 4 4 4h2"/><path d="M32 42h2a4 4 0 0 0 4-4v-10c0-2.2 1.8-4 4-4a4 4 0 0 1-4-4V10a4 4 0 0 0-4-4h-2"/><circle class="cf-f7-dot" cx="24" cy="24" r="3"/></svg><h3><cf-s data-cf-status="DRAFT">Code editor</cf-s></h3><p>Provides a modern development environment with syntax highlighting, auto-completion, property hinting, real-time validation, linting, semantic checks, and error reporting.</p></li>
-    <li><svg class="cf-fig--f7 cf-fig__sym" data-sym="html" viewBox="0 0 48 48" aria-hidden="true" focusable="false"><path d="M30 4H12a4 4 0 0 0-4 4v32a4 4 0 0 0 4 4h24a4 4 0 0 0 4-4V14Z"/><path d="M28 4v8a4 4 0 0 0 4 4h8"/><path d="M20 18h-4"/><path d="M32 26H16"/><path class="cf-f7-o" d="M32 34H16"/></svg><h3><cf-s data-cf-status="DRAFT">HTML docs</cf-s></h3><p>Produces searchable, filterable, fully navigable HTML documentation with hierarchical views, hyperlinks, and cross-references.</p></li>
-    <li><svg class="cf-fig--f7 cf-fig__sym" data-sym="platforms" viewBox="0 0 48 48" aria-hidden="true" focusable="false"><rect x="6" y="6" width="14" height="14" rx="2"/><rect x="28" y="6" width="14" height="14" rx="2"/><rect class="cf-f7-o" x="17" y="28" width="14" height="14" rx="2"/></svg><h3><cf-s data-cf-status="DRAFT">Platforms</cf-s></h3><p>Runs on Windows, Linux, and macOS, providing a consistent development experience across engineering environments.</p></li>
-    <li><svg class="cf-fig--f7 cf-fig__sym" data-sym="ids" viewBox="0 0 48 48" aria-hidden="true" focusable="false"><rect x="8" y="8" width="32" height="32" rx="4"/><rect class="cf-f7-o" x="16" y="16" width="16" height="16" rx="2"/><path d="M14 4v4M24 4v4M34 4v4M14 40v4M24 40v4M34 40v4M4 14h4M4 24h4M4 34h4M40 14h4M40 24h4M40 34h4"/></svg><h3><cf-s data-cf-status="DRAFT">IDS family</cf-s></h3><p>Integrates with IDS-Integrate™, IDS-Verify™, IDS-Validate™, IDS-NoC™, and IDS-AI™ to enable a complete specification-driven design and verification flow.</p></li>
+  <ul class="cf-mcp">
+    <li>
+      <h3>ids-mcp-suite</h3>
+      <p class="cf-mcp__line">Generation, verification and integration</p>
+      <p class="cf-label">Choose this to build</p>
+      <ul class="cf-bullets">
+        <li>Generate synthesizable RTL (Verilog, SV, VHDL)</li>
+        <li>Generate UVM RAL, C/C++/SV headers, docs and IP-XACT</li>
+        <li>Validate register specs (check_spec)</li>
+        <li>Scaffold and simulate ARV-Sim (UVM) environments</li>
+        <li>Scaffold and run ARV-Formal assertions</li>
+        <li>Run and validate IDS-Integrate SoC connectivity specs</li>
+        <li class="cf-bullets__note">Requires idsbatch and an active Agnisys license</li>
+      </ul>
+    </li>
+    <li>
+      <h3>ids-mcp-docs</h3>
+      <p class="cf-mcp__line">Offline knowledge engine and flag search</p>
+      <p class="cf-label">Choose this to learn and look up</p>
+      <ul class="cf-bullets">
+        <li>Instant, deterministic flag lookup and syntax help for idsbatch</li>
+        <li>Semantic search across hundreds of embedded Agnisys guides (IDS-Batch, IDS-Verify, IDS-Validate, IDS-Integrate)</li>
+        <li>Answers architecture, configuration and syntax questions offline</li>
+        <li class="cf-bullets__note">Standalone: no idsbatch install, no license</li>
+      </ul>
+    </li>
   </ul>
+  <p class="cf-mcp__closing">No need to memorize command-line flags. Ask your assistant in plain language.</p>
+</div>
+</section>
+<section id="cf-features" class="cf-page cf-features cf-pt-0">
+<!-- 10-30 document "KEY FEATURES": intro + the nine table rows as a three-column list (title · one line). Text only. -->
+<div class="cf-wrap">
+  <div class="cf-intro cf-rv">
+    <p class="cf-label">KEY FEATURES</p>
+    <h2>Built for how spec-driven teams actually work</h2>
+  </div>
+  <dl class="cf-bl cf-bl--3">
+    <div><dt>Single Golden Specification</dt><dd>One source of truth across architecture, RTL, firmware, software, verification, validation and documentation.</dd></div>
+    <div><dt>AI-assisted validation</dt><dd>Checks completeness, consistency and correctness of the spec so issues surface before implementation begins.</dd></div>
+    <div><dt>Collaborative authoring</dt><dd>Multiple teams author, review and manage the same specification in one project environment.</dd></div>
+    <div><dt>Multi-format import</dt><dd>Imports IDS-Word, IDS-Excel, YAML, IP-XACT, SystemRDL, custom CSV and other formats, for migration and design reuse.</dd></div>
+    <div><dt>VS Code–compatible editor</dt><dd>Syntax highlighting, auto-completion, property hints, real-time validation, linting, semantic checks and error reporting.</dd></div>
+    <div><dt>Interactive HTML documentation</dt><dd>Searchable, filterable and fully navigable, with hierarchical views, hyperlinks and cross-references.</dd></div>
+    <div><dt>Project, version and history</dt><dd>Tracks revisions and generation history, giving complete engineering traceability.</dd></div>
+    <div><dt>Cross-platform</dt><dd>Runs on Windows, Linux and macOS.</dd></div>
+    <div><dt>IDesignSpec ecosystem</dt><dd>Integrates with IDS-Integrate™, IDS-Verify™, IDS-Validate™, IDS-NoC™ and IDS-AI™ for a complete specification-driven design and verification flow.</dd></div>
+  </dl>
 </div>
 </section>
 <section id="cf-benefits" class="cf-page cf-benefits cf-pt-0">
@@ -1790,32 +1860,19 @@
     <h2>What changes on the ground</h2>
   </div>
   <dl class="cf-bl">
-    <div><dt>Higher Specification Quality</dt><dd>AI-assisted validation identifies specification issues before implementation, improving design quality and reducing downstream defects.</dd></div>
-    <div><dt>Faster Time-to-Market</dt><dd>Accelerates development through automated collateral generation, streamlined collaboration, and reduced specification turnaround time.</dd></div>
-    <div><dt>Better Collaboration</dt><dd>Enables architecture, RTL, firmware, software, verification, validation, and documentation teams to collaborate efficiently within a unified environment.</dd></div>
-    <div><dt>End-to-End Traceability</dt><dd>Maintains complete visibility from specification creation through implementation, verification, documentation, and release.</dd></div>
+    <div><dt>Catch spec bugs before they become silicon bugs.</dt><dd>AI-assisted validation finds specification issues before RTL, where fixes cost the least.</dd></div>
+    <div><dt>No manual synchronization.</dt><dd>When the spec changes, RTL, UVM RAL, headers and documentation are regenerated from the same source, not rewritten by hand.</dd></div>
+    <div><dt>Faster turnaround, lower cost.</dt><dd>Automated generation and collaboration cut specification turnaround, rework and late-stage design changes.</dd></div>
+    <div><dt>End-to-end traceability.</dt><dd>Follow a requirement from the specification through implementation, verification, documentation and release.</dd></div>
+    <div><dt>Scales with your program.</dt><dd>From a single IP block to a multi-team SoC, with the same standardized workflow.</dd></div>
   </dl>
   <p class="cf-closing">Create Once. Validate with AI. Generate Everything.</p>
   <div class="cf-live">
     <h3><cf-s data-cf-status="DRAFT">See it in a live demo</cf-s></h3>
-    <a class="cf-btn cf-btn--round" href="https://www.agnisys.com/request-a-call-about-the-agnisys-products-and-solutions/">Request a Demo</a>
+    <a class="cf-btn cf-btn--round" href="https://www.agnisys.com/request-a-call-about-the-agnisys-products-and-solutions/"><cf-s data-cf-status="DRAFT">Request a Demo</cf-s></a>
   </div>
 </div>
-</section>
-<section id="cf-faq" class="cf-page cf-faq cf-pt-0">
-<div class="cf-wrap">
-  <div class="cf-intro cf-rv">
-    <h2><cf-s data-cf-status="DRAFT">Questions teams ask first</cf-s></h2>
-  </div>
-  <div class="cf-faq-list">
-    <details><summary><cf-s data-cf-status="DRAFT">What is a golden specification?</cf-s></summary><p><cf-s data-cf-status="DRAFT">One machine-readable spec that every team works from. IDS-CF generates all outputs from it, so they stay in sync.</cf-s></p></details>
-    <details><summary><cf-s data-cf-status="DRAFT">Do we have to give up Excel or Word?</cf-s></summary><p><cf-s data-cf-status="DRAFT">No. Import from IDS-Excel, IDS-Word, YAML, IP-XACT, SystemRDL or CSV. Keep working in the Spreadsheet view if your team likes tables.</cf-s></p></details>
-    <details><summary><cf-s data-cf-status="DRAFT">Which outputs can IDS-CF generate?</cf-s></summary><p><cf-s data-cf-status="DRAFT">Design (Verilog, VHDL, SV, SystemC), verification (UVM RAL, sequences, formal, testbench), software (C/C++ headers, sequence API, tests), documentation (HTML, PDF, PRM, Word, Markdown, JSON) and standards (IP-XACT, SystemRDL).</cf-s></p></details>
-    <details><summary><cf-s data-cf-status="DRAFT">What does the AI do?</cf-s></summary><p><cf-s data-cf-status="DRAFT">It suggests properties and values while you write the spec, and checks the spec for completeness, consistency and correctness.</cf-s></p></details>
-  </div>
-</div>
-<script type="application/ld+json">{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[{"@type":"Question","name":"What is a golden specification?","acceptedAnswer":{"@type":"Answer","text":"One machine-readable spec that every team works from. IDS-CF generates all outputs from it, so they stay in sync."}},{"@type":"Question","name":"Do we have to give up Excel or Word?","acceptedAnswer":{"@type":"Answer","text":"No. Import from IDS-Excel, IDS-Word, YAML, IP-XACT, SystemRDL or CSV. Keep working in the Spreadsheet view if your team likes tables."}},{"@type":"Question","name":"Which outputs can IDS-CF generate?","acceptedAnswer":{"@type":"Answer","text":"Design (Verilog, VHDL, SV, SystemC), verification (UVM RAL, sequences, formal, testbench), software (C/C++ headers, sequence API, tests), documentation (HTML, PDF, PRM, Word, Markdown, JSON) and standards (IP-XACT, SystemRDL)."}},{"@type":"Question","name":"What does the AI do?","acceptedAnswer":{"@type":"Answer","text":"It suggests properties and values while you write the spec, and checks the spec for completeness, consistency and correctness."}}]}</script>
-<!-- angled seam into the theme graphite band: low left, high right (~2.5°), 3px theme-orange line (05-design-system) -->
+<!-- angled seam into the theme graphite band: low left, high right (~2.5°), 3px theme-orange line (05-design-system); last section since the FAQ left (10-30) -->
 <svg class="cf-seam" viewBox="0 0 1440 64" preserveAspectRatio="none" aria-hidden="true"><polygon points="0,64 1440,0 1440,64" style="fill:var(--cf-theme-graphite)"/><polyline points="0,64 1440,0" style="fill:none;stroke:var(--cf-theme-orange);stroke-width:3"/></svg>
 </section>
 <div style="background:#3B3D41;padding:96px 40px;text-align:center"><span style="display:inline-block;width:320px;height:22px;border-radius:6px;background:#9a9c9f"></span><div style="display:flex;gap:24px;justify-content:center;margin-top:40px;flex-wrap:wrap"><div style="width:300px;height:160px;border-radius:8px;background:#4b4d52"></div><div style="width:300px;height:160px;border-radius:8px;background:#4b4d52"></div><div style="width:300px;height:160px;border-radius:8px;background:#4b4d52"></div></div></div>
